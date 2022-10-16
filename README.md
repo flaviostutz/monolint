@@ -2,7 +2,7 @@
 
 Linter for monorepos. Checks folder structure, module contents, file contents and naming conventions.
 
-This tool will try to find modules inside the repo, which are folders within the monorepo with a certain "marker file", like package.json.
+This tool will look for modules inside the repo (which are folders with a certain "marker file", like package.json).
 
 After discovering the module folders, it will run a set a rules to check if the modules are well structured and show the results.
 
@@ -44,7 +44,7 @@ After discovering the module folders, it will run a set a rules to check if the 
 ```json
 {
   "module-markers": ["package.json", "serverless.yml"],
-  rules: {
+  "rules": {
     "serverless-same-name": true,
     "packagejson-same-name": true,
   },
