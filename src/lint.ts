@@ -30,14 +30,14 @@ const lint = (baseDir:string):RuleResult[] => {
     console.debug(`> Rule '${rule.name}'`);
     const ruleResults = rule.check(baseDir, baseConfig);
     if (ruleResults === null) {
-      console.debug('  - skipped');
+      // console.debug('  - skipped');
       continue;
     }
     for (let j = 0; j < ruleResults.length; j += 1) {
       const ruleResult = ruleResults[j];
       ruleResult.rule = rule.name;
       results.push(ruleResult);
-      console.debug(`   - resource=${ruleResult.resource} valid=${ruleResult.valid}`);
+      // console.debug(`   - resource=${ruleResult.resource} valid=${ruleResult.valid}`);
     }
   }
 
@@ -57,16 +57,30 @@ const lint = (baseDir:string):RuleResult[] => {
     console.debug(`> Checking rule '${rule.name}'`);
     const ruleResults = rule.checkModules(ruleModules, baseDir);
     if (ruleResults === null) {
-      console.debug('   - skipped');
+      // console.debug('   - skipped');
       continue;
     }
     for (let kk = 0; kk < ruleResults.length; kk += 1) {
       const ruleResult = ruleResults[kk];
       ruleResult.rule = rule.name;
       results.push(ruleResult);
-      console.debug(`   - resource=${ruleResult.resource} valid=${ruleResult.valid}`);
+      // console.debug(`   - resource=${ruleResult.resource} valid=${ruleResult.valid}`);
     }
   }
+
+  results.sort((aa, bb) => {
+    if (aa.module && bb.module) {
+      if (bb.module.name > aa.module.name) { return -1; }
+      if (bb.module.name < aa.module.name) { return 1; }
+    }
+    // if module is the same, untie by rule name
+    if (bb.rule > aa.rule) { return -1; }
+    if (bb.rule < aa.rule) { return 1; }
+    // if rule is the same, untie by resource path
+    if (bb.resource > aa.resource) { return -1; }
+    if (bb.resource < aa.resource) { return 1; }
+    return 0;
+  });
 
   return results;
 };
@@ -151,6 +165,18 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
       enabledRules: erules,
     });
   }
+
+  // sort by module name ascending to make it previsible and easier to create
+  // newer modules for tests without breaking existing tests and to debug in general
+  modules.sort((aa, bb) => {
+    if (bb.name > aa.name) { return -1; }
+    if (bb.name < aa.name) { return 1; }
+    // if name is the same, untie by path
+    if (bb.path > aa.path) { return -1; }
+    if (bb.path < aa.path) { return 1; }
+    return 0;
+  });
+
   return modules;
 };
 
