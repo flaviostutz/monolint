@@ -35,6 +35,7 @@ const rule:Rule = {
             resource: packageFile,
             message: `"name" must be "${module.name}"`,
             rule: rule.name,
+            module,
           });
           continue;
         }
@@ -43,6 +44,7 @@ const rule:Rule = {
           resource: packageFile,
           message: '"name" is valid',
           rule: rule.name,
+          module,
         });
 
       } catch (err) {

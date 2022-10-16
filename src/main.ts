@@ -3,9 +3,6 @@ import * as fs from 'fs';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { Config } from './types/Config';
-import { mergeConfigs } from './utils';
-import defaultConfig from './defaultConfig.json';
 import { lint } from './lint';
 
 
@@ -33,22 +30,7 @@ if (!fs.existsSync(argv.baseDir)) {
   process.exit(1);
 }
 
-const cfile = `${argv.baseDir}/.monolinter.json`;
-
-let baseConfig = <Config>defaultConfig;
-
-if (fs.existsSync(cfile)) {
-  const cf = fs.readFileSync(cfile);
-  const loadedConfig = JSON.parse(cf.toString());
-  baseConfig = mergeConfigs(defaultConfig, loadedConfig);
-
-} else {
-  console.info(`File ".monolinter.json" not found in dir "${argv.baseDir}". Using default configurations`);
-}
-
-console.debug(`Base config=${JSON.stringify(baseConfig)}`);
-
-const results = lint(argv.baseDir, baseConfig);
+const results = lint(argv.baseDir);
 
 console.log(``);
 console.log(`Results:`);

@@ -5,13 +5,17 @@ import fg from 'fast-glob';
 import { RuleResult } from './types/RuleResult';
 import { Module } from './types/Module';
 import { Config } from './types/Config';
+import { mergeConfigs } from './utils';
+import { DefaultConfig } from './defaultConfig';
 // when these rules are imported, they are registered in registry
 import r1 from './rules/serverless-same-name';
 import r2 from './rules/packagejson-same-name';
 import { register, allRules, enabledRules } from './registry';
-import { mergeConfigs } from './utils';
 
-const lint = (baseDir:string, baseConfig:Config):RuleResult[] => {
+const lint = (baseDir:string):RuleResult[] => {
+
+  const baseConfig = loadBaseConfig(baseDir);
+  console.debug(`Base config=${JSON.stringify(baseConfig)}`);
 
   register(r1);
   register(r2);
@@ -150,4 +154,22 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
   return modules;
 };
 
-export { lint, discoverModules };
+const loadBaseConfig = (baseDir:string):Config => {
+  const cfile = `${baseDir}/.monolinter.json`;
+
+  let baseConfig = <Config>DefaultConfig;
+
+  if (fs.existsSync(cfile)) {
+    const cf = fs.readFileSync(cfile);
+    const loadedConfig = JSON.parse(cf.toString());
+    baseConfig = mergeConfigs(baseConfig, loadedConfig);
+
+  } else {
+    console.info(`File ".monolinter.json" not found in dir "${baseDir}". Using default configurations`);
+  }
+
+  return baseConfig;
+};
+
+
+export { lint, discoverModules, loadBaseConfig };

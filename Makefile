@@ -1,5 +1,5 @@
 run-dev: 
-	npx ts-node src/main.ts --base-dir=./src/test-monorepo
+	npx ts-node src/main.ts --base-dir=./src/rules/test-monorepo
 
 .PHONY: dist
 dist: 

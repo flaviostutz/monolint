@@ -29,6 +29,7 @@ const rule:Rule = {
             resource: slsFile,
             message: `"service" must be "${module.name}"`,
             rule: rule.name,
+            module,
           });
           continue;
         }
@@ -37,6 +38,7 @@ const rule:Rule = {
           resource: slsFile,
           message: '"service" is valid',
           rule: rule.name,
+          module,
         });
       } catch (err) {
         results.push({
@@ -44,6 +46,7 @@ const rule:Rule = {
           resource: slsFile,
           message: `Couldn't load file`,
           rule: rule.name,
+          module,
         });
         continue;
       }
