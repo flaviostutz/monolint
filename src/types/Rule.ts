@@ -3,6 +3,7 @@ import { Config } from "./Config";
 import { RuleResult } from "./RuleResult";
 
 export interface Rule {
+    checkModule(module: Module): RuleResult[] | null;
+    check(baseDir:string, config?: Config): RuleResult[] | null;
     name:string
-    check(config: Config, modules: Module[]): RuleResult[];
 }

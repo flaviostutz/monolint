@@ -47,7 +47,7 @@ module.exports = {
       "valid-typeof": "error",
       "new-cap": "error",
       "no-invalid-this": "error",
-      complexity: ["error", { max: 6 }],
+      complexity: ["error", { max: 12 }],
       "no-else-return": "error",
       "max-depth": ["error", 4],
       "max-len": ["error", { code: 120, comments: 100, ignoreTemplateLiterals: true, ignoreStrings: true, ignoreTrailingComments: true, ignoreUrls: true }],

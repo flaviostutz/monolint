@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
-
+    "resolveJsonModule": true,
     "preserveConstEnums": true
   },
   "include": [

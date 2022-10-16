@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "build": "esbuild src/main.ts --platform=node --bundle --outfile=dist/bundle.js",
-    "test": "jest"
+    "test": "cd src && jest"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,8 @@
   "homepage": "https://github.com/flaviostutz/monolinter#readme",
   "devDependencies": {
     "@shopify/eslint-plugin": "^42.0.1",
+    "@types/jest": "^29.1.2",
+    "@types/js-yaml": "^4.0.5",
     "@types/node": "^18.11.0",
     "@types/yargs": "^17.0.13",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
@@ -31,6 +33,7 @@
   },
   "dependencies": {
     "fast-glob": "^3.2.12",
+    "js-yaml": "^4.1.0",
     "yargs": "^17.6.0"
   }
 }

@@ -2,7 +2,7 @@
 module.exports = {
   testMatch: ['**/?(*.)+(spec|test).+(ts|tsx|js)'],
   transform: {
-    '^.+\\.tsx?$': [
+    '^.+\\.tsx?$|^.+\\.json$': [
       'esbuild-jest',
       {
         sourcemap: true, // correct line numbers in code coverage

@@ -1,5 +1,5 @@
 run-dev: 
-	npx ts-node src/main.ts --base-dir=./monorepo-example
+	npx ts-node src/main.ts --base-dir=./src/rules/test-monorepo
 
 .PHONY: dist
 dist: 
@@ -10,3 +10,5 @@ lint:
 	npx tsc -noEmit --skipLibCheck
 	npm audit --audit-level high
 	
+test:
+	npm test

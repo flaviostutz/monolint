@@ -1,5 +1,5 @@
-import { Rule } from '../types/Rule';
-import { Config } from '../types/Config';
+import { Rule } from './types/Rule';
+import { Config } from './types/Config';
 
 const rules:Rule[] = [];
 

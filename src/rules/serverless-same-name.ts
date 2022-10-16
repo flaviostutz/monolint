@@ -1,39 +1,50 @@
 import * as fs from 'fs';
 
-import { Config } from '../types/Config';
+import yaml from 'js-yaml';
+
+import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 
-const rule = {
+const rule:Rule = {
   name: 'serverless-same-name',
-  check: (config:Config, modules:Module[]):RuleResult[] => {
-    const results:RuleResult[] = [];
 
-    modules.forEach((module) => {
-      const packageFile = `${module.path}/package.json`;
-      if (fs.existsSync(packageFile)) {
-        console.debug(`Checking ${packageFile}`);
-        const cf = fs.readFileSync(packageFile);
-        try {
-          const loadedPackage = JSON.parse(cf.toString());
-          if (loadedPackage.name !== module.name) {
-            results.push({
-              valid: false,
-              resource: packageFile,
-              message: `"name" must be "${module.name}"`,
-            });
-          }
-        } catch (err) {
-          results.push({
-            valid: false,
-            resource: packageFile,
-            message: `Couldn't load file`,
-          });
-        }
+  checkModule: (module: Module): RuleResult[]|null => {
+    const results: RuleResult[] = [];
+
+    const slsFile = `${module.path}/serverless.yml`;
+    if (!fs.existsSync(slsFile)) {
+      return null;
+    }
+    console.debug(`Checking ${slsFile}`);
+    try {
+      const cf = fs.readFileSync(slsFile, 'utf8');
+      const loadedSls = <any>yaml.load(cf);
+      if (loadedSls.service !== module.name) {
+        results.push({
+          valid: false,
+          resource: slsFile,
+          message: `"service" must be "${module.name}"`,
+        });
+        return results;
       }
-    });
-
+      results.push({
+        valid: true,
+        resource: slsFile,
+        message: '"service" is valid',
+      });
+    } catch (err) {
+      results.push({
+        valid: false,
+        resource: slsFile,
+        message: `Couldn't load file`,
+      });
+      return results;
+    }
     return results;
+  },
+  check(): RuleResult[]|null {
+    return null;
   },
 };
 

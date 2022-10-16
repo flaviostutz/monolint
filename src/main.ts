@@ -3,7 +3,8 @@ import * as fs from 'fs';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { Config } from './types/Config';
+import { mergeConfigs } from './config';
+import defaultConfig from './defaultConfig.json';
 import { lint } from './lint';
 
 
@@ -27,32 +28,26 @@ if (!argv.verbose) {
 }
 
 const cfile = `${argv.baseDir}/.monolinter.json`;
-const defaultConfig = {
-  'base-dir': argv.baseDir,
-  'module-markers': ['package.json', 'serverless.yml'],
-  rules: {
-    'serverless-same-name': true,
-  },
-};
 
 if (!fs.existsSync(cfile)) {
   console.log(`File ".monolinter.json" not found in dir "${argv.rootDir}"`);
+  process.exit(1);
 }
 
-console.debug('Reading .monolinter.json');
 const cf = fs.readFileSync(cfile);
 const loadedConfig = JSON.parse(cf.toString());
+const baseConfig = mergeConfigs(defaultConfig, loadedConfig);
 
-const mergedRules = { ...defaultConfig.rules, ...loadedConfig.rules };
-const config = <Config>{ ...defaultConfig, ...loadedConfig };
-config.rules = mergedRules;
-console.debug(`Using config ${JSON.stringify(config)}`);
+console.debug(`Base config=${JSON.stringify(baseConfig)}`);
 
-const results = lint(config);
+const results = lint(argv.baseDir, baseConfig);
 
 console.log(``);
 console.log(`Results:`);
-console.log(`${JSON.stringify(results)}`);
-
-// yconfig.parse();
+const presults = results.map((rr) => {
+  return { module: rr.module?.name, resource: rr.resource, valid: rr.valid };
+});
+presults.forEach((pr) => {
+  console.log(`-${JSON.stringify(pr)}`);
+});
 

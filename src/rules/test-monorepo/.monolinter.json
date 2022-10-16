@@ -1,0 +1,3 @@
+{
+    "module-markers": ["_package.json", "package.json", "serverless.yml"]
+}
