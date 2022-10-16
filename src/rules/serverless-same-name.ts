@@ -9,37 +9,44 @@ import { RuleResult } from '../types/RuleResult';
 const rule:Rule = {
   name: 'serverless-same-name',
 
-  checkModule: (module: Module): RuleResult[]|null => {
+  checkModules: (modules: Module[]): RuleResult[]|null => {
     const results: RuleResult[] = [];
 
-    const slsFile = `${module.path}/serverless.yml`;
-    if (!fs.existsSync(slsFile)) {
-      return null;
-    }
-    console.debug(`Checking ${slsFile}`);
-    try {
-      const cf = fs.readFileSync(slsFile, 'utf8');
-      const loadedSls = <any>yaml.load(cf);
-      if (loadedSls.service !== module.name) {
+    for (let i = 0; i < modules.length; i += 1) {
+      const module = modules[i];
+
+      const slsFile = `${module.path}/serverless.yml`;
+      if (!fs.existsSync(slsFile)) {
+        continue;
+      }
+      // console.debug(`Checking ${slsFile}`);
+      try {
+        const cf = fs.readFileSync(slsFile, 'utf8');
+        const loadedSls = <any>yaml.load(cf);
+        if (loadedSls.service !== module.name) {
+          results.push({
+            valid: false,
+            resource: slsFile,
+            message: `"service" must be "${module.name}"`,
+            rule: rule.name,
+          });
+          continue;
+        }
+        results.push({
+          valid: true,
+          resource: slsFile,
+          message: '"service" is valid',
+          rule: rule.name,
+        });
+      } catch (err) {
         results.push({
           valid: false,
           resource: slsFile,
-          message: `"service" must be "${module.name}"`,
+          message: `Couldn't load file`,
+          rule: rule.name,
         });
-        return results;
+        continue;
       }
-      results.push({
-        valid: true,
-        resource: slsFile,
-        message: '"service" is valid',
-      });
-    } catch (err) {
-      results.push({
-        valid: false,
-        resource: slsFile,
-        message: `Couldn't load file`,
-      });
-      return results;
     }
     return results;
   },

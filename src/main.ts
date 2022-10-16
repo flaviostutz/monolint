@@ -3,7 +3,8 @@ import * as fs from 'fs';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { mergeConfigs } from './config';
+import { Config } from './types/Config';
+import { mergeConfigs } from './utils';
 import defaultConfig from './defaultConfig.json';
 import { lint } from './lint';
 
@@ -18,7 +19,7 @@ const argv = yargs(hideBin(process.argv))
   .option('base-dir', {
     alias: 'r',
     type: 'string',
-    description: 'Monorepo root dir',
+    description: 'Monorepo base dir',
     default: '.',
   })
 .parseSync();
@@ -27,16 +28,23 @@ if (!argv.verbose) {
     // console.debug = () => {};
 }
 
-const cfile = `${argv.baseDir}/.monolinter.json`;
-
-if (!fs.existsSync(cfile)) {
-  console.log(`File ".monolinter.json" not found in dir "${argv.rootDir}"`);
+if (!fs.existsSync(argv.baseDir)) {
+  console.log(`Monorepo basedir ${argv.baseDir} not found`);
   process.exit(1);
 }
 
-const cf = fs.readFileSync(cfile);
-const loadedConfig = JSON.parse(cf.toString());
-const baseConfig = mergeConfigs(defaultConfig, loadedConfig);
+const cfile = `${argv.baseDir}/.monolinter.json`;
+
+let baseConfig = <Config>defaultConfig;
+
+if (fs.existsSync(cfile)) {
+  const cf = fs.readFileSync(cfile);
+  const loadedConfig = JSON.parse(cf.toString());
+  baseConfig = mergeConfigs(defaultConfig, loadedConfig);
+
+} else {
+  console.info(`File ".monolinter.json" not found in dir "${argv.baseDir}". Using default configurations`);
+}
 
 console.debug(`Base config=${JSON.stringify(baseConfig)}`);
 
@@ -45,9 +53,9 @@ const results = lint(argv.baseDir, baseConfig);
 console.log(``);
 console.log(`Results:`);
 const presults = results.map((rr) => {
-  return { module: rr.module?.name, resource: rr.resource, valid: rr.valid };
+  return { resource: rr.resource, valid: rr.valid, message: rr.message, module: rr.module?.name };
 });
 presults.forEach((pr) => {
-  console.log(`-${JSON.stringify(pr)}`);
+  console.log(`- ${JSON.stringify(pr)}`);
 });
 

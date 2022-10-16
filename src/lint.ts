@@ -8,8 +8,8 @@ import { Config } from './types/Config';
 // when these rules are imported, they are registered in registry
 import r1 from './rules/serverless-same-name';
 import r2 from './rules/packagejson-same-name';
-import { register, enabledRules } from './registry';
-import { mergeConfigs } from './config';
+import { register, allRules, enabledRules } from './registry';
+import { mergeConfigs } from './utils';
 
 const lint = (baseDir:string, baseConfig:Config):RuleResult[] => {
 
@@ -19,45 +19,48 @@ const lint = (baseDir:string, baseConfig:Config):RuleResult[] => {
   const results:RuleResult[] = [];
 
   // check generic rules
+  console.debug('Checking base rules (outside modules)');
   const erules = enabledRules(baseConfig);
   for (let i = 0; i < erules.length; i += 1) {
     const rule = erules[i];
     console.debug(`> Rule '${rule.name}'`);
     const ruleResults = rule.check(baseDir, baseConfig);
     if (ruleResults === null) {
-      console.debug('  SKIPPED');
+      console.debug('  - skipped');
       continue;
     }
     for (let j = 0; j < ruleResults.length; j += 1) {
       const ruleResult = ruleResults[j];
       ruleResult.rule = rule.name;
       results.push(ruleResult);
-      console.debug(`   valid=${ruleResult.valid}`);
+      console.debug(`   - resource=${ruleResult.resource} valid=${ruleResult.valid}`);
     }
   }
+
 
   // check modules
   const modules = discoverModules(baseDir, baseConfig);
   console.debug(`Modules found: ${JSON.stringify(modules.map((mm) => mm.name))}`);
 
-  for (let i = 0; i < modules.length; i += 1) {
-    const module = modules[i];
-    console.debug(`> Checking module ${module.name}`);
-    for (let j = 0; j < module.enabledRules.length; j += 1) {
-      const rule = module.enabledRules[j];
-      console.debug(` > Rule '${rule.name}'`);
-      const ruleResults = rule.checkModule(module);
-      if (ruleResults === null) {
-        console.debug('   SKIPPED');
-        continue;
-      }
-      for (let kk = 0; kk < ruleResults.length; kk += 1) {
-        const ruleResult = ruleResults[kk];
-        ruleResult.rule = rule.name;
-        ruleResult.module = module;
-        results.push(ruleResult);
-        console.debug(`   valid=${ruleResult.valid}`);
-      }
+  // gather all modules for which a certain rule is enabled
+  console.debug('Checking rules against modules');
+  for (let i = 0; i < allRules.length; i += 1) {
+    const rule = allRules[i];
+    const ruleModules:Module[] = modules.filter((module) => {
+      return module.enabledRules.includes(rule);
+    });
+
+    console.debug(`> Checking rule '${rule.name}'`);
+    const ruleResults = rule.checkModules(ruleModules, baseDir);
+    if (ruleResults === null) {
+      console.debug('   - skipped');
+      continue;
+    }
+    for (let kk = 0; kk < ruleResults.length; kk += 1) {
+      const ruleResult = ruleResults[kk];
+      ruleResult.rule = rule.name;
+      results.push(ruleResult);
+      console.debug(`   - resource=${ruleResult.resource} valid=${ruleResult.valid}`);
     }
   }
 
@@ -147,4 +150,4 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
   return modules;
 };
 
-export { lint };
+export { lint, discoverModules };
