@@ -1,9 +1,9 @@
+run-dev: 
+	npx ts-node src/main.ts --base-dir=./monorepo-example
+
 .PHONY: dist
 dist: 
 	npm run build
-
-run: dist
-	node dist/bundle.js
 
 lint:
 	npx eslint . --ext .ts
