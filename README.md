@@ -1,10 +1,12 @@
-# monolinter
+# Monolinter
 
-Linter for monorepos. Checks folder structure, module contents, file contents and naming conventions.
+Linter for monorepos. Checks folder structure, module contents, file contents and naming conventions of a monorepo.
 
-This tool will look for modules inside the repo (which are folders with a certain "marker file", like package.json).
+This tool will look for modules inside the repo (which are folders with a certain "marker file", like package.json). After discovering the module folders, it will run a set a rules to check if the modules are well structured and show the results.
 
-After discovering the module folders, it will run a set a rules to check if the modules are well structured and show the results.
+Some example of the rules are: check if all modules are inside a certain folder, check if module names comply to a specific naming convention, check if certain file between modules have the same contents, check if github actions workflow name contains the name of the corresponding module...
+
+Monolinter was implemented in an extensible way for creating more and more rules as needed, so if you new a new feature, contribute to our project! Read [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
 ## Usage
 
