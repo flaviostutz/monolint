@@ -52,11 +52,13 @@ If you work or know a good public monorepo, please let us now so we can use it a
     "serverless-same-name": true,
     "packagejson-same-name": true,
   },
+  "defaults": true
 }
 ```
 
   * 'module-markers' - declare a list of file names that, if found in any folder inside the monorepo, will make the folder considered a module. Used only in the base folder of the monorepo.
   * 'rules' - activate/deactivate rules, or setup specific configurations for a rule
+  * 'defaults' - whatever use default configurations or not. Defaults to true.
 
 * This file can be placed in any folder to define specific configurations/rules for different branches of the monorepo.
   * Example:
@@ -70,7 +72,46 @@ If you work or know a good public monorepo, please let us now so we can use it a
 
 ### __.monolinterignore__
 
-* Place an empty file with name ".monolinterignore" in any folder of a module, or an intermediary grouping folder so monolinter won't discover nor check anything in these paths
+* Create file ".monolinterignore" at the root folder of the monorepo with file/directory patterns to be ignored during module discovery. You can use these patterns to hide entire branches of the monorepo from monolinter or just specific directories.
+
+* The ignore patterns works as follows:
+  * Add each ignore pattern in a new line of the file
+  * '*' - matches a single level of dir
+  * '**' - matches any number of levels of a dir
+  * When a parent dir matches the ignore pattern, all its childs will be ignored
+
+* Example
+
+  * Repo structure
+
+```
+modules/
+  ⌞ auth-svc/
+  ⌞ todo-web/
+shared/
+  ⌞ utils/
+lib/test/external/
+  ⌞ legacy
+  ⌞ platform
+.monolinterignore
+```
+
+  * .monolinterignore
+
+```
+**/legacy
+modules/auth-svc
+shared
+```
+
+  * The following structure will be visible to monolinter
+
+````
+modules/
+  ⌞ todo-web/
+lib/test/external/
+  ⌞ platform
+```
 
 ### Rules
 

@@ -4,15 +4,13 @@ import fg from 'fast-glob';
 
 import { RuleResult } from './types/RuleResult';
 import { Module } from './types/Module';
-import { Config } from './types/Config';
-import { mergeConfigs, validateConfig } from './utils';
-import { DefaultConfig } from './defaultConfig';
+import { mergeConfigs, validateConfig, loadBaseConfig, loadIgnorePatterns } from './utils';
 // when registry is imported, all rules are registered at bootstrap
 import { allRules, enabledRules } from './rules/registry';
 
-const lint = (baseDir:string):RuleResult[] => {
+const lint = (baseDir:string, configFile:string|null):RuleResult[] => {
 
-  const baseConfig = loadBaseConfig(baseDir);
+  const baseConfig = loadBaseConfig(baseDir, configFile);
   const results:RuleResult[] = [];
 
   // check generic rules
@@ -32,7 +30,7 @@ const lint = (baseDir:string):RuleResult[] => {
   }
 
   // check modules
-  const modules = discoverModules(baseDir, baseConfig);
+  const modules = discoverModules(baseDir, configFile);
 
   // gather all modules for which a certain rule is enabled
   // Checking rules against modules
@@ -70,7 +68,9 @@ const lint = (baseDir:string):RuleResult[] => {
   return results;
 };
 
-const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
+const discoverModules = (baseDir:string, configFile:string|null):Module[] => {
+  const baseConfig = loadBaseConfig(baseDir, configFile);
+
   const patterns:string[] = [];
   const markers = baseConfig['module-markers'];
   if (!markers) {
@@ -81,8 +81,15 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
     patterns.push(`${baseDir}/**/${elem}`);
   });
 
+  const ignorePatterns = loadIgnorePatterns(baseDir);
+
   const entries = fg.sync(
-    patterns, { dot: true },
+    patterns, {
+      dot: true,
+      ignore: ignorePatterns,
+      globstar: true,
+      extglob: true,
+    },
   );
 
   const paths:string[] = [];
@@ -104,11 +111,9 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
     const modulePaths = baseModulePath.split('/');
     let path = '';
 
-    let skipModule = false;
     let moduleConfig = baseConfig;
 
     // iterate over path parts of the module for creating a merged config
-    // and checking if there is any .monolinterignore file
     for (let j = 0; j < modulePaths.length; j += 1) {
       const pathPart = modulePaths[j];
 
@@ -124,9 +129,9 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
       }
 
       // calculate merged config by looking at the module path hierarchy
-      const configFile = `${path}/.monolinter.json`;
-      if (fs.existsSync(configFile)) {
-        const cf = fs.readFileSync(configFile);
+      const configFile2 = `${path}/.monolinter.json`;
+      if (fs.existsSync(configFile2)) {
+        const cf = fs.readFileSync(configFile2);
         try {
           const loadedConfig = JSON.parse(cf.toString());
           if (loadedConfig['module-markers']) {
@@ -135,19 +140,9 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
           moduleConfig = mergeConfigs(moduleConfig, loadedConfig);
           validateConfig(moduleConfig);
         } catch (err) {
-          throw new Error(`Error loading ${configFile}. err=${err}`);
+          throw new Error(`Error loading ${configFile2}. err=${err}`);
         }
       }
-
-      // if .monolinterignore file in any place in path hierarchy, skip this module
-      if (fs.existsSync(`${path}/.monolinterignore`)) {
-        skipModule = true;
-        break;
-      }
-    }
-
-    if (skipModule) {
-      continue;
     }
 
     const erules = enabledRules(moduleConfig);
@@ -174,22 +169,4 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
   return modules;
 };
 
-const loadBaseConfig = (baseDir:string):Config => {
-  const cfile = `${baseDir}/.monolinter.json`;
-
-  let baseConfig = <Config>DefaultConfig;
-
-  if (fs.existsSync(cfile)) {
-    const cf = fs.readFileSync(cfile);
-    const loadedConfig = JSON.parse(cf.toString());
-    baseConfig = mergeConfigs(baseConfig, loadedConfig);
-
-  } else {
-    console.info(`File ".monolinter.json" not found in dir "${baseDir}". Using default configurations`);
-  }
-
-  return baseConfig;
-};
-
-export { lint, discoverModules, loadBaseConfig };
-
+export { lint, discoverModules };

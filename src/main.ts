@@ -5,7 +5,6 @@ import { hideBin } from 'yargs/helpers';
 
 import { lint } from './lint';
 
-
 const argv = yargs(hideBin(process.argv))
   .option('verbose', {
     alias: 'v',
@@ -19,6 +18,12 @@ const argv = yargs(hideBin(process.argv))
     description: 'Monorepo base dir',
     default: '.',
   })
+  .option('config', {
+    alias: 'c',
+    type: 'string',
+    description: 'Config file. Defaults to \'.monolinter.json\'',
+    default: '.monolinter.json',
+  })
 .parseSync();
 
 if (!argv.verbose) {
@@ -30,7 +35,7 @@ if (!fs.existsSync(argv.baseDir)) {
   process.exit(1);
 }
 
-const results = lint(argv.baseDir);
+const results = lint(argv.baseDir, argv.config);
 
 console.log(``);
 console.log(`Results:`);

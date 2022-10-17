@@ -1,10 +1,9 @@
-import { discoverModules, loadBaseConfig } from '../lint';
+import { discoverModules } from '../lint';
 
 import rule from './packagejson-same-name';
 
 const baseDir = 'src/rules/test-monorepo';
-const baseConfig = loadBaseConfig(baseDir);
-const modules = discoverModules(baseDir, baseConfig);
+const modules = discoverModules(baseDir, null);
 
 describe('packagejson-same-name', () => {
 

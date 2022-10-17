@@ -5,38 +5,19 @@ const baseDir = 'src/rules/test-monorepo';
 describe('lint', () => {
 
   it('discoverModules by marker', async () => {
-    const config = {
-      "module-markers": ["_thisisamodule"],
-      rules: {},
-    };
-    const results = discoverModules(baseDir, config);
+    const results = discoverModules(baseDir, '.monolinter2.json');
     expect(results).toHaveLength(1);
     expect(results[0].path.includes('group1')).toBeTruthy();
     expect(results[0].name).toEqual('mod3-svc');
-
-    config['module-markers'] = [];
-    const results2 = discoverModules(baseDir, config);
-    expect(results2).toHaveLength(0);
   });
 
   it('discoverModules by marker considering duplicate and ignoring folders', async () => {
-    const config = {
-      "module-markers": ["package.json", "serverless.yml"],
-      rules: {},
-    };
-    const results = discoverModules(baseDir, config);
+    const results = discoverModules(baseDir, null);
     expect(results).toHaveLength(7);
   });
 
   it('discoverModules and check config hierarchy', async () => {
-    const config = {
-      "module-markers": ["package.json", "serverless.yml"],
-      rules: {
-        "serverless-same-name": true,
-        "packagejson-same-name": true,
-      },
-    };
-    const results = discoverModules(baseDir, config);
+    const results = discoverModules(baseDir, null);
     expect(results).toHaveLength(7);
 
     expect(results[5].config.rules).toBeDefined();
@@ -53,7 +34,7 @@ describe('lint', () => {
   });
 
   it('lint test repo', async () => {
-    const results = lint(baseDir);
+    const results = lint(baseDir, null);
 
     expect(results.length > 5).toBeTruthy();
 
