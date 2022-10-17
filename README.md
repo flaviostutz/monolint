@@ -8,6 +8,8 @@ Some example of the rules are: check if all modules are inside a certain folder,
 
 Monolinter was implemented in an extensible way for creating more and more rules as needed, so if you new a new feature, contribute to our project! Read [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
+If you work or know a good public monorepo, please let us now so we can use it as a reference test for this tool!
+
 ## Usage
 
 * Simplest run

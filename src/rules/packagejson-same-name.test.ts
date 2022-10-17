@@ -10,7 +10,7 @@ describe('packagejson-same-name', () => {
 
   it('package.json with different name is invalid', async () => {
     const results = rule.checkModules(modules, baseDir);
-    expect(results).toHaveLength(4);
+    expect(results).toHaveLength(6);
     if (results) {
       expect(results[0].resource.includes('package.json')).toBeTruthy();
       expect(results[0].module?.name).toEqual('mod1-js');
@@ -27,7 +27,7 @@ describe('packagejson-same-name', () => {
       expect(results[3].resource.includes('package.json')).toBeTruthy();
       expect(results[3].module?.name).toEqual('mod5-thx');
       expect(results[3].valid).toBeFalsy();
-}
+    }
   });
 
 });

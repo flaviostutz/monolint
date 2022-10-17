@@ -14,6 +14,9 @@ const rule:Rule = {
       const module = modules[i];
 
       let packageJsonFile = 'package.json';
+      if (!module.config.rules) {
+        throw new Error('Config should have rules');
+      }
       const trules = module.config.rules['packagejson-same-name'];
       if (typeof trules !== 'boolean') {
         if (trules['package-json-file']) {

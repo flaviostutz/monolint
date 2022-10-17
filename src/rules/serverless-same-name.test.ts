@@ -10,7 +10,7 @@ describe('serverless-same-name', () => {
 
   it('serverless with different service name is invalid', async () => {
     const results = rule.checkModules(modules, baseDir);
-    expect(results).toHaveLength(3);
+    expect(results).toHaveLength(4);
     if (results) {
       expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
       expect(results[0].module?.name).toEqual('mod2-svc');

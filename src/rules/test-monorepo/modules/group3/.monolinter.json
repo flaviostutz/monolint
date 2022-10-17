@@ -1,0 +1,5 @@
+{
+    "rules": {
+        "packagejson-same-name": false
+    }
+}

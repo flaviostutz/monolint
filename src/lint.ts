@@ -5,66 +5,51 @@ import fg from 'fast-glob';
 import { RuleResult } from './types/RuleResult';
 import { Module } from './types/Module';
 import { Config } from './types/Config';
-import { mergeConfigs } from './utils';
+import { mergeConfigs, validateConfig } from './utils';
 import { DefaultConfig } from './defaultConfig';
-// when these rules are imported, they are registered in registry
-import r1 from './rules/serverless-same-name';
-import r2 from './rules/packagejson-same-name';
-import { register, allRules, enabledRules } from './registry';
+// when registry is imported, all rules are registered at bootstrap
+import { allRules, enabledRules } from './rules/registry';
 
 const lint = (baseDir:string):RuleResult[] => {
 
   const baseConfig = loadBaseConfig(baseDir);
-  console.debug(`Base config=${JSON.stringify(baseConfig)}`);
-
-  register(r1);
-  register(r2);
-
   const results:RuleResult[] = [];
 
   // check generic rules
-  console.debug('Checking base rules (outside modules)');
+  // Checking base rules (outside modules)
   const erules = enabledRules(baseConfig);
   for (let i = 0; i < erules.length; i += 1) {
     const rule = erules[i];
-    console.debug(`> Rule '${rule.name}'`);
     const ruleResults = rule.check(baseDir, baseConfig);
     if (ruleResults === null) {
-      // console.debug('  - skipped');
       continue;
     }
     for (let j = 0; j < ruleResults.length; j += 1) {
       const ruleResult = ruleResults[j];
       ruleResult.rule = rule.name;
       results.push(ruleResult);
-      // console.debug(`   - resource=${ruleResult.resource} valid=${ruleResult.valid}`);
     }
   }
 
-
   // check modules
   const modules = discoverModules(baseDir, baseConfig);
-  console.debug(`Modules found: ${JSON.stringify(modules.map((mm) => mm.name))}`);
 
   // gather all modules for which a certain rule is enabled
-  console.debug('Checking rules against modules');
+  // Checking rules against modules
   for (let i = 0; i < allRules.length; i += 1) {
     const rule = allRules[i];
     const ruleModules:Module[] = modules.filter((module) => {
       return module.enabledRules.includes(rule);
     });
 
-    console.debug(`> Checking rule '${rule.name}'`);
     const ruleResults = rule.checkModules(ruleModules, baseDir);
     if (ruleResults === null) {
-      // console.debug('   - skipped');
       continue;
     }
     for (let kk = 0; kk < ruleResults.length; kk += 1) {
       const ruleResult = ruleResults[kk];
       ruleResult.rule = rule.name;
       results.push(ruleResult);
-      // console.debug(`   - resource=${ruleResult.resource} valid=${ruleResult.valid}`);
     }
   }
 
@@ -87,7 +72,12 @@ const lint = (baseDir:string):RuleResult[] => {
 
 const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
   const patterns:string[] = [];
-  baseConfig['module-markers'].forEach((elem) => {
+  const markers = baseConfig['module-markers'];
+  if (!markers) {
+    throw new Error('Base config should have "module-markers" config');
+  }
+
+  markers.forEach((elem) => {
     patterns.push(`${baseDir}/**/${elem}`);
   });
 
@@ -128,8 +118,8 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
         path = `${path}/${pathPart}`;
       }
 
-      // only evaluate files starting from baseDir path
-      if (path.length < baseDir.length) {
+      // only evaluate files one level deeper in the monorepo
+      if (path.length < baseDir.length || path === baseDir) {
         continue;
       }
 
@@ -139,9 +129,13 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
         const cf = fs.readFileSync(configFile);
         try {
           const loadedConfig = JSON.parse(cf.toString());
+          if (loadedConfig['module-markers']) {
+            throw new Error("'module-markers' is only valid on monorepo root level configuration");
+          }
           moduleConfig = mergeConfigs(moduleConfig, loadedConfig);
+          validateConfig(moduleConfig);
         } catch (err) {
-          throw new Error(`Error loading config ${configFile}. err=${err}`);
+          throw new Error(`Error loading ${configFile}. err=${err}`);
         }
       }
 
@@ -197,5 +191,5 @@ const loadBaseConfig = (baseDir:string):Config => {
   return baseConfig;
 };
 
-
 export { lint, discoverModules, loadBaseConfig };
+
