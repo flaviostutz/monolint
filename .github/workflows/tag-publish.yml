@@ -1,11 +1,9 @@
 name: tag-publish
 
 on:
-  release:
-    types: [created]
-  # push:
-  #   tags:
-  #   - '*'
+  push:
+    tags:
+    - '*'
 
 jobs:
   build:
