@@ -27,7 +27,7 @@ const rule:Rule = {
           results.push({
             valid: false,
             resource: slsFile,
-            message: `"service" must be "${module.name}"`,
+            message: `Attribute 'service' should be '${module.name}'`,
             rule: rule.name,
             module,
           });

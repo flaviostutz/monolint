@@ -28,7 +28,7 @@ const rule:Rule = {
       if (!fs.existsSync(packageFile)) {
         continue;
       }
-      // console.debug(`Checking ${packageFile}`);
+
       try {
         const cf = fs.readFileSync(packageFile, 'utf8');
         const loadedPackage = JSON.parse(cf.toString());
@@ -36,7 +36,7 @@ const rule:Rule = {
           results.push({
             valid: false,
             resource: packageFile,
-            message: `"name" must be "${module.name}"`,
+            message: `Attribute 'name' should be '${module.name}'`,
             rule: rule.name,
             module,
           });

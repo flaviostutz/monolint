@@ -1,4 +1,4 @@
-import { loadBaseConfig } from './utils';
+import { loadBaseConfig } from './config';
 
 const baseDir = 'src/rules/test-monorepo';
 

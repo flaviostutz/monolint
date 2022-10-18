@@ -4,6 +4,7 @@ import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 
 import { lint } from './lint';
+import { renderResultsConsole } from './utils/console-renderer';
 
 const argv = yargs(hideBin(process.argv))
   .option('verbose', {
@@ -35,14 +36,8 @@ if (!fs.existsSync(argv.baseDir)) {
   process.exit(1);
 }
 
+// run linter
 const results = lint(argv.baseDir, argv.config);
 
-console.log(``);
-console.log(`Results:`);
-const presults = results.map((rr) => {
-  return { resource: rr.resource, valid: rr.valid, message: rr.message, module: rr.module?.name };
-});
-presults.forEach((pr) => {
-  console.log(`- ${JSON.stringify(pr)}`);
-});
-
+// show results
+renderResultsConsole(results);

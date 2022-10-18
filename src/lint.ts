@@ -4,7 +4,8 @@ import fg from 'fast-glob';
 
 import { RuleResult } from './types/RuleResult';
 import { Module } from './types/Module';
-import { mergeConfigs, validateConfig, loadBaseConfig, loadIgnorePatterns } from './utils';
+import { mergeConfigs, validateConfig, loadBaseConfig } from './utils/config';
+import { loadIgnorePatterns } from './utils/ignorefile';
 // when registry is imported, all rules are registered at bootstrap
 import { allRules, enabledRules } from './rules/registry';
 

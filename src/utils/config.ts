@@ -1,8 +1,8 @@
 import fs from 'fs';
 
-import { Config } from './types/Config';
-import { getRule } from './rules/registry';
-import { DefaultConfig } from './defaultConfig';
+import { Config } from '../types/Config';
+import { getRule } from '../rules/registry';
+import { DefaultConfig } from '../defaultConfig';
 
 const mergeConfigs = (parentConfig:Config, childConfig:Config):Config => {
   const mergedRules = { ...parentConfig.rules, ...childConfig.rules };
@@ -10,7 +10,6 @@ const mergeConfigs = (parentConfig:Config, childConfig:Config):Config => {
   config.rules = mergedRules;
   return config;
 };
-
 
 const validateConfig = (config: Config):void => {
   if (config.rules) {
@@ -50,20 +49,4 @@ const loadBaseConfig = (baseDir:string, configFile:string|null):Config => {
   throw new Error(`File "${configFile}" not found`);
 };
 
-const loadIgnorePatterns = (baseDir:string):string[] => {
-  const cfile = `${baseDir}/.monolinterignore`;
-  if (fs.existsSync(cfile)) {
-    const cf = fs.readFileSync(cfile);
-    const ignorePatterns = cf.toString().trim().split("\n");
-    const fi = ignorePatterns.filter((elem) => {
-      return elem.trim().length > 0 && !elem.trim().startsWith('#');
-    });
-    const fi2 = fi.map((elem) => {
-      return `${baseDir}/${elem}`;
-    });
-    return fi2;
-  }
-  return [];
-};
-
-export { mergeConfigs, validateConfig, loadBaseConfig, loadIgnorePatterns };
+export { mergeConfigs, validateConfig, loadBaseConfig };

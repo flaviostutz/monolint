@@ -11,3 +11,5 @@ lint:
 
 test:
 	npm run test
+
+all: lint build run test
