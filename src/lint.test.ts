@@ -1,23 +1,26 @@
 import { lint, discoverModules } from './lint';
+import { loadBaseConfig } from './utils/config';
 
 const baseDir = 'src/rules/test-monorepo';
+const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
+const baseConfig2 = loadBaseConfig(baseDir, '.monolint2.json');
 
 describe('lint', () => {
 
   it('discoverModules by marker', async () => {
-    const results = discoverModules(baseDir, '.monolint2.json');
+    const results = discoverModules(baseDir, baseConfig2);
     expect(results).toHaveLength(1);
     expect(results[0].path.includes('group1')).toBeTruthy();
     expect(results[0].name).toEqual('mod3-svc');
   });
 
   it('discoverModules by marker considering duplicate and ignoring folders', async () => {
-    const results = discoverModules(baseDir, null);
+    const results = discoverModules(baseDir, baseConfig);
     expect(results).toHaveLength(7);
   });
 
   it('discoverModules and check config hierarchy', async () => {
-    const results = discoverModules(baseDir, null);
+    const results = discoverModules(baseDir, baseConfig);
     expect(results).toHaveLength(7);
 
     expect(results[5].config.rules).toBeDefined();

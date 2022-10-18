@@ -4,6 +4,7 @@ import fg from 'fast-glob';
 
 import { RuleResult } from './types/RuleResult';
 import { Module } from './types/Module';
+import { Config } from './types/Config';
 import { mergeConfigs, validateConfig, loadBaseConfig } from './utils/config';
 import { loadIgnorePatterns } from './utils/ignorefile';
 // when registry is imported, all rules are registered at bootstrap
@@ -31,7 +32,7 @@ const lint = (baseDir:string, configFile:string|null):RuleResult[] => {
   }
 
   // check modules
-  const modules = discoverModules(baseDir, configFile);
+  const modules = discoverModules(baseDir, baseConfig);
 
   // gather all modules for which a certain rule is enabled
   // Checking rules against modules
@@ -69,9 +70,7 @@ const lint = (baseDir:string, configFile:string|null):RuleResult[] => {
   return results;
 };
 
-const discoverModules = (baseDir:string, configFile:string|null):Module[] => {
-  const baseConfig = loadBaseConfig(baseDir, configFile);
-
+const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
   const patterns:string[] = [];
   const markers = baseConfig['module-markers'];
   if (!markers) {

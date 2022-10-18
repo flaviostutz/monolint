@@ -23,7 +23,7 @@ const rule:Rule = {
       try {
         const cf = fs.readFileSync(slsFile, 'utf8');
         const loadedSls = <any>yaml.load(cf);
-        if (loadedSls.service !== module.name) {
+        if (!(<string>loadedSls.service).endsWith(module.name)) {
           results.push({
             valid: false,
             resource: slsFile,

@@ -32,7 +32,7 @@ const rule:Rule = {
       try {
         const cf = fs.readFileSync(packageFile, 'utf8');
         const loadedPackage = JSON.parse(cf.toString());
-        if (loadedPackage.name !== module.name) {
+        if (!(<string>loadedPackage.name).endsWith(module.name)) {
           results.push({
             valid: false,
             resource: packageFile,

@@ -1,9 +1,11 @@
 import { discoverModules } from '../lint';
+import { loadBaseConfig } from '../utils/config';
 
 import rule from './serverless-same-name';
 
 const baseDir = 'src/rules/test-monorepo';
-const modules = discoverModules(baseDir, null);
+const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
+const modules = discoverModules(baseDir, baseConfig);
 
 describe('serverless-same-name', () => {
 
