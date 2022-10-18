@@ -70,7 +70,7 @@ const renderResultsConsole = (ruleResults:RuleResult[]):void => {
     console.log(``);
   });
 
-  console.log(`${chalk.red('✖')} ${chalk.red(failRes.length)} ${chalk.red('problems found')}`);
+  console.log(`${chalk.bold.red('✖')} ${chalk.bold.red(failRes.length)} ${chalk.bold.red('problems found')}`);
 };
 
 export { groupByResource, renderResultsConsole };
