@@ -9,7 +9,11 @@ lint:
 	npx tsc -noEmit --skipLibCheck
 	npm audit --audit-level high
 
-test:
+unit-test:
 	npm run test
+
+publish:
+	npm version patch
+	npm publish
 
 all: lint build run test

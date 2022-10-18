@@ -71,6 +71,10 @@ const renderResultsConsole = (ruleResults:RuleResult[]):void => {
   });
 
   console.log(`${chalk.bold.red('✖')} ${chalk.bold.red(failRes.length)} ${chalk.bold.red('problems found')}`);
+
+  if (failRes.length > 0) {
+    process.exit(1);
+  }
 };
 
 export { groupByResource, renderResultsConsole };
