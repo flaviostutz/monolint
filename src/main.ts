@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+
+// eslint-disable-next-line node/shebang
 import * as fs from 'fs';
 
 import yargs from 'yargs/yargs';

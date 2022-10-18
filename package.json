@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Monorepo linter for checking folder structure and file contents",
   "main": "main.js",
+  "bin": "dist/main.js",
   "scripts": {
     "build": "esbuild src/main.ts --platform=node --bundle --outfile=dist/bundle.js",
     "test": "jest"

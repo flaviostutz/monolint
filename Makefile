@@ -1,5 +1,6 @@
 build: 
 	npm ci
+	npx esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js
 
 run:
 	npx ts-node src/main.ts --base-dir=./src/rules/test-monorepo
