@@ -1,5 +1,5 @@
 build: 
-	npm run build
+	npm ci
 
 run:
 	npx ts-node src/main.ts --base-dir=./src/rules/test-monorepo
