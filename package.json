@@ -1,5 +1,5 @@
 {
-  "name": "monolinter",
+  "name": "monolint",
   "version": "1.0.0",
   "description": "Monorepo linter for checking folder structure and file contents",
   "main": "main.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flaviostutz/monolinter.git"
+    "url": "git+https://github.com/flaviostutz/monolint.git"
   },
   "author": "flaviostutz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/flaviostutz/monolinter/issues"
+    "url": "https://github.com/flaviostutz/monolint/issues"
   },
-  "homepage": "https://github.com/flaviostutz/monolinter#readme",
+  "homepage": "https://github.com/flaviostutz/monolint#readme",
   "devDependencies": {
     "@shopify/eslint-plugin": "^42.0.1",
     "@types/jest": "^29.1.2",

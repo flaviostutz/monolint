@@ -1,4 +1,4 @@
-# Monolinter
+# Monolint
 
 Linter for monorepos. Checks folder structure, module contents, file contents and naming conventions of a monorepo.
 
@@ -6,7 +6,7 @@ This tool will look for modules inside the repo (which are folders with a certai
 
 Some example of the rules are: check if all modules are inside a certain folder, check if module names comply to a specific naming convention, check if certain file between modules have the same contents, check if github actions workflow name contains the name of the corresponding module...
 
-Monolinter was implemented in an extensible way for creating more and more rules as needed, so if you new a new feature, contribute to our project! Read [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+Monolint was implemented in an extensible way for creating more and more rules as needed, so if you new a new feature, contribute to our project! Read [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
 If you work or know a good public monorepo, please let us now so we can use it as a reference test for this tool!
 
@@ -14,12 +14,12 @@ If you work or know a good public monorepo, please let us now so we can use it a
 
 * Simplest run
   * Checkout an example monorepo at https://github.com/vsavkin/large-monorepo
-  * Execute `npx monolinter .` inside the repo dir
+  * Execute `npx monolint .` inside the repo dir
   * The checks will use default parameters
   * Check the validation results
 
 * Customize rules
-  * Create ".monolinter.json" at the root of your monorepo with contents
+  * Create ".monolint.json" at the root of your monorepo with contents
 
 ```json
 {
@@ -30,7 +30,7 @@ If you work or know a good public monorepo, please let us now so we can use it a
 }
 ```
 
-  * Execute `npx monolinter .`
+  * Execute `npx monolint .`
     * In this example, it will search for any folder that has a file "package.json" and consider it a module
     * Then it will run all default enabled rules, but will turn off rule "packagejson-same-name", which enforces the "name" property of the package.json contents to have the same name as the module folder
   * See results
@@ -39,9 +39,9 @@ If you work or know a good public monorepo, please let us now so we can use it a
 
 * The name of the discovered modules is the same as its folder. So, a module at "group1/module-black" will have the name "module-black". The module name is used by various rules and on the results report to help you locate where the error is.
 
-### __.monolinter.json__
+### __.monolint.json__
 
-* Create this file for configuring monolinter
+* Create this file for configuring monolint
 * This file normally is at the root of our monorepo, but you can place it in intermediary folders or in the module itself to setup specific configurations for the different parts of the monorepo
 
 * The structure of this file is
@@ -63,17 +63,17 @@ If you work or know a good public monorepo, please let us now so we can use it a
 
 * This file can be placed in any folder to define specific configurations/rules for different branches of the monorepo.
   * Example:
-        /.monolinter.json - enables rule "serverless-same-name"
+        /.monolint.json - enables rule "serverless-same-name"
         /modules/group1
-                       /.monolinter.json - disables rule "serverless-same-name"
+                       /.monolint.json - disables rule "serverless-same-name"
                        /module-test1 -> won't be checked by "serverless-same-name"
                        /module-test2 -> won't be checked by "serverless-same-name"
                 /module-test3 -> will be checked by "serverless-same-name"
 
 
-### __.monolinterignore__
+### __.monolintignore__
 
-* Create file ".monolinterignore" at the root folder of the monorepo with file/directory patterns to be ignored during module discovery. You can use these patterns to hide entire branches of the monorepo from monolinter or just specific directories.
+* Create file ".monolintignore" at the root folder of the monorepo with file/directory patterns to be ignored during module discovery. You can use these patterns to hide entire branches of the monorepo from monolint or just specific directories.
 
 * The ignore patterns works as follows:
   * Add each ignore pattern in a new line of the file
@@ -94,10 +94,10 @@ shared/
 lib/test/external/
   ⌞ legacy
   ⌞ platform
-.monolinterignore
+.monolintignore
 ```
 
-  * .monolinterignore
+  * .monolintignore
 
 ```
 **/legacy
@@ -105,7 +105,7 @@ modules/auth-svc
 shared
 ```
 
-  * The following structure will be visible to monolinter
+  * The following structure will be visible to monolint
 
 ````
 modules/
@@ -116,7 +116,7 @@ lib/test/external/
 
 ### Rules
 
-These are the rules you can enable/disable in .monolinter.json configuration file.
+These are the rules you can enable/disable in .monolint.json configuration file.
 
 #### __packagejson-same-name__
 

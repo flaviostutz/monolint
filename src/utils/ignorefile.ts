@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 const loadIgnorePatterns = (baseDir:string):string[] => {
-  const cfile = `${baseDir}/.monolinterignore`;
+  const cfile = `${baseDir}/.monolintignore`;
   if (fs.existsSync(cfile)) {
     const cf = fs.readFileSync(cfile);
     const ignorePatterns = cf.toString().trim().split("\n");

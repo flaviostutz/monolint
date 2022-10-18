@@ -130,7 +130,7 @@ const discoverModules = (baseDir:string, configFile:string|null):Module[] => {
       }
 
       // calculate merged config by looking at the module path hierarchy
-      const configFile2 = `${path}/.monolinter.json`;
+      const configFile2 = `${path}/.monolint.json`;
       if (fs.existsSync(configFile2)) {
         const cf = fs.readFileSync(configFile2);
         try {

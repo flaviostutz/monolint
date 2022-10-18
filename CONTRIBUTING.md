@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-Thank you for being interested in helping with Monolinter!
+Thank you for being interested in helping with Monolint!
 
 ## The best way to start
 
@@ -18,7 +18,7 @@ Thank you for being interested in helping with Monolinter!
 
 * If you find any bug, create a new Issue describing what is the structure of your monorepo and what kind of error you had. If possible, send a link of your repo, or a screenshot of its structure.
 
-* If you want a new feature, open an Issue and explain your real use case, the kind of problems you have nowadays and how you think Monolinter could help you in practice.
+* If you want a new feature, open an Issue and explain your real use case, the kind of problems you have nowadays and how you think Monolint could help you in practice.
 
 ## Prepare your development environment
 

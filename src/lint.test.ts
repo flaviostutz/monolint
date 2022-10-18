@@ -5,7 +5,7 @@ const baseDir = 'src/rules/test-monorepo';
 describe('lint', () => {
 
   it('discoverModules by marker', async () => {
-    const results = discoverModules(baseDir, '.monolinter2.json');
+    const results = discoverModules(baseDir, '.monolint2.json');
     expect(results).toHaveLength(1);
     expect(results[0].path.includes('group1')).toBeTruthy();
     expect(results[0].name).toEqual('mod3-svc');

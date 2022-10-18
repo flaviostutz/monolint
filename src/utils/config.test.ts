@@ -4,7 +4,7 @@ const baseDir = 'src/rules/test-monorepo';
 
 describe('utils', () => {
 
-  it('loadBaseConfig .monolinter.json', async () => {
+  it('loadBaseConfig .monolint.json', async () => {
     const config = loadBaseConfig(baseDir, null);
     expect(config['module-markers']).toEqual(['package.json', 'serverless.yml', 'go.mod']);
     expect(config.rules).toBeDefined();
@@ -12,12 +12,12 @@ describe('utils', () => {
       expect(config.rules['serverless-same-name']).toBeTruthy();
     }
 
-    const config2 = loadBaseConfig(baseDir, '.monolinter.json');
+    const config2 = loadBaseConfig(baseDir, '.monolint.json');
     expect(config).toEqual(config2);
   });
 
-  it('loadBaseConfig .monolinter2.json', async () => {
-    const config = loadBaseConfig(baseDir, '.monolinter2.json');
+  it('loadBaseConfig .monolint2.json', async () => {
+    const config = loadBaseConfig(baseDir, '.monolint2.json');
     expect(config['module-markers']).toEqual(['_thisisamodule']);
     expect(config.rules).toBeDefined();
     if (config.rules) {

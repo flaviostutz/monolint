@@ -28,7 +28,7 @@ const loadBaseConfig = (baseDir:string, configFile:string|null):Config => {
 
   let cfile = configFile;
   if (cfile == null) {
-    cfile = '.monolinter.json';
+    cfile = '.monolint.json';
   }
 
   if (fs.existsSync(`${baseDir}/${cfile}`)) {
@@ -41,7 +41,7 @@ const loadBaseConfig = (baseDir:string, configFile:string|null):Config => {
     return loadedConfig;
   }
 
-  if (cfile === '.monolinter.json') {
+  if (cfile === '.monolint.json') {
     console.info(`File "${configFile}" not found. Using default configurations`);
     return <Config>DefaultConfig;
   }
