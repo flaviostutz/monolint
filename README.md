@@ -13,7 +13,8 @@ If you work or know a good public monorepo, please let us now so we can use it a
 ## Usage
 
 * Simplest run
-  * Execute `npx monolinter .` at the root of your monorepo
+  * Checkout an example monorepo at https://github.com/vsavkin/large-monorepo
+  * Execute `npx monolinter .` inside the repo dir
   * The checks will use default parameters
   * Check the validation results
 
