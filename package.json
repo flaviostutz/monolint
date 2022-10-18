@@ -1,6 +1,6 @@
 {
   "name": "monolint",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "description": "Monorepo linter for checking folder structure and file contents",
   "main": "main.js",
   "bin": "dist/main.js",
