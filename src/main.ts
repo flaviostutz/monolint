@@ -6,8 +6,9 @@ import * as fs from 'fs';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { lint } from './lint';
+import { discoverModules, lint } from './lint';
 import { renderResultsConsole } from './utils/console-renderer';
+import { loadBaseConfig } from './utils/config';
 
 const argv = yargs(hideBin(process.argv))
   .option('verbose', {
@@ -43,4 +44,9 @@ if (!fs.existsSync(argv.baseDir)) {
 const results = lint(argv.baseDir, argv.config);
 
 // show results
-renderResultsConsole(results);
+if (argv.verbose) {
+  const modules = discoverModules(argv.baseDir, loadBaseConfig(argv.baseDir, argv.config));
+  console.log(`Found ${modules.length} modules: ${modules.map((mm) => mm.path).toString()}`);
+}
+
+renderResultsConsole(results, argv.verbose);

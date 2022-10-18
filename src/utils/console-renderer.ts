@@ -48,19 +48,38 @@ const groupByResource = (ruleResults:RuleResult[]):ResourceResult[] => {
   return resourceList;
 };
 
-const renderResultsConsole = (ruleResults:RuleResult[]):void => {
+const renderResultsConsole = (ruleResults:RuleResult[], verbose:boolean):void => {
   console.log(``);
 
   const byRes = groupByResource(ruleResults);
   const ordByRes = byRes.sort((aa, bb) => {
-    if (aa.resource < bb.resource) { return 1; }
-    if (aa.resource > bb.resource) { return -1; }
-    return 0;
+    if (aa.valid === bb.valid) {
+      if (aa.resource < bb.resource) { return 1; }
+      if (aa.resource > bb.resource) { return -1; }
+      return 0;
+    }
+    if (aa.valid) { return 1; }
+    return -1;
+  });
+
+
+  const successRes = ordByRes.filter((rr) => {
+    return rr.valid;
   });
 
   const failRes = ordByRes.filter((rr) => {
     return !rr.valid;
   });
+
+  if (verbose) {
+    successRes.forEach((rr) => {
+      console.log(`${chalk.underline(rr.resource)}`);
+      rr.ruleResults.forEach((ruleResult) => {
+        console.log(`  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`);
+      });
+      console.log(``);
+    });
+  }
 
   failRes.forEach((rr) => {
     console.log(`${chalk.underline(rr.resource)}`);
@@ -69,6 +88,10 @@ const renderResultsConsole = (ruleResults:RuleResult[]):void => {
     });
     console.log(``);
   });
+
+  if (verbose) {
+    console.log(`${chalk.bold.green('✓')} ${chalk.bold.green(successRes.length)} ${chalk.bold.green('checks successful')}`);
+  }
 
   console.log(`${chalk.bold.red('✖')} ${chalk.bold.red(failRes.length)} ${chalk.bold.red('problems found')}`);
 
