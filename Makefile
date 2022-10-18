@@ -13,9 +13,9 @@ unit-tests:
 	npm run test
 
 publish:
-	npm version patch
 	git config --global user.email "flaviostutz@gmail.com"
 	git config --global user.name "Flávio Stutz"
+	npm version patch
 	npm publish
 
 all: lint build run test
