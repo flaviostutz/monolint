@@ -3,5 +3,6 @@ export const DefaultConfig = {
   rules: {
     "serverless-same-name": true,
     "packagejson-same-name": true,
+    "module-name-regex": true,
   },
 };

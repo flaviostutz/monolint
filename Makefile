@@ -21,3 +21,7 @@ publish:
 	npm publish
 
 all: lint build run test
+
+rules-doc:
+	npx ts-node src/rules-doc.ts
+

@@ -12,14 +12,17 @@ const mergeConfigs = (parentConfig:Config, childConfig:Config):Config => {
 };
 
 const validateConfig = (config: Config):void => {
-  if (config.rules) {
-    for (const ruleName in config.rules) {
-      if (Object.prototype.hasOwnProperty.call(config.rules, ruleName)) {
-        const rule = getRule(ruleName);
-        if (!rule) {
-          throw new Error(`Rule '${ruleName}' is not valid`);
-        }
+  if (!config.rules) {
+    throw new Error(`Config has no rule configurations`);
+  }
+  for (const ruleName in config.rules) {
+    if (Object.prototype.hasOwnProperty.call(config.rules, ruleName)) {
+      const rule = getRule(ruleName);
+      if (!rule) {
+        throw new Error(`Rule '${ruleName}' is not valid`);
       }
+      // const ruleConfig = config.rules[ruleName];
+      // rule.validateConfig(ruleConfig);
     }
   }
 };

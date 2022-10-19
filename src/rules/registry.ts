@@ -3,6 +3,7 @@ import { Config } from '../types/Config';
 
 import r1 from './serverless-same-name';
 import r2 from './packagejson-same-name';
+import r3 from './module-name-regex';
 
 const allRules:Rule[] = [];
 
@@ -13,6 +14,7 @@ const register = (rule:Rule):void => {
 // register all rules available
 register(r1);
 register(r2);
+register(r3);
 
 const getRule = (name:string):Rule|null => {
   const fr = allRules.filter((rule) => {

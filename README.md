@@ -10,6 +10,8 @@ Monolint was implemented in an extensible way for creating more and more rules a
 
 If you work or know a good public monorepo, please let us now so we can use it as a reference test for this tool!
 
+[Check rules documentation here](rules.md)
+
 ## Usage
 
 * Simplest run
@@ -107,7 +109,7 @@ shared
 
   * The following structure will be visible to monolint
 
-````
+```
 modules/
   ⌞ todo-web/
 lib/test/external/
@@ -116,13 +118,6 @@ lib/test/external/
 
 ### Rules
 
-These are the rules you can enable/disable in .monolint.json configuration file.
+Each check that you want to do in the monorepo is done by a "rule". You can enable/disable/configure then in .monolint.json configuration file.
 
-#### __packagejson-same-name__
-
-* Checks if the attribute "name" of package.json is the same as the name of the module.
-
-#### __serverless-same-name__
-
-* Checks if the attribute "service" of serverless.yml is the same as the name of the module.
-
+[Check rules documentation here](rules.md)
