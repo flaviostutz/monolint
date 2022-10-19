@@ -1,5 +1,3 @@
-import { privateEncrypt } from 'crypto';
-
 import { lint, discoverModules } from './lint';
 import { loadBaseConfig } from './utils/config';
 
