@@ -9,7 +9,7 @@ module.exports = {
       },
     ],
   },
-  collectCoverage: false,
+  collectCoverage: true,
   collectCoverageFrom: ["./src/**"],
   coverageThreshold: {
     global: {
