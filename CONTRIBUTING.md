@@ -34,7 +34,7 @@ make rules-doc
 
 - Install npm and "make" on your machine
 - Git clone this repo
-- Type `make run` to see a first run
+- Type `make run` to see a first run with success and errors examples
 - Use preferrebly VSCode with ESLint plugin installed so linting with auto fix will be available
 
 ## Pipeline and Publishing to NPM
