@@ -103,8 +103,8 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
   for (let i = 0; i < entries.length; i += 1) {
     const elem = entries[i];
 
-    const baseModulePath = elem.substring(0, elem.lastIndexOf("/"));
-    const moduleName = baseModulePath.substring(baseModulePath.lastIndexOf("/") + 1, elem.lastIndexOf("/"));
+    const baseModulePath = elem.substring(0, elem.lastIndexOf('/'));
+    const moduleName = baseModulePath.substring(baseModulePath.lastIndexOf('/') + 1, elem.lastIndexOf('/'));
 
     // check if this module was already added before
     if (paths.includes(baseModulePath)) {

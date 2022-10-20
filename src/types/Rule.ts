@@ -1,7 +1,7 @@
-import { Module } from "./Module";
-import { Config } from "./Config";
-import { RuleResult } from "./RuleResult";
-import { RuleExample } from "./RuleExample";
+import { Module } from './Module';
+import { Config } from './Config';
+import { RuleResult } from './RuleResult';
+import { RuleExample } from './RuleExample';
 
 export interface Rule {
 

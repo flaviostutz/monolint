@@ -1,5 +1,5 @@
-import { Config } from "./Config";
-import { RuleConfig } from "./RuleConfig";
+import { Config } from './Config';
+import { RuleConfig } from './RuleConfig';
 
 export type Module = {
     path: string,

@@ -11,6 +11,9 @@ lint:
 	npx tsc -noEmit --skipLibCheck
 	npm audit --audit-level high
 
+lint-fix:
+	npx eslint . --ext .ts --fix
+
 unit-tests:
 	npm run test
 

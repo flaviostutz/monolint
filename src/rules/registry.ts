@@ -5,9 +5,9 @@ import r1 from './serverless-same-name';
 import r2 from './packagejson-same-name';
 import r3 from './module-name-regex';
 
-const allRules:Rule[] = [];
+const allRules: Rule[] = [];
 
-const register = (rule:Rule):void => {
+const register = (rule: Rule): void => {
   allRules.push(rule);
 };
 
@@ -16,7 +16,7 @@ register(r1);
 register(r2);
 register(r3);
 
-const getRule = (name:string):Rule|null => {
+const getRule = (name: string): Rule | null => {
   const fr = allRules.filter((rule) => {
     return rule.name === name;
   });
@@ -26,7 +26,7 @@ const getRule = (name:string):Rule|null => {
   return null;
 };
 
-const enabledRules = (config:Config):Rule[] => {
+const enabledRules = (config: Config): Rule[] => {
   return allRules.filter((rule) => {
     return config.rules && config.rules[rule.name];
   });

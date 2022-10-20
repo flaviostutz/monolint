@@ -1,4 +1,4 @@
-import { Rule } from "./Rule";
+import { Rule } from './Rule';
 
 export type RuleConfig = {
     rule: Rule,

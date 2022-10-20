@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { RuleResult } from "../types/RuleResult";
+import { RuleResult } from '../types/RuleResult';
 
 type ResourceResult = {
     resource: string,
@@ -49,7 +49,7 @@ const groupByResource = (ruleResults:RuleResult[]):ResourceResult[] => {
 };
 
 const renderResultsConsole = (ruleResults:RuleResult[], verbose:boolean):void => {
-  console.log(``);
+  console.log('');
 
   const byRes = groupByResource(ruleResults);
   const ordByRes = byRes.sort((aa, bb) => {
@@ -77,7 +77,7 @@ const renderResultsConsole = (ruleResults:RuleResult[], verbose:boolean):void =>
       rr.ruleResults.forEach((ruleResult) => {
         console.log(`  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`);
       });
-      console.log(``);
+      console.log('');
     });
   }
 
@@ -86,7 +86,7 @@ const renderResultsConsole = (ruleResults:RuleResult[], verbose:boolean):void =>
     rr.ruleResults.forEach((ruleResult) => {
       console.log(`  ${chalk.red('error')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`);
     });
-    console.log(``);
+    console.log('');
   });
 
   if (verbose) {

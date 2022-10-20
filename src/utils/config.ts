@@ -13,7 +13,7 @@ const mergeConfigs = (parentConfig:Config, childConfig:Config):Config => {
 
 const validateConfig = (config: Config):void => {
   if (!config.rules) {
-    throw new Error(`Config has no rule configurations`);
+    throw new Error('Config has no rule configurations');
   }
   for (const ruleName in config.rules) {
     if (Object.prototype.hasOwnProperty.call(config.rules, ruleName)) {

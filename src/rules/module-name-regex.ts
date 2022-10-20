@@ -3,7 +3,7 @@ import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 import { RuleExample } from '../types/RuleExample';
 
-const rule:Rule = {
+const rule: Rule = {
   name: 'module-name-regex',
 
   checkModules: (modules: Module[]): RuleResult[] | null => {
@@ -63,7 +63,8 @@ const rule:Rule = {
   docExampleConfigs(): RuleExample[] {
     return [
       {
-        description: 'Activates this rule with default regex "[a-z]+[a-z0-9-_]{4,12}"',
+        description:
+          'Activates this rule with default regex "[a-z]+[a-z0-9-_]{4,12}"',
         config: true,
       },
       {
