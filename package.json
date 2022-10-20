@@ -2,10 +2,13 @@
   "name": "monolint",
   "version": "0.0.5",
   "description": "Monorepo linter for checking folder structure and file contents",
-  "main": "main.js",
+  "main": "dist/main.js",
   "bin": "dist/main.js",
+  "files": [
+      "dist/main.js"
+  ],
   "scripts": {
-    "build": "esbuild src/main.ts --platform=node --bundle --outfile=dist/bundle.js",
+    "build": "esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js",
     "test": "jest"
   },
   "repository": {

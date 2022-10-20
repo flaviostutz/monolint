@@ -1,6 +1,7 @@
 import { Module } from "./Module";
 import { Config } from "./Config";
 import { RuleResult } from "./RuleResult";
+import { RuleExample } from "./RuleExample";
 
 export interface Rule {
 
@@ -26,10 +27,23 @@ export interface Rule {
      *                                  rule doesn't support base checks, simply
      *                                  return null to indicate that they were skipped
      */
-     check(baseDir:string, config?: Config): RuleResult[] | null;
+    check(baseDir:string, config?: Config): RuleResult[] | null;
+
+    /**
+     * Returns a documentation markdown for this rule
+     * If you update this, make sure to run "make rules-doc" so
+     * file "rules.md" with recent updates will be recreated
+     */
+    docMarkdown():string
+
+    /**
+     * Returns one or more examples of configurations
+     */
+     docExampleConfigs(): RuleExample[];
 
     /**
      * The name of this rule
      */
     name:string
+
 }

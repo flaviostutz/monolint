@@ -41,17 +41,47 @@ describe('lint', () => {
 
     expect(results.length > 5).toBeTruthy();
 
-    expect(results[0].resource.includes('package.json')).toBeTruthy();
-    expect(results[0].module?.name).toEqual('mod1-js');
-    expect(results[0].valid).toBeFalsy();
+    let checks = 5;
 
-    expect(results[1].resource.includes('serverless.yml')).toBeTruthy();
-    expect(results[1].module?.name).toEqual('mod2-svc');
-    expect(results[1].valid).toBeFalsy();
+    for (let i = 0; i < results.length; i += 1) {
+      const result = results[i];
 
-    expect(results[2].resource.includes('package.json')).toBeTruthy();
-    expect(results[2].module?.name).toEqual('mod4-svc');
-    expect(results[2].valid).toBeTruthy();
+      if (result.resource === 'src/rules/test-monorepo/modules/mod1-js' &&
+          result.rule === 'module-name-regex') {
+        expect(result.module?.name).toEqual('mod1-js');
+        expect(result.valid).toBeTruthy();
+        checks -= 1;
+      }
+
+      if (result.resource === 'src/rules/test-monorepo/modules/mod1-js/package.json' &&
+          result.rule === 'packagejson-same-name') {
+        expect(result.module?.name).toEqual('mod1-js');
+        expect(result.valid).toBeFalsy();
+        checks -= 1;
+      }
+
+      if (result.resource === 'src/rules/test-monorepo/modules/group3/group3a/mod7-xyz' &&
+          result.rule === 'module-name-regex') {
+        expect(result.module?.name).toEqual('mod7-xyz');
+        expect(result.valid).toBeFalsy();
+        checks -= 1;
+      }
+
+      if (result.resource === 'src/rules/test-monorepo/modules/group3/group3a/mod6-abc' &&
+          result.rule === 'module-name-regex') {
+        expect(result.module?.name).toEqual('mod6-abc');
+        expect(result.valid).toBeTruthy();
+        checks -= 1;
+      }
+
+      if (result.resource === 'src/rules/test-monorepo/modules/mod5-thx/serverless.yml' &&
+          result.rule === 'serverless-same-name') {
+        expect(result.module?.name).toEqual('mod5-thx');
+        expect(result.valid).toBeTruthy();
+        checks -= 1;
+      }
+    }
+    expect(checks).toBe(0);
   });
 
 });

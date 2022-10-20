@@ -5,6 +5,7 @@ import fg from 'fast-glob';
 import { RuleResult } from './types/RuleResult';
 import { Module } from './types/Module';
 import { Config } from './types/Config';
+import { RuleConfig } from './types/RuleConfig';
 import { mergeConfigs, validateConfig, loadBaseConfig } from './utils/config';
 import { loadIgnorePatterns } from './utils/ignorefile';
 // when registry is imported, all rules are registered at bootstrap
@@ -39,17 +40,21 @@ const lint = (baseDir:string, configFile:string|null):RuleResult[] => {
   for (let i = 0; i < allRules.length; i += 1) {
     const rule = allRules[i];
     const ruleModules:Module[] = modules.filter((module) => {
-      return module.enabledRules.includes(rule);
+      return rule.name in module.enabledRules;
     });
 
-    const ruleResults = rule.checkModules(ruleModules, baseDir);
-    if (ruleResults === null) {
-      continue;
-    }
-    for (let kk = 0; kk < ruleResults.length; kk += 1) {
-      const ruleResult = ruleResults[kk];
-      ruleResult.rule = rule.name;
-      results.push(ruleResult);
+    try {
+      const ruleResults = rule.checkModules(ruleModules, baseDir);
+      if (ruleResults === null) {
+        continue;
+      }
+      for (let kk = 0; kk < ruleResults.length; kk += 1) {
+        const ruleResult = ruleResults[kk];
+        ruleResult.rule = rule.name;
+        results.push(ruleResult);
+      }
+    } catch (err) {
+      throw new Error(`Error checking rule ${rule.name}: ${err}`);
     }
   }
 
@@ -146,12 +151,22 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
     }
 
     const erules = enabledRules(moduleConfig);
+    const ruleConfigs:Record<string, RuleConfig> = {};
+    for (let j = 0; j < erules.length; j += 1) {
+      const erule = erules[j];
+      if (!moduleConfig.rules) {
+        throw new Error('Rules not found in config');
+      }
+      const moduleRuleConfig = moduleConfig.rules[erule.name];
+      ruleConfigs[erule.name] = { rule: erules[j], ruleConfig: moduleRuleConfig };
+    }
+
 
     modules.push({
       path: baseModulePath,
       name: moduleName,
       config: moduleConfig,
-      enabledRules: erules,
+      enabledRules: ruleConfigs,
     });
   }
 

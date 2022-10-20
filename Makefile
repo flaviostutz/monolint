@@ -1,6 +1,6 @@
 build: 
 	npm ci
-	npx esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js
+	npm run build
 
 run:
 	npx ts-node src/main.ts --base-dir=./src/rules/test-monorepo --verbose
@@ -21,3 +21,7 @@ publish:
 	npm publish
 
 all: lint build run test
+
+rules-doc:
+	npx ts-node src/rules-doc.ts
+

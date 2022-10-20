@@ -3,11 +3,12 @@ import * as fs from 'fs';
 import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
+import { RuleExample } from '../types/RuleExample';
 
 const rule:Rule = {
   name: 'packagejson-same-name',
 
-  checkModules: (modules: Module[]): RuleResult[]|null => {
+  checkModules: (modules: Module[]): RuleResult[] | null => {
     const results: RuleResult[] = [];
 
     for (let i = 0; i < modules.length; i += 1) {
@@ -63,8 +64,18 @@ const rule:Rule = {
 
     return results;
   },
-  check(): RuleResult[]|null {
+  check(): RuleResult[] | null {
     return null;
+  },
+  docMarkdown(): string {
+    return '* Check if "name" attribute of the package.json file equals (or ends with) the name of the module';
+  },
+  docExampleConfigs(): RuleExample[] {
+    return [
+      {
+        description: 'Deactivates this rule',
+        config: false,
+      }];
   },
 };
 
