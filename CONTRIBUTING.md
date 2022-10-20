@@ -5,9 +5,19 @@ Thank you for being interested in helping with Monolint!
 ## The best way to start
 
 - Look at the "Issues" and choose something to implement
-- Fork this project to your account
-- Implement it, create unit tests and documentation
-- Create a PR after you complete it to `main` branch
+
+* Fork this project to your account
+
+- Implement it, create unit tests and run `make rules-doc` to update documentation
+- Create a PR after you complete it to master branch
+- Use make targets for common tasks (they are the same that are run during pipelines)
+
+```sh
+make build
+make lint
+make unit-tests
+make rules-doc
+```
 
 ## Questions and discussions
 
@@ -24,7 +34,7 @@ Thank you for being interested in helping with Monolint!
 
 - Install npm and "make" on your machine
 - Git clone this repo
-- Type `make all` to see a first run
+- Type `make run` to see a first run
 - Use preferrebly VSCode with ESLint plugin installed so linting with auto fix will be available
 
 ## Pipeline and Publishing to NPM
