@@ -3,7 +3,7 @@ import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 import { RuleExample } from '../types/RuleExample';
 
-const rule:Rule = {
+const rule: Rule = {
   name: 'module-name-regex',
 
   checkModules: (modules: Module[]): RuleResult[] | null => {

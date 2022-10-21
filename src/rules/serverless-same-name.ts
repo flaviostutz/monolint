@@ -7,7 +7,7 @@ import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 import { RuleExample } from '../types/RuleExample';
 
-const rule:Rule = {
+const rule: Rule = {
   name: 'serverless-same-name',
 
   checkModules: (modules: Module[]): RuleResult[] | null => {
@@ -45,7 +45,7 @@ const rule:Rule = {
         results.push({
           valid: false,
           resource: slsFile,
-          message: `Couldn't load file`,
+          message: "Couldn't load file",
           rule: rule.name,
           module,
         });
@@ -65,7 +65,8 @@ const rule:Rule = {
       {
         description: 'Deactivates this rule',
         config: false,
-      }];
+      },
+    ];
   },
 };
 

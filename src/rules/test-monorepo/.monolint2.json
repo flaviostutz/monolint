@@ -1,7 +1,7 @@
 {
-    "module-markers": ["_thisisamodule"],
-    "rules": {
-        "packagejson-same-name": true
-    },
-    "defaults": false
+  "module-markers": ["_thisisamodule"],
+  "rules": {
+    "packagejson-same-name": true
+  },
+  "defaults": false
 }

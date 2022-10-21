@@ -8,7 +8,6 @@ const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
 const modules = discoverModules(baseDir, baseConfig);
 
 describe('packagejson-same-name', () => {
-
   it('package.json with different name is invalid', async () => {
     const results = rule.checkModules(modules, baseDir);
     expect(results).toHaveLength(6);
@@ -30,5 +29,4 @@ describe('packagejson-same-name', () => {
       expect(results[3].valid).toBeFalsy();
     }
   });
-
 });

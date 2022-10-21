@@ -1,15 +1,14 @@
 import chalk from 'chalk';
 
-import { RuleResult } from "../types/RuleResult";
+import { RuleResult } from '../types/RuleResult';
 
 type ResourceResult = {
-    resource: string,
-    valid: boolean,
-    ruleResults: RuleResult[],
-}
+  resource: string;
+  valid: boolean;
+  ruleResults: RuleResult[];
+};
 
-const groupByResource = (ruleResults:RuleResult[]):ResourceResult[] => {
-
+const groupByResource = (ruleResults: RuleResult[]): ResourceResult[] => {
   // group results by resource
   const resourceResults = new Map<string, RuleResult[]>();
   for (let i = 0; i < ruleResults.length; i += 1) {
@@ -24,7 +23,7 @@ const groupByResource = (ruleResults:RuleResult[]):ResourceResult[] => {
   }
 
   // check each resource if pass or fail
-  const resourceList:ResourceResult[] = [];
+  const resourceList: ResourceResult[] = [];
 
   resourceResults.forEach((resResults: RuleResult[], res: string) => {
     // verify if all tests around this resoure were successfull
@@ -48,20 +47,25 @@ const groupByResource = (ruleResults:RuleResult[]):ResourceResult[] => {
   return resourceList;
 };
 
-const renderResultsConsole = (ruleResults:RuleResult[], verbose:boolean):void => {
-  console.log(``);
+const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void => {
+  console.log('');
 
   const byRes = groupByResource(ruleResults);
   const ordByRes = byRes.sort((aa, bb) => {
     if (aa.valid === bb.valid) {
-      if (aa.resource < bb.resource) { return 1; }
-      if (aa.resource > bb.resource) { return -1; }
+      if (aa.resource < bb.resource) {
+        return 1;
+      }
+      if (aa.resource > bb.resource) {
+        return -1;
+      }
       return 0;
     }
-    if (aa.valid) { return 1; }
+    if (aa.valid) {
+      return 1;
+    }
     return -1;
   });
-
 
   const successRes = ordByRes.filter((rr) => {
     return rr.valid;
@@ -75,9 +79,11 @@ const renderResultsConsole = (ruleResults:RuleResult[], verbose:boolean):void =>
     successRes.forEach((rr) => {
       console.log(`${chalk.underline(rr.resource)}`);
       rr.ruleResults.forEach((ruleResult) => {
-        console.log(`  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`);
+        console.log(
+          `  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`,
+        );
       });
-      console.log(``);
+      console.log('');
     });
   }
 
@@ -86,14 +92,20 @@ const renderResultsConsole = (ruleResults:RuleResult[], verbose:boolean):void =>
     rr.ruleResults.forEach((ruleResult) => {
       console.log(`  ${chalk.red('error')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`);
     });
-    console.log(``);
+    console.log('');
   });
 
   if (verbose) {
-    console.log(`${chalk.bold.green('✓')} ${chalk.bold.green(successRes.length)} ${chalk.bold.green('checks successful')}`);
+    console.log(
+      `${chalk.bold.green('✓')} ${chalk.bold.green(successRes.length)} ${chalk.bold.green(
+        'checks successful',
+      )}`,
+    );
   }
 
-  console.log(`${chalk.bold.red('✖')} ${chalk.bold.red(failRes.length)} ${chalk.bold.red('problems found')}`);
+  console.log(
+    `${chalk.bold.red('✖')} ${chalk.bold.red(failRes.length)} ${chalk.bold.red('problems found')}`,
+  );
 
   if (failRes.length > 0) {
     process.exit(1);

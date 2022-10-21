@@ -11,10 +11,9 @@ import { loadIgnorePatterns } from './utils/ignorefile';
 // when registry is imported, all rules are registered at bootstrap
 import { allRules, enabledRules } from './rules/registry';
 
-const lint = (baseDir:string, configFile:string|null):RuleResult[] => {
-
+const lint = (baseDir: string, configFile: string | null): RuleResult[] => {
   const baseConfig = loadBaseConfig(baseDir, configFile);
-  const results:RuleResult[] = [];
+  const results: RuleResult[] = [];
 
   // check generic rules
   // Checking base rules (outside modules)
@@ -39,7 +38,7 @@ const lint = (baseDir:string, configFile:string|null):RuleResult[] => {
   // Checking rules against modules
   for (let i = 0; i < allRules.length; i += 1) {
     const rule = allRules[i];
-    const ruleModules:Module[] = modules.filter((module) => {
+    const ruleModules: Module[] = modules.filter((module) => {
       return rule.name in module.enabledRules;
     });
 
@@ -60,23 +59,35 @@ const lint = (baseDir:string, configFile:string|null):RuleResult[] => {
 
   results.sort((aa, bb) => {
     if (aa.module && bb.module) {
-      if (bb.module.name > aa.module.name) { return -1; }
-      if (bb.module.name < aa.module.name) { return 1; }
+      if (bb.module.name > aa.module.name) {
+        return -1;
+      }
+      if (bb.module.name < aa.module.name) {
+        return 1;
+      }
     }
     // if module is the same, untie by rule name
-    if (bb.rule > aa.rule) { return -1; }
-    if (bb.rule < aa.rule) { return 1; }
+    if (bb.rule > aa.rule) {
+      return -1;
+    }
+    if (bb.rule < aa.rule) {
+      return 1;
+    }
     // if rule is the same, untie by resource path
-    if (bb.resource > aa.resource) { return -1; }
-    if (bb.resource < aa.resource) { return 1; }
+    if (bb.resource > aa.resource) {
+      return -1;
+    }
+    if (bb.resource < aa.resource) {
+      return 1;
+    }
     return 0;
   });
 
   return results;
 };
 
-const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
-  const patterns:string[] = [];
+const discoverModules = (baseDir: string, baseConfig: Config): Module[] => {
+  const patterns: string[] = [];
   const markers = baseConfig['module-markers'];
   if (!markers) {
     throw new Error('Base config should have "module-markers" config');
@@ -88,23 +99,24 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
 
   const ignorePatterns = loadIgnorePatterns(baseDir);
 
-  const entries = fg.sync(
-    patterns, {
-      dot: true,
-      ignore: ignorePatterns,
-      globstar: true,
-      extglob: true,
-    },
-  );
+  const entries = fg.sync(patterns, {
+    dot: true,
+    ignore: ignorePatterns,
+    globstar: true,
+    extglob: true,
+  });
 
-  const paths:string[] = [];
-  const modules:Module[] = [];
+  const paths: string[] = [];
+  const modules: Module[] = [];
 
   for (let i = 0; i < entries.length; i += 1) {
     const elem = entries[i];
 
-    const baseModulePath = elem.substring(0, elem.lastIndexOf("/"));
-    const moduleName = baseModulePath.substring(baseModulePath.lastIndexOf("/") + 1, elem.lastIndexOf("/"));
+    const baseModulePath = elem.substring(0, elem.lastIndexOf('/'));
+    const moduleName = baseModulePath.substring(
+      baseModulePath.lastIndexOf('/') + 1,
+      elem.lastIndexOf('/'),
+    );
 
     // check if this module was already added before
     if (paths.includes(baseModulePath)) {
@@ -151,7 +163,7 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
     }
 
     const erules = enabledRules(moduleConfig);
-    const ruleConfigs:Record<string, RuleConfig> = {};
+    const ruleConfigs: Record<string, RuleConfig> = {};
     for (let j = 0; j < erules.length; j += 1) {
       const erule = erules[j];
       if (!moduleConfig.rules) {
@@ -160,7 +172,6 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
       const moduleRuleConfig = moduleConfig.rules[erule.name];
       ruleConfigs[erule.name] = { rule: erules[j], ruleConfig: moduleRuleConfig };
     }
-
 
     modules.push({
       path: baseModulePath,
@@ -173,11 +184,19 @@ const discoverModules = (baseDir:string, baseConfig:Config):Module[] => {
   // sort by module name ascending to make it previsible and easier to create
   // newer modules for tests without breaking existing tests and to debug in general
   modules.sort((aa, bb) => {
-    if (bb.name > aa.name) { return -1; }
-    if (bb.name < aa.name) { return 1; }
+    if (bb.name > aa.name) {
+      return -1;
+    }
+    if (bb.name < aa.name) {
+      return 1;
+    }
     // if name is the same, untie by path
-    if (bb.path > aa.path) { return -1; }
-    if (bb.path < aa.path) { return 1; }
+    if (bb.path > aa.path) {
+      return -1;
+    }
+    if (bb.path < aa.path) {
+      return 1;
+    }
     return 0;
   });
 

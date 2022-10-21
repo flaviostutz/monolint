@@ -2,7 +2,7 @@ name: master-build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   build:

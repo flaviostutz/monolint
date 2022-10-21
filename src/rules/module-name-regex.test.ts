@@ -6,7 +6,6 @@ const baseDir = 'src/rules/test-monorepo';
 const ruleModules = loadModulesForRule(baseDir, '.monolint.json', 'module-name-regex');
 
 describe('module-name-regex', () => {
-
   it('check module names', async () => {
     const results = rule.checkModules(ruleModules, baseDir);
     expect(results).toHaveLength(6);
@@ -24,5 +23,4 @@ describe('module-name-regex', () => {
       expect(results[5].valid).toBeFalsy();
     }
   });
-
 });

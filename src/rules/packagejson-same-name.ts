@@ -5,7 +5,7 @@ import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 import { RuleExample } from '../types/RuleExample';
 
-const rule:Rule = {
+const rule: Rule = {
   name: 'packagejson-same-name',
 
   checkModules: (modules: Module[]): RuleResult[] | null => {
@@ -50,12 +50,11 @@ const rule:Rule = {
           rule: rule.name,
           module,
         });
-
       } catch (err) {
         results.push({
           valid: false,
           resource: packageFile,
-          message: `Couldn't load file`,
+          message: "Couldn't load file",
           rule: rule.name,
         });
         continue;
@@ -75,7 +74,8 @@ const rule:Rule = {
       {
         description: 'Deactivates this rule',
         config: false,
-      }];
+      },
+    ];
   },
 };
 

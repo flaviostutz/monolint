@@ -7,7 +7,8 @@ run:
 	# npx ts-node src/main.ts --base-dir=../large-monorepo --verbose
 
 lint:
-	npx eslint . --ext .ts
+	npx prettier --write .
+	npx eslint . --ext .ts --fix
 	npx tsc -noEmit --skipLibCheck
 	npm audit --audit-level high
 
@@ -20,7 +21,7 @@ publish:
 	npm version from-git
 	npm publish
 
-all: lint build run test
+all: build lint unit-tests run
 
 rules-doc:
 	npx ts-node src/rules-doc.ts

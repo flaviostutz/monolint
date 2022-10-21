@@ -1,6 +1,6 @@
 {
-    "name": "wrongsvcname",
-    "version": "1.0.0",
-    "main": "index.js",
-    "license": "MIT"
+  "name": "wrongsvcname",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT"
 }

@@ -1,5 +1,5 @@
 {
-    "rules": {
-        "module-name-regex": false
-    }
+  "rules": {
+    "module-name-regex": false
+  }
 }
