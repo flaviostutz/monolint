@@ -59,7 +59,7 @@ for (let i = 0; i < rules.length; i += 1) {
       doc += '```json\n';
       const econf = { rules: <Record<string, any>>{} };
 
-      if (!ex.config) {
+      if (typeof ex.config === 'undefined') {
         console.log(`Example config for ${rule.name} -> example ${j + 1} must be defined`);
         process.exit(1);
       }
