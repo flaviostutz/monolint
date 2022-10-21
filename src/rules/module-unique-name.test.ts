@@ -3,7 +3,7 @@ import { loadBaseConfig } from '../utils/config';
 
 import rule from './module-unique-name';
 
-const baseDir = 'src/rules/test-monorepo';
+const baseDir = 'src/rules/test-cases/general';
 const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
 const modules = discoverModules(baseDir, baseConfig);
 
