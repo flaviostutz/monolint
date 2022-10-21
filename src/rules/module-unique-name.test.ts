@@ -10,11 +10,25 @@ const modules = discoverModules(baseDir, baseConfig);
 describe('module-unique-name', () => {
   it('check if names are unique', async () => {
     const results = rule.checkModules(modules, baseDir);
-    expect(results).toHaveLength(6);
-    if (results) {
-      expect(results[0].resource.includes('package.json')).toBeTruthy();
-      expect(results[0].module?.name).toEqual('mod1-js');
-      expect(results[0].valid).toBeFalsy();
+    const fresults = results?.filter((rr) => !rr.valid && rr.rule === 'module-unique-name');
+    expect(fresults).toHaveLength(2);
+    if (fresults) {
+      expect(fresults[0].module?.name).toEqual('mod5-thx');
+      expect(fresults[0].valid).toBeFalsy();
+      expect(fresults[1].module?.name).toEqual('mod5-thx');
+      expect(fresults[1].valid).toBeFalsy();
+
+      const m0p = fresults[0].module?.path;
+      const m1p = fresults[1].module?.path;
+
+      expect(m1p).toBeDefined();
+      if (m1p) {
+        expect(fresults[0].message?.includes(m1p));
+      }
+      expect(m0p).toBeDefined();
+      if (m0p) {
+        expect(fresults[1].message?.includes(m0p));
+      }
     }
   });
 });

@@ -4,7 +4,8 @@ import { Config } from '../types/Config';
 import r1 from './serverless-same-name';
 import r2 from './packagejson-same-name';
 import r3 from './module-name-regex';
-import r4 from './module-required-files';
+import r4 from './module-unique-name';
+import r5 from './module-required-files';
 
 const allRules: Rule[] = [];
 
@@ -17,6 +18,7 @@ register(r1);
 register(r2);
 register(r3);
 register(r4);
+register(r5);
 
 const getRule = (name: string): Rule | null => {
   const fr = allRules.filter((rule) => {

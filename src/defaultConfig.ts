@@ -7,5 +7,6 @@ export const DefaultConfig: Config = {
     'serverless-same-name': true,
     'packagejson-same-name': true,
     'module-name-regex': true,
+    'module-unique-name': true,
   },
 };
