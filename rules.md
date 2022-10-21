@@ -4,13 +4,12 @@ See below all rules that can be used for monorepo linting.
 
 Those configurations should be added to a file in the root of the monorepo called '.monolint.json'. If you create this file in intermediate folder (or even in the module folder), it will be merged to the root and default configurations also.
 
-## __module-name-regex__
+## **module-name-regex**
 
-* Check if "name" attribute of the package.json file equals (or ends with) the name of the module
-* Examples:
+- Check if "name" attribute of the package.json file equals (or ends with) the name of the module
+- Examples:
 
-
-  * Activates this rule with default regex "[a-z]+[a-z0-9-_]{4,12}"
+  - Activates this rule with default regex "[a-z]+[a-z0-9-_]{4,12}"
 
 ```json
 {
@@ -20,7 +19,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Deactivates this rule
+- Deactivates this rule
 
 ```json
 {
@@ -30,7 +29,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Module names should be sufixed by "-svc" or "web"
+- Module names should be sufixed by "-svc" or "web"
 
 ```json
 {
@@ -40,13 +39,12 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-## __packagejson-same-name__
+## **packagejson-same-name**
 
-* Check if "name" attribute of the package.json file equals (or ends with) the name of the module
-* Example:
+- Check if "name" attribute of the package.json file equals (or ends with) the name of the module
+- Example:
 
-
-  * Deactivates this rule
+  - Deactivates this rule
 
 ```json
 {
@@ -56,13 +54,12 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-## __serverless-same-name__
+## **serverless-same-name**
 
-* Check if "service" attribute of the serverless.yml file equals (or ends with) the name of the module
-* Example:
+- Check if "service" attribute of the serverless.yml file equals (or ends with) the name of the module
+- Example:
 
-
-  * Deactivates this rule
+  - Deactivates this rule
 
 ```json
 {

@@ -54,7 +54,7 @@ const rule: Rule = {
         results.push({
           valid: false,
           resource: packageFile,
-          message: 'Couldn\'t load file',
+          message: "Couldn't load file",
           rule: rule.name,
         });
         continue;

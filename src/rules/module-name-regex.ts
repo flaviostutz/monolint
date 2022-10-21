@@ -63,8 +63,7 @@ const rule: Rule = {
   docExampleConfigs(): RuleExample[] {
     return [
       {
-        description:
-          'Activates this rule with default regex "[a-z]+[a-z0-9-_]{4,12}"',
+        description: 'Activates this rule with default regex "[a-z]+[a-z0-9-_]{4,12}"',
         config: true,
       },
       {

@@ -6,7 +6,6 @@ const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
 const baseConfig2 = loadBaseConfig(baseDir, '.monolint2.json');
 
 describe('lint', () => {
-
   it('discoverModules by marker', async () => {
     const results = discoverModules(baseDir, baseConfig2);
     expect(results).toHaveLength(1);
@@ -46,36 +45,46 @@ describe('lint', () => {
     for (let i = 0; i < results.length; i += 1) {
       const result = results[i];
 
-      if (result.resource === 'src/rules/test-monorepo/modules/mod1-js' &&
-          result.rule === 'module-name-regex') {
+      if (
+        result.resource === 'src/rules/test-monorepo/modules/mod1-js' &&
+        result.rule === 'module-name-regex'
+      ) {
         expect(result.module?.name).toEqual('mod1-js');
         expect(result.valid).toBeTruthy();
         checks -= 1;
       }
 
-      if (result.resource === 'src/rules/test-monorepo/modules/mod1-js/package.json' &&
-          result.rule === 'packagejson-same-name') {
+      if (
+        result.resource === 'src/rules/test-monorepo/modules/mod1-js/package.json' &&
+        result.rule === 'packagejson-same-name'
+      ) {
         expect(result.module?.name).toEqual('mod1-js');
         expect(result.valid).toBeFalsy();
         checks -= 1;
       }
 
-      if (result.resource === 'src/rules/test-monorepo/modules/group3/group3a/mod7-xyz' &&
-          result.rule === 'module-name-regex') {
+      if (
+        result.resource === 'src/rules/test-monorepo/modules/group3/group3a/mod7-xyz' &&
+        result.rule === 'module-name-regex'
+      ) {
         expect(result.module?.name).toEqual('mod7-xyz');
         expect(result.valid).toBeFalsy();
         checks -= 1;
       }
 
-      if (result.resource === 'src/rules/test-monorepo/modules/group3/group3a/mod6-abc' &&
-          result.rule === 'module-name-regex') {
+      if (
+        result.resource === 'src/rules/test-monorepo/modules/group3/group3a/mod6-abc' &&
+        result.rule === 'module-name-regex'
+      ) {
         expect(result.module?.name).toEqual('mod6-abc');
         expect(result.valid).toBeTruthy();
         checks -= 1;
       }
 
-      if (result.resource === 'src/rules/test-monorepo/modules/mod5-thx/serverless.yml' &&
-          result.rule === 'serverless-same-name') {
+      if (
+        result.resource === 'src/rules/test-monorepo/modules/mod5-thx/serverless.yml' &&
+        result.rule === 'serverless-same-name'
+      ) {
         expect(result.module?.name).toEqual('mod5-thx');
         expect(result.valid).toBeTruthy();
         checks -= 1;
@@ -83,5 +92,4 @@ describe('lint', () => {
     }
     expect(checks).toBe(0);
   });
-
 });

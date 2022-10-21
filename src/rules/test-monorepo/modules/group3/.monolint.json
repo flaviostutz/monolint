@@ -1,6 +1,6 @@
 {
-    "rules": {
-        "packagejson-same-name": false,
-        "module-name-regex": ".+(-abc|-www)"
-    }
+  "rules": {
+    "packagejson-same-name": false,
+    "module-name-regex": ".+(-abc|-www)"
+  }
 }

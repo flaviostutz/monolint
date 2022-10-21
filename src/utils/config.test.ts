@@ -3,7 +3,6 @@ import { loadBaseConfig } from './config';
 const baseDir = 'src/rules/test-monorepo';
 
 describe('utils', () => {
-
   it('loadBaseConfig .monolint.json', async () => {
     const config = loadBaseConfig(baseDir, null);
     expect(config['module-markers']).toEqual(['package.json', 'serverless.yml', 'go.mod']);
@@ -26,5 +25,4 @@ describe('utils', () => {
       });
     }
   });
-
 });

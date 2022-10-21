@@ -1,4 +1,4 @@
 export type RuleExample = {
-    description:string
-    config:any
-}
+  description: string;
+  config: any;
+};

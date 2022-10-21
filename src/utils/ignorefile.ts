@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const loadIgnorePatterns = (baseDir:string):string[] => {
+const loadIgnorePatterns = (baseDir: string): string[] => {
   const cfile = `${baseDir}/.monolintignore`;
   if (fs.existsSync(cfile)) {
     const cf = fs.readFileSync(cfile);

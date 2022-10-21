@@ -2,7 +2,7 @@ name: pr-build
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   build:
@@ -15,4 +15,3 @@ jobs:
       target-build: true
       target-lint: true
       target-unit-tests: true
-

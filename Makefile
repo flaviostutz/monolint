@@ -7,12 +7,10 @@ run:
 	# npx ts-node src/main.ts --base-dir=../large-monorepo --verbose
 
 lint:
-	npx eslint . --ext .ts
+	npx prettier --write .
+	npx eslint . --ext .ts --fix
 	npx tsc -noEmit --skipLibCheck
 	npm audit --audit-level high
-
-lint-fix:
-	npx eslint . --ext .ts --fix
 
 unit-tests:
 	npm run test

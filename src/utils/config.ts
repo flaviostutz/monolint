@@ -4,14 +4,14 @@ import { Config } from '../types/Config';
 import { getRule } from '../rules/registry';
 import { DefaultConfig } from '../defaultConfig';
 
-const mergeConfigs = (parentConfig:Config, childConfig:Config):Config => {
+const mergeConfigs = (parentConfig: Config, childConfig: Config): Config => {
   const mergedRules = { ...parentConfig.rules, ...childConfig.rules };
   const config = <Config>{ ...parentConfig, ...childConfig };
   config.rules = mergedRules;
   return config;
 };
 
-const validateConfig = (config: Config):void => {
+const validateConfig = (config: Config): void => {
   if (!config.rules) {
     throw new Error('Config has no rule configurations');
   }
@@ -27,8 +27,7 @@ const validateConfig = (config: Config):void => {
   }
 };
 
-const loadBaseConfig = (baseDir:string, configFile:string|null):Config => {
-
+const loadBaseConfig = (baseDir: string, configFile: string | null): Config => {
   let cfile = configFile;
   if (cfile == null) {
     cfile = '.monolint.json';

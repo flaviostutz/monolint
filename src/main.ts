@@ -26,13 +26,13 @@ const argv = yargs(hideBin(process.argv))
   .option('config', {
     alias: 'c',
     type: 'string',
-    description: 'Config file. Defaults to \'.monolint.json\'',
+    description: "Config file. Defaults to '.monolint.json'",
     default: '.monolint.json',
   })
-.parseSync();
+  .parseSync();
 
 if (!argv.verbose) {
-    // console.debug = () => {};
+  // console.debug = () => {};
 }
 
 if (!fs.existsSync(argv.baseDir)) {

@@ -14,78 +14,79 @@ If you work or know a good public monorepo, please let us now so we can use it a
 
 ## Usage
 
-* Simplest run
-  * Checkout an example monorepo at https://github.com/vsavkin/large-monorepo
-  * Execute `npx monolint .` inside the repo dir
-  * The checks will use default parameters
-  * Check the validation results
+- Simplest run
 
-* Customize rules
-  * Create ".monolint.json" at the root of your monorepo with contents
+  - Checkout an example monorepo at https://github.com/vsavkin/large-monorepo
+  - Execute `npx monolint .` inside the repo dir
+  - The checks will use default parameters
+  - Check the validation results
+
+- Customize rules
+  - Create ".monolint.json" at the root of your monorepo with contents
 
 ```json
 {
-    "module-markers": ["package.json"],
-    "rules": {
-        "packagejson-same-name": false,
-    }
+  "module-markers": ["package.json"],
+  "rules": {
+    "packagejson-same-name": false
+  }
 }
 ```
 
-  * Execute `npx monolint .`
-    * In this example, it will search for any folder that has a file "package.json" and consider it a module
-    * Then it will run all default enabled rules, but will turn off rule "packagejson-same-name", which enforces the "name" property of the package.json contents to have the same name as the module folder
-  * See results
+- Execute `npx monolint .`
+  - In this example, it will search for any folder that has a file "package.json" and consider it a module
+  - Then it will run all default enabled rules, but will turn off rule "packagejson-same-name", which enforces the "name" property of the package.json contents to have the same name as the module folder
+- See results
 
 ## Concepts
 
-* The name of the discovered modules is the same as its folder. So, a module at "group1/module-black" will have the name "module-black". The module name is used by various rules and on the results report to help you locate where the error is.
+- The name of the discovered modules is the same as its folder. So, a module at "group1/module-black" will have the name "module-black". The module name is used by various rules and on the results report to help you locate where the error is.
 
-### __.monolint.json__
+### **.monolint.json**
 
-* Create this file for configuring monolint
-* This file normally is at the root of our monorepo, but you can place it in intermediary folders or in the module itself to setup specific configurations for the different parts of the monorepo
+- Create this file for configuring monolint
+- This file normally is at the root of our monorepo, but you can place it in intermediary folders or in the module itself to setup specific configurations for the different parts of the monorepo
 
-* The structure of this file is
+- The structure of this file is
 
 ```json
 {
   "module-markers": ["package.json", "serverless.yml"],
   "rules": {
     "serverless-same-name": true,
-    "packagejson-same-name": true,
+    "packagejson-same-name": true
   },
   "defaults": true
 }
 ```
 
-  * 'module-markers' - declare a list of file names that, if found in any folder inside the monorepo, will make the folder considered a module. Used only in the base folder of the monorepo.
-  * 'rules' - activate/deactivate rules, or setup specific configurations for a rule
-  * 'defaults' - whatever use default configurations or not. Defaults to true.
+- 'module-markers' - declare a list of file names that, if found in any folder inside the monorepo, will make the folder considered a module. Used only in the base folder of the monorepo.
+- 'rules' - activate/deactivate rules, or setup specific configurations for a rule
+- 'defaults' - whatever use default configurations or not. Defaults to true.
 
-* This file can be placed in any folder to define specific configurations/rules for different branches of the monorepo.
-  * Example:
-        /.monolint.json - enables rule "serverless-same-name"
-        /modules/group1
-                       /.monolint.json - disables rule "serverless-same-name"
-                       /module-test1 -> won't be checked by "serverless-same-name"
-                       /module-test2 -> won't be checked by "serverless-same-name"
-                /module-test3 -> will be checked by "serverless-same-name"
+- This file can be placed in any folder to define specific configurations/rules for different branches of the monorepo.
+  - Example:
+    /.monolint.json - enables rule "serverless-same-name"
+    /modules/group1
+    /.monolint.json - disables rule "serverless-same-name"
+    /module-test1 -> won't be checked by "serverless-same-name"
+    /module-test2 -> won't be checked by "serverless-same-name"
+    /module-test3 -> will be checked by "serverless-same-name"
 
+### **.monolintignore**
 
-### __.monolintignore__
+- Create file ".monolintignore" at the root folder of the monorepo with file/directory patterns to be ignored during module discovery. You can use these patterns to hide entire branches of the monorepo from monolint or just specific directories.
 
-* Create file ".monolintignore" at the root folder of the monorepo with file/directory patterns to be ignored during module discovery. You can use these patterns to hide entire branches of the monorepo from monolint or just specific directories.
+- The ignore patterns works as follows:
 
-* The ignore patterns works as follows:
-  * Add each ignore pattern in a new line of the file
-  * '*' - matches a single level of dir
-  * '**' - matches any number of levels of a dir
-  * When a parent dir matches the ignore pattern, all its childs will be ignored
+  - Add each ignore pattern in a new line of the file
+  - '\*' - matches a single level of dir
+  - '\*\*' - matches any number of levels of a dir
+  - When a parent dir matches the ignore pattern, all its childs will be ignored
 
-* Example
+- Example
 
-  * Repo structure
+  - Repo structure
 
 ```
 modules/
@@ -99,7 +100,7 @@ lib/test/external/
 .monolintignore
 ```
 
-  * .monolintignore
+- .monolintignore
 
 ```
 **/legacy
@@ -107,7 +108,7 @@ modules/auth-svc
 shared
 ```
 
-  * The following structure will be visible to monolint
+- The following structure will be visible to monolint
 
 ```
 modules/
