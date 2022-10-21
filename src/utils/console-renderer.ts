@@ -66,7 +66,9 @@ const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void
   failRes.forEach((rr) => {
     console.log(`${chalk.underline(rr.resource)}`);
     const sortRuleResults = rr.ruleResults.sort((aa, bb) => {
-      if (aa.valid && !bb.valid) { return -1; }
+      if (aa.valid && !bb.valid) {
+        return -1;
+      }
       return 1;
     });
     sortRuleResults.forEach((ruleResult) => {

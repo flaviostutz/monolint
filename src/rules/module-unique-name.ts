@@ -9,7 +9,7 @@ const rule: Rule = {
   checkModules: (modules: Module[]): RuleResult[] | null => {
     const results: RuleResult[] = [];
 
-    const modulesMap:Record<string, Module[]|undefined> = {};
+    const modulesMap: Record<string, Module[] | undefined> = {};
 
     // map all
     for (let i = 0; i < modules.length; i += 1) {

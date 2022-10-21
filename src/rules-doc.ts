@@ -16,9 +16,9 @@ doc +=
 
 const rules = allRules.sort((aa, bb) => {
   if (aa < bb) {
-    return 1;
+    return -1;
   }
-  return -1;
+  return 1;
 });
 
 for (let i = 0; i < rules.length; i += 1) {
@@ -51,9 +51,6 @@ if (checkOnly) {
   const diffs = diffChars(cf, doc);
   if (diffs.length > 1) {
     console.error('rules.md file is outdated. run "make rules-doc"');
-    diffs.forEach((part) => {
-      console.log(part);
-    });
     process.exit(1);
   }
 } else {
