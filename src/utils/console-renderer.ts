@@ -26,20 +26,10 @@ const groupByResource = (ruleResults: RuleResult[]): ResourceResult[] => {
   const resourceList: ResourceResult[] = [];
 
   resourceResults.forEach((resResults: RuleResult[], res: string) => {
-    // verify if all tests around this resoure were successfull
-    let resValid = true;
-    for (let j = 0; j < resResults.length; j += 1) {
-      const rr = resResults[0];
-      if (!rr.valid) {
-        resValid = false;
-      }
-    }
-
-    // verify
-
+    const invalids = resResults.filter((rr) => !rr.valid);
     resourceList.push({
       resource: res,
-      valid: resValid,
+      valid: invalids.length === 0,
       ruleResults: resResults,
     });
   });
@@ -67,15 +57,8 @@ const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void
     return -1;
   });
 
-  const successRes = ordByRes.filter((rr) => {
-    return rr.valid;
-  });
-
-  const failRes = ordByRes.filter((rr) => {
-    return !rr.valid;
-  });
-
   if (verbose) {
+    const successRes = byRes.filter((rr) => rr.valid);
     successRes.forEach((rr) => {
       console.log(`${chalk.underline(rr.resource)}`);
       rr.ruleResults.forEach((ruleResult) => {
@@ -87,24 +70,36 @@ const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void
     });
   }
 
+  const failRes = ordByRes.filter((rr) => !rr.valid);
+
   failRes.forEach((rr) => {
     console.log(`${chalk.underline(rr.resource)}`);
     rr.ruleResults.forEach((ruleResult) => {
-      console.log(`  ${chalk.red('error')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`);
+      if (ruleResult.valid) {
+        if (verbose) {
+          console.log(
+            `  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`,
+          );
+        }
+      } else {
+        console.log(`  ${chalk.red('error')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`);
+      }
     });
     console.log('');
   });
 
   if (verbose) {
+    const successc = ruleResults.filter((rr) => rr.valid).length;
     console.log(
-      `${chalk.bold.green('✓')} ${chalk.bold.green(successRes.length)} ${chalk.bold.green(
+      `${chalk.bold.green('✓')} ${chalk.bold.green(successc)} ${chalk.bold.green(
         'checks successful',
       )}`,
     );
   }
 
+  const failc = ruleResults.filter((rr) => !rr.valid).length;
   console.log(
-    `${chalk.bold.red('✖')} ${chalk.bold.red(failRes.length)} ${chalk.bold.red('problems found')}`,
+    `${chalk.bold.red('✖')} ${chalk.bold.red(failc)} ${chalk.bold.red('problems found')}`,
   );
 
   if (failRes.length > 0) {

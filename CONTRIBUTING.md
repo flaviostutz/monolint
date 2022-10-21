@@ -30,6 +30,13 @@ make rules-doc
 
 - If you want a new feature, open an Issue and explain your real use case, the kind of problems you have nowadays and how you think Monolint could help you in practice.
 
+## When creating a new rule
+
+- Create the new rule under folder 'rules'
+- Create unit tests for it based on test monorepo at 'rules/test-monorepo'
+- Register the new rule in file 'rules/registry.ts'
+- Add the rule as default in 'src/defaultConfig.ts' if it is a generic enough rule
+
 ## Prepare your development environment
 
 - Install npm and "make" on your machine
