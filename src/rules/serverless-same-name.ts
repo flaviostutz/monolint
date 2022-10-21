@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-import yaml from 'js-yaml';
+import { yamlParse } from 'yaml-cfn';
 
 import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
@@ -23,7 +23,7 @@ const rule: Rule = {
       // console.debug(`Checking ${slsFile}`);
       try {
         const cf = fs.readFileSync(slsFile, 'utf8');
-        const loadedSls = <any>yaml.load(cf);
+        const loadedSls = yamlParse(cf);
         if (!(<string>loadedSls.service).endsWith(module.name)) {
           results.push({
             valid: false,
@@ -45,7 +45,7 @@ const rule: Rule = {
         results.push({
           valid: false,
           resource: slsFile,
-          message: "Couldn't load file",
+          message: `Couldn't load yml file: ${err}`,
           rule: rule.name,
           module,
         });
