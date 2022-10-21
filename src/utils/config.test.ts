@@ -6,6 +6,7 @@ describe('utils', () => {
   it('loadBaseConfig .monolint.json', async () => {
     const config = loadBaseConfig(baseDir, null);
     expect(config['module-markers']).toEqual(['package.json', 'serverless.yml', 'go.mod']);
+    expect(config['use-gitignore']).toBeTruthy();
     expect(config.rules).toBeDefined();
     if (config.rules) {
       expect(config.rules['serverless-same-name']).toBeTruthy();
@@ -18,6 +19,7 @@ describe('utils', () => {
   it('loadBaseConfig .monolint2.json', async () => {
     const config = loadBaseConfig(baseDir, '.monolint2.json');
     expect(config['module-markers']).toEqual(['_thisisamodule']);
+    expect(config['use-gitignore']).toBeFalsy();
     expect(config.rules).toBeDefined();
     if (config.rules) {
       expect(config.rules).toEqual({

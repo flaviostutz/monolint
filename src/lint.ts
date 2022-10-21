@@ -97,7 +97,7 @@ const discoverModules = (baseDir: string, baseConfig: Config): Module[] => {
     patterns.push(`${baseDir}/**/${elem}`);
   });
 
-  const ignorePatterns = loadIgnorePatterns(baseDir);
+  const ignorePatterns = loadIgnorePatterns(baseDir, baseConfig);
 
   const entries = fg.sync(patterns, {
     dot: true,

@@ -6,11 +6,17 @@ const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
 const baseConfig2 = loadBaseConfig(baseDir, '.monolint2.json');
 
 describe('lint', () => {
-  it('discoverModules by marker', async () => {
+  it('discoverModules by specific marker', async () => {
     const results = discoverModules(baseDir, baseConfig2);
     expect(results).toHaveLength(1);
     expect(results[0].path.includes('group1')).toBeTruthy();
     expect(results[0].name).toEqual('mod3-svc');
+  });
+
+  it('discoverModules don\'t find ignored modules', async () => {
+    const results = discoverModules(baseDir, baseConfig);
+    const rr = results.filter((elem) => elem.path.includes('node_modules'));
+    expect(rr).toHaveLength(0);
   });
 
   it('discoverModules by marker considering duplicate and ignoring folders', async () => {

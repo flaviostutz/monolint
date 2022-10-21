@@ -1,5 +1,6 @@
 {
   "module-markers": ["_thisisamodule"],
+  "use-gitignore": false,
   "rules": {
     "packagejson-same-name": true
   },

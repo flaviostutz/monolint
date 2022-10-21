@@ -52,6 +52,7 @@ If you work or know a good public monorepo, please let us now so we can use it a
 ```json
 {
   "module-markers": ["package.json", "serverless.yml"],
+  "use-gitignore": true,
   "rules": {
     "serverless-same-name": true,
     "packagejson-same-name": true
@@ -61,6 +62,7 @@ If you work or know a good public monorepo, please let us now so we can use it a
 ```
 
 - 'module-markers' - declare a list of file names that, if found in any folder inside the monorepo, will make the folder considered a module. Used only in the base folder of the monorepo.
+- 'use-gitignore' - whatever use .gitignore (is exists) as the starting point for defining the patterns (along with .monolintignore) for ignore paths during module search. Defaults to true
 - 'rules' - activate/deactivate rules, or setup specific configurations for a rule
 - 'defaults' - whatever use default configurations or not. Defaults to true.
 
