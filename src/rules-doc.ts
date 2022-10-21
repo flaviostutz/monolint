@@ -15,7 +15,7 @@ doc +=
   "Those configurations should be added to a file in the root of the monorepo called '.monolint.json'. If you create this file in intermediate folder (or even in the module folder), it will be merged to the root and default configurations also.\n";
 
 const rules = allRules.sort((aa, bb) => {
-  if (aa < bb) {
+  if (aa.name < bb.name) {
     return -1;
   }
   return 1;
