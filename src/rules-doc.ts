@@ -23,22 +23,46 @@ const rules = allRules.sort((aa, bb) => {
 
 for (let i = 0; i < rules.length; i += 1) {
   const rule = rules[i];
+
+  const ruleDocMarkdown = rule.docMarkdown();
+
+  if (!ruleDocMarkdown || ruleDocMarkdown.length < 15) {
+    console.log(`Doc markdown for rule ${rule.name} is too short`);
+    process.exit(1);
+  }
+
+
   doc += '\n';
   doc += `## **${rule.name}**\n\n`;
-  doc += `${rule.docMarkdown()}\n\n`;
+  doc += `${ruleDocMarkdown}\n\n`;
 
   const examples = rule.docExampleConfigs();
+  if (examples.length === 0) {
+    console.log(`Examples for ${rule.name} is empty`);
+    process.exit(1);
+  }
   if (examples.length > 0) {
+
     if (examples.length === 1) {
       doc += '* Example:\n\n';
     } else {
       doc += '* Examples:\n\n';
     }
+
     for (let j = 0; j < examples.length; j += 1) {
       const ex = examples[j];
+      if (!ex.description || ex.description.length < 15) {
+        console.log(`Example description for ${rule.name} -> example ${j + 1} is too short`);
+        process.exit(1);
+      }
       doc += `\n  * ${ex.description}\n\n`;
       doc += '```json\n';
       const econf = { rules: <Record<string, any>>{} };
+
+      if (!ex.config) {
+        console.log(`Example config for ${rule.name} -> example ${j + 1} must be defined`);
+        process.exit(1);
+      }
       econf.rules[`${rule.name}`] = ex.config;
       doc += `${JSON.stringify(econf, null, 2)}\n`;
       doc += '```\n';
