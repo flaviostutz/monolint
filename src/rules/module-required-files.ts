@@ -1,6 +1,3 @@
-import * as fs from 'fs';
-
-import { yamlParse } from 'yaml-cfn';
 
 import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
@@ -13,52 +10,13 @@ const rule: Rule = {
   checkModules: (modules: Module[]): RuleResult[] | null => {
     const results: RuleResult[] = [];
 
-    for (let i = 0; i < modules.length; i += 1) {
-      const module = modules[i];
-
-      const slsFile = `${module.path}/serverless.yml`;
-      if (!fs.existsSync(slsFile)) {
-        continue;
-      }
-      // console.debug(`Checking ${slsFile}`);
-      try {
-        const cf = fs.readFileSync(slsFile, 'utf8');
-        const loadedSls = yamlParse(cf);
-        if (!(<string>loadedSls.service).endsWith(module.name)) {
-          results.push({
-            valid: false,
-            resource: slsFile,
-            message: `Attribute 'service' should be '${module.name}'`,
-            rule: rule.name,
-            module,
-          });
-          continue;
-        }
-        results.push({
-          valid: true,
-          resource: slsFile,
-          message: '"service" is valid',
-          rule: rule.name,
-          module,
-        });
-      } catch (err) {
-        results.push({
-          valid: false,
-          resource: slsFile,
-          message: `Couldn't load yml file: ${err}`,
-          rule: rule.name,
-          module,
-        });
-        continue;
-      }
-    }
     return results;
   },
   check(): RuleResult[] | null {
     return null;
   },
   docMarkdown(): string {
-    return '* Check if "service" attribute of the serverless.yml file equals (or ends with) the name of the module';
+    return '* Check if all the required files are present in the folder';
   },
   docExampleConfigs(): RuleExample[] {
     return [

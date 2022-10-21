@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "module-required-files": {
+      "strict": false,
+      "files": ["README.md", "package.json"]
+    }
+  }
+}
