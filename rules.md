@@ -6,10 +6,12 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 ## **module-name-regex**
 
-- Check if "name" attribute of the package.json file equals (or ends with) the name of the module
-- Examples:
+* Check if "name" attribute of the package.json file equals (or ends with) the name of the module
 
-  - Activates this rule with default regex "[a-z]+[a-z0-9-_]{4,12}"
+* Examples:
+
+
+  * Activates this rule with default regex "[a-z]+[a-z0-9-_]{4,12}"
 
 ```json
 {
@@ -19,7 +21,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-- Deactivates this rule
+  * Deactivates this rule
 
 ```json
 {
@@ -29,7 +31,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-- Module names should be sufixed by "-svc" or "web"
+  * Module names should be sufixed by "-svc" or "web"
 
 ```json
 {
@@ -41,10 +43,12 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 ## **packagejson-same-name**
 
-- Check if "name" attribute of the package.json file equals (or ends with) the name of the module
-- Example:
+* Check if "name" attribute of the package.json file equals (or ends with) the name of the module
 
-  - Deactivates this rule
+* Example:
+
+
+  * Deactivates this rule
 
 ```json
 {
@@ -56,10 +60,12 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 ## **serverless-same-name**
 
-- Check if "service" attribute of the serverless.yml file equals (or ends with) the name of the module
-- Example:
+* Check if "service" attribute of the serverless.yml file equals (or ends with) the name of the module
 
-  - Deactivates this rule
+* Example:
+
+
+  * Deactivates this rule
 
 ```json
 {

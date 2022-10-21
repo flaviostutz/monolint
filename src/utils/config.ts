@@ -38,14 +38,14 @@ const loadBaseConfig = (baseDir: string, configFile: string | null): Config => {
     const loadedConfig = JSON.parse(cf.toString());
     // eslint-disable-next-line no-prototype-builtins
     if (!loadedConfig.hasOwnProperty('defaults') || loadedConfig.defaults) {
-      return mergeConfigs(<Config>DefaultConfig, loadedConfig);
+      return mergeConfigs(DefaultConfig, loadedConfig);
     }
     return loadedConfig;
   }
 
   if (cfile === '.monolint.json') {
     console.info(`File "${configFile}" not found. Using default configurations`);
-    return <Config>DefaultConfig;
+    return DefaultConfig;
   }
 
   throw new Error(`File "${configFile}" not found`);

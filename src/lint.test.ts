@@ -13,7 +13,7 @@ describe('lint', () => {
     expect(results[0].name).toEqual('mod3-svc');
   });
 
-  it('discoverModules don\'t find ignored modules', async () => {
+  it("discoverModules don't find ignored modules", async () => {
     const results = discoverModules(baseDir, baseConfig);
     const rr = results.filter((elem) => elem.path.includes('node_modules'));
     expect(rr).toHaveLength(0);

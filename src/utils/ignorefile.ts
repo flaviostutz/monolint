@@ -3,8 +3,7 @@ import fs from 'fs';
 import { Config } from '../types/Config';
 
 const loadIgnorePatterns = (baseDir: string, baseConfig: Config): string[] => {
-
-  const ignorePaths:string[] = [];
+  const ignorePaths: string[] = [];
 
   if (baseConfig['use-gitignore']) {
     const gfile = `${baseDir}/.gitignore`;
@@ -32,7 +31,6 @@ const loadIgnorePatterns = (baseDir: string, baseConfig: Config): string[] => {
     return `${baseDir}/**/${elem}`;
   });
   return fi2;
-
 };
 
 export { loadIgnorePatterns };

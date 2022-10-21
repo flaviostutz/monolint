@@ -85,7 +85,7 @@ module.exports = {
     'require-await': 'off',
     '@typescript-eslint/require-await': 'off',
     'no-undef': 'off',
-    'object-curly-spacing': ['error', 'always', { objectsInObjects: false }],
+    'object-curly-spacing': ['error', 'always'],
     '@babel/object-curly-spacing': 'off',
     'line-comment-position': 'off',
     // "@typescript-eslint/typedef": ["error", {arrowParameter: true, variableDeclaration: true}],

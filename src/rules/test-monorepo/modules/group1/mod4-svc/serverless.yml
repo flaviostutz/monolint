@@ -56,8 +56,7 @@ custom:
     bundle: true
     sourcemap: true
     watch:
-      pattern:
-        ['src/**/*.ts', '../../connectors/**/*.ts', '../../utils/**/*.ts']
+      pattern: ['src/**/*.ts', '../../connectors/**/*.ts', '../../utils/**/*.ts']
       ignore: ['.serverless/**/*', '.build', '.esbuild']
     packager: yarn
 
