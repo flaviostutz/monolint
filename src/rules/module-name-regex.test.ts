@@ -2,7 +2,7 @@ import { loadModulesForRule } from '../utils/tests';
 
 import rule from './module-name-regex';
 
-const baseDir = 'src/rules/test-monorepo';
+const baseDir = 'src/rules/test-cases/general';
 const ruleModules = loadModulesForRule(baseDir, '.monolint.json', 'module-name-regex');
 
 describe('module-name-regex', () => {

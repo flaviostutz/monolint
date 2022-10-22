@@ -41,6 +41,23 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
+## **module-required-files**
+
+* Check whether all the required files are present in the modules folders
+
+* Example:
+
+
+  * Deactivates this rule
+
+```json
+{
+  "rules": {
+    "module-required-files": false
+  }
+}
+```
+
 ## **module-unique-name**
 
 * Checks if the name of the modules are unique in the entire monorepo, regardless of the which folder it is present

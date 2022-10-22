@@ -1,6 +1,6 @@
 import { loadBaseConfig } from './config';
 
-const baseDir = 'src/rules/test-monorepo';
+const baseDir = 'src/rules/test-cases/general';
 
 describe('utils', () => {
   it('loadBaseConfig .monolint.json', async () => {

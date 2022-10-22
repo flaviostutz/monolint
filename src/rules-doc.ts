@@ -31,7 +31,6 @@ for (let i = 0; i < rules.length; i += 1) {
     process.exit(1);
   }
 
-
   doc += '\n';
   doc += `## **${rule.name}**\n\n`;
   doc += `${ruleDocMarkdown}\n\n`;
@@ -42,7 +41,6 @@ for (let i = 0; i < rules.length; i += 1) {
     process.exit(1);
   }
   if (examples.length > 0) {
-
     if (examples.length === 1) {
       doc += '* Example:\n\n';
     } else {
