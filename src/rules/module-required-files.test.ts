@@ -133,6 +133,7 @@ describe('given a folder with strict config', () => {
         expect(results[1].module?.name).toEqual('mod-strict-error-2');
         expect(results[2].module?.name).toEqual('mod-strict-error-2');
         expect(results[3].module?.name).toEqual('mod-strict-error-2');
+
         expect(results[0].valid).toBeFalsy();
         expect(results[1].valid).toBeFalsy();
         expect(results[2].valid).toBeFalsy();
