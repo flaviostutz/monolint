@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "module-required-files": {
+      "strict": false,
+      "files": ["serverless.yml", "package.json"]
+    }
+  }
+}
