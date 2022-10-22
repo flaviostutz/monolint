@@ -1,4 +1,4 @@
-service: mod4-svc
+service: mod-error-1
 useDotenv: true
 variablesResolutionMode: 20210326
 

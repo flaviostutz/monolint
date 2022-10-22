@@ -1,4 +1,4 @@
-service: mod-non-strict-success-2
+service: mod-success-2
 useDotenv: true
 variablesResolutionMode: 20210326
 

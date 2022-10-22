@@ -2,7 +2,7 @@
   "rules": {
     "module-required-files": {
       "strict": true,
-      "files": ["README.md", "CHANGELOG.md", "LICENSE"]
+      "files": ["README.md", "CONTRIBUTING.md", "LICENSE"]
     }
   }
 }

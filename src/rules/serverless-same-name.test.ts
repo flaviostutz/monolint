@@ -8,7 +8,6 @@ const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
 const modules = discoverModules(baseDir, baseConfig);
 
 describe('serverless-same-name', () => {
-
   it('serverless with different service name is invalid', async () => {
     const results = rule.checkModules(modules, baseDir);
     expect(results).toHaveLength(4);
