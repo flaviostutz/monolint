@@ -1,0 +1,3 @@
+Resources:
+  AWSServicesSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
