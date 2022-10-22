@@ -9,7 +9,7 @@ describe('given a folder with non-strict config', () => {
   const baseDir = 'src/rules/test-cases/module-required-files/non-strict';
 
   describe('when required files not found in folder', () => {
-    const testCaseDir = `${baseDir}/mod-error-1`;
+    const testCaseDir = `${baseDir}/mod-non-strict-error-1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig);
 
@@ -20,9 +20,9 @@ describe('given a folder with non-strict config', () => {
         expect(results[0].resource.includes('README.md')).toBeTruthy();
         expect(results[1].resource.includes('serverless.yml')).toBeTruthy();
         expect(results[2].resource.includes('package.json')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-error-1');
-        expect(results[1].module?.name).toEqual('mod-error-1');
-        expect(results[2].module?.name).toEqual('mod-error-1');
+        expect(results[0].module?.name).toEqual('mod-non-strict-error-1');
+        expect(results[1].module?.name).toEqual('mod-non-strict-error-1');
+        expect(results[2].module?.name).toEqual('mod-non-strict-error-1');
         expect(results[0].valid).toBeFalsy();
         expect(results[1].valid).toBeTruthy();
         expect(results[2].valid).toBeTruthy();
@@ -43,10 +43,10 @@ describe('given a folder with non-strict config', () => {
         expect(results[1].resource.includes('package.json')).toBeTruthy();
         expect(results[2].resource.includes('README.md')).toBeTruthy();
         expect(results[3].resource.includes('package.json')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-1');
-        expect(results[1].module?.name).toEqual('mod-1');
-        expect(results[2].module?.name).toEqual('mod-2');
-        expect(results[3].module?.name).toEqual('mod-2');
+        expect(results[0].module?.name).toEqual('mod-e-ns-1');
+        expect(results[1].module?.name).toEqual('mod-e-ns-1');
+        expect(results[2].module?.name).toEqual('mod-e-ns-2');
+        expect(results[3].module?.name).toEqual('mod-e-ns-2');
         expect(results[0].valid).toBeTruthy();
         expect(results[1].valid).toBeTruthy();
         expect(results[2].valid).toBeFalsy();
@@ -56,7 +56,7 @@ describe('given a folder with non-strict config', () => {
   });
 
   describe('when files in folder beyond the required', () => {
-    const testCaseDir = `${baseDir}/mod-success-1`;
+    const testCaseDir = `${baseDir}/mod-non-strict-success-1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig);
 
@@ -66,8 +66,8 @@ describe('given a folder with non-strict config', () => {
       if (results) {
         expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
         expect(results[1].resource.includes('package.json')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-success-1');
-        expect(results[1].module?.name).toEqual('mod-success-1');
+        expect(results[0].module?.name).toEqual('mod-non-strict-success-1');
+        expect(results[1].module?.name).toEqual('mod-non-strict-success-1');
         expect(results[0].valid).toBeTruthy();
         expect(results[1].valid).toBeTruthy();
       }
@@ -75,7 +75,7 @@ describe('given a folder with non-strict config', () => {
   });
 
   describe('when files in folder exactly the required', () => {
-    const testCaseDir = `${baseDir}/mod-success-2`;
+    const testCaseDir = `${baseDir}/mod-non-strict-success-2`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig);
 
@@ -85,8 +85,8 @@ describe('given a folder with non-strict config', () => {
       if (results) {
         expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
         expect(results[1].resource.includes('package.json')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-success-2');
-        expect(results[1].module?.name).toEqual('mod-success-2');
+        expect(results[0].module?.name).toEqual('mod-non-strict-success-2');
+        expect(results[1].module?.name).toEqual('mod-non-strict-success-2');
         expect(results[0].valid).toBeTruthy();
         expect(results[1].valid).toBeTruthy();
       }
@@ -98,7 +98,7 @@ describe('given a folder with strict config', () => {
   const baseDir = 'src/rules/test-cases/module-required-files/strict';
 
   describe('when files beyond required found in folder', () => {
-    const testCaseDir = `${baseDir}/mod-error-1`;
+    const testCaseDir = `${baseDir}/mod-strict-error-1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig);
 
@@ -108,8 +108,8 @@ describe('given a folder with strict config', () => {
       if (results) {
         expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
         expect(results[1].resource.includes('package.json')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-error-1');
-        expect(results[1].module?.name).toEqual('mod-error-1');
+        expect(results[0].module?.name).toEqual('mod-strict-error-1');
+        expect(results[1].module?.name).toEqual('mod-strict-error-1');
         expect(results[0].valid).toBeTruthy();
         expect(results[1].valid).toBeFalsy();
       }
@@ -117,7 +117,7 @@ describe('given a folder with strict config', () => {
   });
 
   describe('when required files not found in folder', () => {
-    const testCaseDir = `${baseDir}/mod-error-2`;
+    const testCaseDir = `${baseDir}/mod-strict-error-2`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig);
 
@@ -129,10 +129,10 @@ describe('given a folder with strict config', () => {
         expect(results[1].resource.includes('CONTRIBUTING.md')).toBeTruthy();
         expect(results[2].resource.includes('LICENSE')).toBeTruthy();
         expect(results[3].resource.includes('serverless.yml')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-error-2');
-        expect(results[1].module?.name).toEqual('mod-error-2');
-        expect(results[2].module?.name).toEqual('mod-error-2');
-        expect(results[3].module?.name).toEqual('mod-error-2');
+        expect(results[0].module?.name).toEqual('mod-strict-error-2');
+        expect(results[1].module?.name).toEqual('mod-strict-error-2');
+        expect(results[2].module?.name).toEqual('mod-strict-error-2');
+        expect(results[3].module?.name).toEqual('mod-strict-error-2');
         expect(results[0].valid).toBeFalsy();
         expect(results[1].valid).toBeFalsy();
         expect(results[2].valid).toBeFalsy();
@@ -142,7 +142,7 @@ describe('given a folder with strict config', () => {
   });
 
   describe('when required files found in folder', () => {
-    const testCaseDir = `${baseDir}/mod-success-1`;
+    const testCaseDir = `${baseDir}/mod-strict-success-1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig);
     // create node_modules to simulate the .gitignore behavior
@@ -155,7 +155,7 @@ describe('given a folder with strict config', () => {
       expect(results).toHaveLength(1);
       if (results) {
         expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-success-1');
+        expect(results[0].module?.name).toEqual('mod-strict-success-1');
         expect(results[0].valid).toBeTruthy();
       }
     });
