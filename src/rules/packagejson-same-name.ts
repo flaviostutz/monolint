@@ -4,6 +4,7 @@ import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 import { RuleExample } from '../types/RuleExample';
+import { ConfigPackageJsonSameName } from '../types/Config';
 
 const rule: Rule = {
   name: 'packagejson-same-name',
@@ -14,18 +15,19 @@ const rule: Rule = {
     for (let i = 0; i < modules.length; i += 1) {
       const module = modules[i];
 
-      let packageJsonFile = 'package.json';
+      let packageJsonFileToUse = 'package.json';
       if (!module.config.rules) {
         throw new Error('Config should have rules');
       }
       const trules = module.config.rules['packagejson-same-name'];
       if (typeof trules !== 'boolean') {
-        if (trules['package-json-file']) {
-          packageJsonFile = trules['package-json-file'];
+        const rulesAdvanced = trules as ConfigPackageJsonSameName;
+        if (rulesAdvanced.packageJsonFile) {
+          packageJsonFileToUse = rulesAdvanced.packageJsonFile;
         }
       }
 
-      const packageFile = `${module.path}/${packageJsonFile}`;
+      const packageFile = `${module.path}/${packageJsonFileToUse}`;
       if (!fs.existsSync(packageFile)) {
         continue;
       }
@@ -54,7 +56,7 @@ const rule: Rule = {
         results.push({
           valid: false,
           resource: packageFile,
-          message: `Couldn't load json file: ${err}`,
+          message: "Couldn't load file",
           rule: rule.name,
         });
         continue;

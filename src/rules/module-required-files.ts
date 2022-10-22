@@ -4,7 +4,7 @@ import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 import { RuleExample } from '../types/RuleExample';
-import { ModuleRequiredFilesConfig } from '../types/ModuleRequiredFilesConfig';
+import { ConfigModuleRequiredFiles } from '../types/Config';
 
 const rule: Rule = {
   name: 'module-required-files',
@@ -20,7 +20,7 @@ const rule: Rule = {
       }
 
       // get the config for this rule
-      const requiredFileRuleConfig = rules['module-required-files'] as ModuleRequiredFilesConfig;
+      const requiredFileRuleConfig = rules['module-required-files'] as ConfigModuleRequiredFiles;
 
       // get the list of required files specified on .monolint.json
       const { files, strict } = requiredFileRuleConfig;
