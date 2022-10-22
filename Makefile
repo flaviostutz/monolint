@@ -3,7 +3,8 @@ build:
 	npm run build
 
 run:
-	npx ts-node src/main.ts --base-dir=./src/rules/test-monorepo --verbose
+	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/general --verbose
+	npx ts-node src/main.ts --base-dir=./src/rules/test-cases/module-required-files --verbose
 	# npx ts-node src/main.ts --base-dir=../large-monorepo --verbose
 
 lint:

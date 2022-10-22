@@ -39,7 +39,7 @@ const rule: Rule = {
           results.push({
             valid: true,
             resource: requiredFilePath,
-            message: 'Required file exists',
+            message: 'Required file found',
             rule: rule.name,
             module,
           });
@@ -47,7 +47,7 @@ const rule: Rule = {
           results.push({
             valid: false,
             resource: requiredFilePath,
-            message: 'Required file does not exist',
+            message: 'Required file not found',
             rule: rule.name,
             module,
           });
@@ -73,7 +73,7 @@ const rule: Rule = {
             results.push({
               valid: false,
               resource: `${path}/${file}`,
-              message: 'File not required by rule in strict mode',
+              message: 'File outside the required list not allowed (strict mode)',
               rule: rule.name,
               module,
             });

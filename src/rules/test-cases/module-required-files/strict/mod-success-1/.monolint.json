@@ -1,8 +1,0 @@
-{
-  "rules": {
-    "module-required-files": {
-      "strict": true,
-      "files": ["serverless.yml"]
-    }
-  }
-}
