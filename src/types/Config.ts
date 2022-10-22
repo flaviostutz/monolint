@@ -10,8 +10,7 @@ type ConfigModuleRequiredFiles = {
 };
 
 type ConfigPackageJsonSameName = {
-  'packageJsonFile': string;
+  packageJsonFile: string;
 };
-
 
 export { Config, ConfigModuleRequiredFiles, ConfigPackageJsonSameName };

@@ -79,7 +79,6 @@ const rule: Rule = {
             });
           }
         });
-
       }
     }
     return results;
