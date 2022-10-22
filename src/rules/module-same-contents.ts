@@ -1,4 +1,4 @@
-// import * as fs from 'fs';
+import * as fs from 'fs';
 
 import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
@@ -31,7 +31,7 @@ const rule: Rule = {
         }];
       }
       const refModule = fm[0];
-      return checkModules(refModule, modules, refFiles, minSimilarity);
+      return checkModules(modules, refModule, refFiles, minSimilarity);
     }
 
     // reference module not defined
@@ -40,7 +40,7 @@ const rule: Rule = {
     let bestRuleResults:RuleResult[]|null = null;
     for (let i = 0; i < modules.length; i += 1) {
       const refModule = modules[i];
-      const rr = checkModules(refModule, modules, refFiles, minSimilarity);
+      const rr = checkModules(modules, refModule, refFiles, minSimilarity);
       const irr = rr.filter((rrr) => !rrr.valid);
       const ibr = bestRuleResults?.filter((rrr) => !rrr.valid);
       if (!bestRuleResults || (ibr && irr.length < ibr.length)) {
@@ -65,7 +65,7 @@ const rule: Rule = {
   },
 };
 
-const checkModules = (refModule: Module, modules:Module[], refFiles: string[], minSimilarity:int):RuleResult[] => {
+const checkModules = (modules:Module[], refModule: Module, refFiles: string[], minSimilarity:int):RuleResult[] => {
   const results:RuleResult[] = [];
   for (let j = 0; j < modules.length; j += 1) {
     const module = modules[j];
@@ -73,6 +73,13 @@ const checkModules = (refModule: Module, modules:Module[], refFiles: string[], m
       continue;
     }
 
+    // check if file exists on target module
+    refFiles.forEach((refFile) => {
+      const refFilePath = `${refModule.path}/${refFile}`;
+      if (fs.existsSync(refFilePath)) {
+
+      }
+    });
   }
   return results;
 };

@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "lib": ["es2020"],
+      "module": "commonjs",
+      "target": "es2020",
+      "strict": true,
+      "esModuleInterop": true,
+      "sourceMap": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "preserveConstEnums": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.spec.ts"]
+  }

@@ -24,7 +24,7 @@ export type RuleResult = {
   message?: string;
 
   /**
-   * Related module name
+   * Related module
    */
   module?: Module;
 };
