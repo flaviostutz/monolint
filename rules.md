@@ -75,6 +75,23 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
+## **module-unique-name**
+
+* Checks if the name of the modules are unique in the entire monorepo, regardless of the which folder it is present
+
+* Example:
+
+
+  * Disable this rule
+
+```json
+{
+  "rules": {
+    "module-unique-name": false
+  }
+}
+```
+
 ## **packagejson-same-name**
 
 * Check if "name" attribute of the package.json file equals (or ends with) the name of the module

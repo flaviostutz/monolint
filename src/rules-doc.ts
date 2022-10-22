@@ -15,30 +15,54 @@ doc +=
   "Those configurations should be added to a file in the root of the monorepo called '.monolint.json'. If you create this file in intermediate folder (or even in the module folder), it will be merged to the root and default configurations also.\n";
 
 const rules = allRules.sort((aa, bb) => {
-  if (aa < bb) {
-    return 1;
+  if (aa.name < bb.name) {
+    return -1;
   }
-  return -1;
+  return 1;
 });
 
 for (let i = 0; i < rules.length; i += 1) {
   const rule = rules[i];
+
+  const ruleDocMarkdown = rule.docMarkdown();
+
+  if (!ruleDocMarkdown || ruleDocMarkdown.length < 15) {
+    console.log(`Doc markdown for rule ${rule.name} is too short`);
+    process.exit(1);
+  }
+
+
   doc += '\n';
   doc += `## **${rule.name}**\n\n`;
-  doc += `${rule.docMarkdown()}\n\n`;
+  doc += `${ruleDocMarkdown}\n\n`;
 
   const examples = rule.docExampleConfigs();
+  if (examples.length === 0) {
+    console.log(`Examples for ${rule.name} is empty`);
+    process.exit(1);
+  }
   if (examples.length > 0) {
+
     if (examples.length === 1) {
       doc += '* Example:\n\n';
     } else {
       doc += '* Examples:\n\n';
     }
+
     for (let j = 0; j < examples.length; j += 1) {
       const ex = examples[j];
+      if (!ex.description || ex.description.length < 15) {
+        console.log(`Example description for ${rule.name} -> example ${j + 1} is too short`);
+        process.exit(1);
+      }
       doc += `\n  * ${ex.description}\n\n`;
       doc += '```json\n';
       const econf = { rules: <Record<string, any>>{} };
+
+      if (typeof ex.config === 'undefined') {
+        console.log(`Example config for ${rule.name} -> example ${j + 1} must be defined`);
+        process.exit(1);
+      }
       econf.rules[`${rule.name}`] = ex.config;
       doc += `${JSON.stringify(econf, null, 2)}\n`;
       doc += '```\n';
@@ -51,9 +75,6 @@ if (checkOnly) {
   const diffs = diffChars(cf, doc);
   if (diffs.length > 1) {
     console.error('rules.md file is outdated. run "make rules-doc"');
-    diffs.forEach((part) => {
-      console.log(part);
-    });
     process.exit(1);
   }
 } else {
