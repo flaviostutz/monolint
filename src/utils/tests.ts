@@ -18,46 +18,42 @@ const loadModulesForRule = (
 
 const expectAllResourcesRegexValid = (
     ruleResults: RuleResult[]|null,
-    resourcesRegex: string[],
+    resourceRegex: string,
     expectValid: boolean,
     expectMessageRegex?: string,
 ):void => {
   if (!ruleResults) {
     throw new Error('ruleResults should be defined');
   }
-  for (let i = 0; i < resourcesRegex.length; i += 1) {
-    const resRegex = resourcesRegex[i];
+  let foundResult = false;
+  let validResult = false;
+  for (let j = 0; j < ruleResults.length; j += 1) {
+    const rr = ruleResults[j];
 
-    let foundResult = false;
-    let validResult = false;
-    for (let j = 0; j < ruleResults.length; j += 1) {
-      const rr = ruleResults[j];
-
-      const regexp = new RegExp(resRegex);
-      if (regexp.test(rr.resource)) {
-        if (foundResult && validResult !== rr.valid) {
-          throw new Error(`Multiple rule results for ${resRegex} found with different 'valid' results`);
-        }
-
-        if (expectMessageRegex) {
-          const regexpm = new RegExp(expectMessageRegex);
-          if (!rr.message || !regexpm.test(rr.message)) {
-            throw new Error(`Message ${rr.message} doesn't match regex`);
-          }
-        }
-
-        foundResult = true;
-        validResult = rr.valid;
+    const regexp = new RegExp(resourceRegex);
+    if (regexp.test(rr.resource)) {
+      if (foundResult && validResult !== rr.valid) {
+        throw new Error(`Multiple rule results for ${resourceRegex} found with different 'valid' results`);
       }
-    }
 
-    if (!foundResult) {
-      throw new Error(`No resources that match '${resRegex}' found in rule results`);
-    }
+      if (expectMessageRegex) {
+        const regexpm = new RegExp(expectMessageRegex);
+        if (!rr.message || !regexpm.test(rr.message)) {
+          throw new Error(`Message ${rr.message} doesn't match regex`);
+        }
+      }
 
-    if (expectValid !== validResult) {
-      throw new Error(`All rule results for resource ${resRegex} should be ${expectValid ? 'valid' : 'invalid'}`);
+      foundResult = true;
+      validResult = rr.valid;
     }
+  }
+
+  if (!foundResult) {
+    throw new Error(`No resources that match '${resourceRegex}' found in rule results`);
+  }
+
+  if (expectValid !== validResult) {
+    throw new Error(`All rule results for resource ${resourceRegex} should be ${expectValid ? 'valid' : 'invalid'}`);
   }
 };
 
