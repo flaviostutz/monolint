@@ -17,11 +17,11 @@ const loadModulesForRule = (
 };
 
 const expectAllResourcesRegexValid = (
-    ruleResults: RuleResult[]|null,
-    resourceRegex: string,
-    expectValid: boolean,
-    expectMessageRegex?: string,
-):void => {
+  ruleResults: RuleResult[] | null,
+  resourceRegex: string,
+  expectValid: boolean,
+  expectMessageRegex?: string,
+): void => {
   if (!ruleResults) {
     throw new Error('ruleResults should be defined');
   }
@@ -33,7 +33,9 @@ const expectAllResourcesRegexValid = (
     const regexp = new RegExp(resourceRegex);
     if (regexp.test(rr.resource)) {
       if (foundResult && validResult !== rr.valid) {
-        throw new Error(`Multiple rule results for ${resourceRegex} found with different 'valid' results`);
+        throw new Error(
+          `Multiple rule results for ${resourceRegex} found with different 'valid' results`,
+        );
       }
 
       if (expectMessageRegex) {
@@ -53,15 +55,19 @@ const expectAllResourcesRegexValid = (
   }
 
   if (expectValid !== validResult) {
-    throw new Error(`All rule results for resource ${resourceRegex} should be ${expectValid ? 'valid' : 'invalid'}`);
+    throw new Error(
+      `All rule results for resource ${resourceRegex} should be ${
+        expectValid ? 'valid' : 'invalid'
+      }`,
+    );
   }
 };
 
 const expectAllModuleResultsValid = (
-  ruleResults: RuleResult[]|null,
+  ruleResults: RuleResult[] | null,
   moduleName: string,
   expectValid: boolean,
-):void => {
+): void => {
   if (!ruleResults) {
     throw new Error('ruleResults should be defined');
   }
@@ -73,7 +79,9 @@ const expectAllModuleResultsValid = (
 
     if (moduleName === rr.module?.name) {
       if (foundResult && validResult !== rr.valid) {
-        throw new Error(`Multiple rule results for module ${rr.module.name} found with different 'valid' results`);
+        throw new Error(
+          `Multiple rule results for module ${rr.module.name} found with different 'valid' results`,
+        );
       }
       foundResult = true;
       validResult = rr.valid;
@@ -85,7 +93,9 @@ const expectAllModuleResultsValid = (
   }
 
   if (expectValid !== validResult) {
-    throw new Error(`All rule results for module ${moduleName} should be ${expectValid ? 'valid' : 'invalid'}`);
+    throw new Error(
+      `All rule results for module ${moduleName} should be ${expectValid ? 'valid' : 'invalid'}`,
+    );
   }
 };
 

@@ -1,4 +1,8 @@
-import { expectAllModuleResultsValid, expectAllResourcesRegexValid, loadModulesForRule } from '../utils/tests';
+import {
+  expectAllModuleResultsValid,
+  expectAllResourcesRegexValid,
+  loadModulesForRule,
+} from '../utils/tests';
 
 import rule from './module-same-contents';
 
@@ -28,15 +32,28 @@ describe('when using default configuration', () => {
 
   it('mod3-some-different-files/.prettierrc.js error should refer to mod4-all-same/.prettierrc.js', async () => {
     const results = rule.checkModules(modules, baseDir);
-    expectAllResourcesRegexValid(results,
+    expectAllResourcesRegexValid(
+      results,
       'mod3-some-different-files/.prettierrc.js',
       false,
-      'mod4-all-same/.prettierrc.js');
+      'mod4-all-same/.prettierrc.js',
+    );
   });
 
   it('mod3-some-equal-files module should be all valid', async () => {
     const results = rule.checkModules(modules, baseDir);
     expectAllModuleResultsValid(results, 'mod2-some-equal-files', true);
   });
+});
 
+describe('when using intermediate configuration', () => {
+  const modules = loadModulesForRule(baseDir, '.monolint2.json', 'module-same-contents');
+
+  it('mod4-all-same should be selected automatically as the reference module', async () => {
+    const results = rule.checkModules(modules, baseDir);
+    expectAllResourcesRegexValid(results, 'mod4-all-same/.prettierrc.js', true, 'Reference.*');
+    expectAllResourcesRegexValid(results, 'mod4-all-same/jest.config.js', true, 'Reference.*');
+    expectAllResourcesRegexValid(results, 'mod4-all-same/tsconfig.json', true, 'Reference.*');
+    expectAllModuleResultsValid(results, 'mod4-all-same', true);
+  });
 });

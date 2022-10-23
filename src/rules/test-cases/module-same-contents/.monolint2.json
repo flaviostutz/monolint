@@ -1,7 +1,6 @@
 {
   "rules": {
     "module-same-contents": {
-      "min-similarity": 90,
       "files": ["file1", "file2", "dir1/file3"]
     }
   }

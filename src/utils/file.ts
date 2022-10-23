@@ -2,7 +2,7 @@ import * as fs from 'fs';
 
 import levenshtein from 'fast-levenshtein';
 
-const similarityPerc = (file1:string, file2:string):number => {
+const similarityPerc = (file1: string, file2: string): number => {
   const file1Contents = fs.readFileSync(file1).toString();
   const file2Contents = fs.readFileSync(file2).toString();
   const diffDist = levenshtein.get(file1Contents, file2Contents);
