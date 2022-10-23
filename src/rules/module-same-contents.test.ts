@@ -12,7 +12,11 @@ describe('when using default configuration', () => {
     // module mod4-all-same should be automatically set as the reference because:
     //    - it has the most files that are similar to other modules
     //    - it has more files from the reference
-    expectAllResourcesRegexValid(results, ['.*/mod4-all-same/prettierrc.js', '.*/mod4-all-same/jest.config.js', '.*/mod4-all-same/tsconfig.json'], true);
+    expectAllResourcesRegexValid(results, [
+      'mod4-all-same/.prettierrc.js',
+      'mod4-all-same/jest.config.js',
+      'mod4-all-same/tsconfig.json',
+    ], true, 'Reference.*');
     expectAllModuleResultsValid(results, 'mod4-all-same', true);
   });
 
@@ -24,8 +28,8 @@ describe('when using default configuration', () => {
 
   it('mod3-some-different-files/.prettierrc.js should be invalid', async () => {
     const results = rule.checkModules(modules, baseDir);
-    expectAllResourcesRegexValid(results, ['.*/mod3-some-different-files/.prettierrc.js'], false);
-    expectAllResourcesRegexValid(results, ['.*/mod3-some-different-files/tsconfig.json'], true);
+    expectAllResourcesRegexValid(results, ['mod3-some-different-files/.prettierrc.js'], false);
+    expectAllResourcesRegexValid(results, ['mod3-some-different-files/tsconfig.json'], true);
   });
 
   it('mod3-some-different-files/.prettierrc.js error should refer to mod4-all-same/.prettierrc.js', async () => {
@@ -34,12 +38,12 @@ describe('when using default configuration', () => {
     if (!res) { throw new Error('Res should be defined'); }
     expect(res).toHaveLength(1);
     expect(res[0].message).toContain('mod4-all-same/.prettierrc.js');
-    expectAllResourcesRegexValid(results, ['.*/mod3-some-different-files/.prettierrc.js'], false);
+    expectAllResourcesRegexValid(results, ['mod3-some-different-files/.prettierrc.js'], false);
   });
 
   it('mod3-some-equal-files module should be all valid', async () => {
     const results = rule.checkModules(modules, baseDir);
-    expectAllModuleResultsValid(results, 'mod3-some-equal-files', true);
+    expectAllModuleResultsValid(results, 'mod2-some-equal-files', true);
   });
 
 });

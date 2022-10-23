@@ -10,19 +10,22 @@ import { RuleExample } from '../types/RuleExample';
 const defaultFiles = [
   'LICENSE',
   // common javascript configurations
-  'jest.config.js', 'tsconfig.js', 'tsconfig.eslint.json', '.eslintrc.js', 'eslintignore', '.prettierrc.js', '.prettierignore',
+  'jest.config.js', 'tsconfig.json', 'tsconfig.eslint.json', '.eslintrc.js', 'eslintignore', '.prettierrc.js', '.prettierignore',
 ];
 
 const rule: Rule = {
   name: 'module-same-contents',
 
   checkModules: (modules: Module[]): RuleResult[] | null => {
-    const refModuleName:string|null = 'mod4-all-same';
+
+    // parei aqui read from advanced config
+
+    const refModuleName:string|null = null;
     const refFiles = defaultFiles;
-    const minSimilarityPerc = 80;
+    const minSimilarityPerc = 100;
 
     // reference module defined
-    if (!refModuleName) {
+    if (refModuleName) {
       const fm = modules.filter((mm) => mm.name === refModuleName);
       if (fm.length !== 1) {
         return [{
@@ -37,11 +40,26 @@ const rule: Rule = {
     }
 
     // reference module not defined
-    // try all modules as ref and use the one
-    // that generates the least number of invalid resources
-    let bestRuleResults:RuleResult[]|null = null;
+    // find the module that have most of the reference files in it
+    // if two modules tie, use the one that creates less invalid checks
+    let bestFileCount = 0;
+    let sameCountBests:Module[] = [];
     for (let i = 0; i < modules.length; i += 1) {
-      const refModule = modules[i];
+      const rm = modules[i];
+      // only check if module has ref files and return one result per file found
+      const rr = checkModules([rm], rm, refFiles, minSimilarityPerc);
+      if (rr.length === bestFileCount) {
+        sameCountBests.push(rm);
+      }
+      if (rr.length > bestFileCount) {
+        bestFileCount = rr.length;
+        sameCountBests = [rm];
+      }
+    }
+
+    let bestRuleResults:RuleResult[]|null = null;
+    for (let i = 0; i < sameCountBests.length; i += 1) {
+      const refModule = sameCountBests[i];
       const rr = checkModules(modules, refModule, refFiles, minSimilarityPerc);
       const irr = rr.filter((rrr) => !rrr.valid);
       const ibr = bestRuleResults?.filter((rrr) => !rrr.valid);
@@ -77,9 +95,6 @@ const checkModules = (
   const results:RuleResult[] = [];
   for (let j = 0; j < modules.length; j += 1) {
     const module = modules[j];
-    if (module.path === refModule.path) {
-      continue;
-    }
 
     refFiles.forEach((refFile) => {
       const modFilePath = `${module.path}/${refFile}`;
@@ -87,6 +102,20 @@ const checkModules = (
       if (!(fs.existsSync(refFilePath) && fs.existsSync(modFilePath))) {
         return;
       }
+
+      // reference module
+      if (module.path === refModule.path) {
+        results.push({
+          valid: true,
+          resource: modFilePath,
+          message: 'Reference file for other modules',
+          rule: rule.name,
+          module,
+        });
+        return;
+      }
+
+      // other modules
       const sp = similarityPerc(modFilePath, refFilePath);
       const valid = (sp >= minSimilarityPerc);
       let message = `Similar to module ${refModule.name} (${sp}%)`;

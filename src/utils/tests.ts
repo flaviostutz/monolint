@@ -20,6 +20,7 @@ const expectAllResourcesRegexValid = (
     ruleResults: RuleResult[]|null,
     resourcesRegex: string[],
     expectValid: boolean,
+    expectMessageRegex?: string,
 ):void => {
   if (!ruleResults) {
     throw new Error('ruleResults should be defined');
@@ -37,6 +38,14 @@ const expectAllResourcesRegexValid = (
         if (foundResult && validResult !== rr.valid) {
           throw new Error(`Multiple rule results for ${resRegex} found with different 'valid' results`);
         }
+
+        if (expectMessageRegex) {
+          const regexpm = new RegExp(expectMessageRegex);
+          if (!rr.message || !regexpm.test(rr.message)) {
+            throw new Error(`Message ${rr.message} doesn't match regex`);
+          }
+        }
+
         foundResult = true;
         validResult = rr.valid;
       }
