@@ -13,10 +13,14 @@ describe('when using default configuration', () => {
 
   it('mod4-all-same should be selected automatically as the reference module', async () => {
     const results = rule.checkModules(modules, baseDir);
+    if (!results) {
+      throw new Error("Results shouldn't be null");
+    }
+    expect(results.length).toBeGreaterThan(0);
+    expectAllModuleResultsValid(results, 'mod4-all-same', true);
     expectAllResourcesRegexValid(results, 'mod4-all-same/.prettierrc.js', true, 'Reference.*');
     expectAllResourcesRegexValid(results, 'mod4-all-same/jest.config.js', true, 'Reference.*');
     expectAllResourcesRegexValid(results, 'mod4-all-same/tsconfig.json', true, 'Reference.*');
-    expectAllModuleResultsValid(results, 'mod4-all-same', true);
   });
 
   it('mod1-reference resources should all be valid', async () => {
@@ -49,11 +53,11 @@ describe('when using default configuration', () => {
 describe('when using intermediate configuration', () => {
   const modules = loadModulesForRule(baseDir, '.monolint2.json', 'module-same-contents');
 
-  it('mod4-all-same should be selected automatically as the reference module', async () => {
+  it('mod1-reference should be selected automatically as the reference module because alphabetically it wins the tie', async () => {
     const results = rule.checkModules(modules, baseDir);
-    expectAllResourcesRegexValid(results, 'mod4-all-same/.prettierrc.js', true, 'Reference.*');
-    expectAllResourcesRegexValid(results, 'mod4-all-same/jest.config.js', true, 'Reference.*');
-    expectAllResourcesRegexValid(results, 'mod4-all-same/tsconfig.json', true, 'Reference.*');
-    expectAllModuleResultsValid(results, 'mod4-all-same', true);
+    expectAllResourcesRegexValid(results, 'mod1-reference/file1', true, 'Reference.*');
+    expectAllResourcesRegexValid(results, 'mod1-reference/file2', true, 'Reference.*');
+    expectAllResourcesRegexValid(results, 'mod1-reference/dir1/file3', true, 'Reference.*');
+    expectAllModuleResultsValid(results, 'mod1-reference', true);
   });
 });
