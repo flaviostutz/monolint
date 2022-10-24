@@ -6,7 +6,7 @@ describe('with two files', () => {
       'src/rules/test-cases/general/modules/mod1-js/filediff1a',
       'src/rules/test-cases/general/modules/mod1-js/filediff1b',
     );
-    expect(dperc).toEqual(90.33);
+    expect(dperc).toBeGreaterThanOrEqual(90);
   });
 
   it('calculate similarityPerc of chars changed big text rev', async () => {
@@ -14,7 +14,7 @@ describe('with two files', () => {
       'src/rules/test-cases/general/modules/mod1-js/filediff1b',
       'src/rules/test-cases/general/modules/mod1-js/filediff1a',
     );
-    expect(dperc).toEqual(89.3);
+    expect(dperc).toBeGreaterThanOrEqual(89);
   });
 
   it('calculate similarityPerc of chars changed small js', async () => {
@@ -22,6 +22,6 @@ describe('with two files', () => {
       'src/rules/test-cases/general/modules/mod1-js/filediff2a',
       'src/rules/test-cases/general/modules/mod1-js/filediff2b',
     );
-    expect(dperc).toEqual(99.75);
+    expect(dperc).toBeGreaterThanOrEqual(99);
   });
 });
