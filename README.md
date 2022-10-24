@@ -90,11 +90,14 @@ If you work or know a good public monorepo, please let us now so we can use it a
 
 - Create file ".monolintignore" at the root folder of the monorepo with file/directory patterns to be ignored during module discovery. You can use these patterns to hide entire branches of the monorepo from monolint or just specific directories.
 
+- By default all patterns present in .gitignore at the root of the monorepo will be used for ignoring paths during module discovery. You can disable this behavior with the configuration 'use-gitignore': false in .monolint.json
+
 - The ignore patterns works as follows:
 
   - Add each ignore pattern in a new line of the file
   - '\*' - matches a single level of dir
   - '\*\*' - matches any number of levels of a dir
+  - '[name of a dir]' - will ignore any folder with this name in any level
   - When a parent dir matches the ignore pattern, all its childs will be ignored
 
 - Example

@@ -1,16 +1,15 @@
-import { discoverModules } from '../lint';
-import { loadBaseConfig } from '../utils/config';
+import { loadModulesForRule } from '../utils/tests';
 
 import rule from './module-unique-name';
 
 const baseDir = 'src/rules/test-cases/general';
-const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
-const modules = discoverModules(baseDir, baseConfig);
 
-describe('module-unique-name', () => {
-  it('check if names are unique', async () => {
+describe('using default configurations on general monorepo', () => {
+  const modules = loadModulesForRule(baseDir, '.monolint.json', 'module-unique-name');
+
+  it('names should be unique', async () => {
     const results = rule.checkModules(modules, baseDir);
-    const fresults = results?.filter((rr) => !rr.valid && rr.rule === 'module-unique-name');
+    const fresults = results?.filter((rr) => !rr.valid);
     expect(fresults).toHaveLength(2);
     if (fresults) {
       expect(fresults[0].module?.name).toEqual('mod5-thx');
