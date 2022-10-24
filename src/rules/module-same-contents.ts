@@ -35,12 +35,9 @@ const rule: Rule = {
       if (!rules || !rules['module-same-contents']) {
         throw new Error('module-same-contents is not enabled for this rule');
       }
-      const moduleConfig = rules['module-same-contents'] as ConfigModuleSameContents;
 
-      let targetModuleRuleConfig:ConfigModuleSameContents = {};
-      if (typeof moduleConfig !== 'boolean') {
-        targetModuleRuleConfig = moduleConfig;
-      }
+      // expand simple configuration format to complete format
+      const targetModuleRuleConfig = expandConfig(<boolean | ConfigModuleSameContents>rules['module-same-contents']);
 
       // reference module was set
       const refModuleName = targetModuleRuleConfig['reference-module'];
@@ -154,30 +151,25 @@ const checkModule = (
 ): RuleResult[] => {
   const results: RuleResult[] = [];
 
-  // expand simple configuration format to complete format
-  let fconfig = targetModuleRuleConfig.files;
-  if (!targetModuleRuleConfig.files) {
-    targetModuleRuleConfig.files = defaultFiles;
-  }
-  console.log(JSON.stringify(targetModuleRuleConfig));
-  if (Array.isArray(targetModuleRuleConfig.files)) {
-    fconfig = targetModuleRuleConfig.files.reduce<Record<string, ConfigModuleSameContentsFile>>((fc, rf) => {
-      fc[rf] = { enabled: true, 'min-similarity': 100 };
-      return fc;
-    }, {});
-  }
-  const fileConfigs = <Record<string, ConfigModuleSameContentsFile>>fconfig;
 
   // check each file in module against ref module file
-  for (const filename in fileConfigs) {
+  for (const filename in targetModuleRuleConfig.files) {
     // eslint-disable-next-line no-prototype-builtins
-    if (!fileConfigs.hasOwnProperty(filename)) {
+    if (!targetModuleRuleConfig.files.hasOwnProperty(filename)) {
       continue;
     }
 
     const targetFilePath = `${targetModule.path}/${filename}`;
     const refFilePath = `${refModule.path}/${filename}`;
     if (!(fs.existsSync(refFilePath) && fs.existsSync(targetFilePath))) {
+      continue;
+    }
+
+    // we will always have the expanded form here
+    const fileConfigs = <Record<string, ConfigModuleSameContentsFile>>targetModuleRuleConfig.files;
+    const fileConfig = fileConfigs[filename];
+
+    if (!fileConfig.enabled) {
       continue;
     }
 
@@ -190,12 +182,6 @@ const checkModule = (
         rule: rule.name,
         module: targetModule,
       });
-      continue;
-    }
-
-    const fileConfig = fileConfigs[filename];
-
-    if (!fileConfig.enabled) {
       continue;
     }
 
@@ -222,6 +208,45 @@ const checkModule = (
 
   }
   return results;
+};
+
+const expandConfig = (moduleConfig: boolean | ConfigModuleSameContents): ConfigModuleSameContents => {
+  let targetModuleRuleConfig:ConfigModuleSameContents = {};
+
+  // some custom configuration was passed, not only a boolean for activating the module
+  if (typeof moduleConfig !== 'boolean') {
+    targetModuleRuleConfig = moduleConfig;
+  }
+
+  // files wasn't defined, so use default files
+  let fileConfigs = targetModuleRuleConfig.files;
+  if (!fileConfigs) {
+    fileConfigs = defaultFiles;
+  }
+
+  // only an array of files was used, not the expanded full format, so expand it
+  if (Array.isArray(fileConfigs)) {
+    fileConfigs = fileConfigs.reduce<Record<string, ConfigModuleSameContentsFile>>((fc, rf) => {
+      fc[rf] = { enabled: true, 'min-similarity': 100 };
+      return fc;
+    }, {});
+  }
+
+  for (const fc in fileConfigs) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!fileConfigs.hasOwnProperty(fc)) {
+      continue;
+    }
+    const fileConfig = fileConfigs[fc];
+    if (typeof fileConfig['min-similarity'] !== 'number') {
+      fileConfig['min-similarity'] = 100;
+    }
+    if (typeof fileConfig.enabled !== 'boolean') {
+      fileConfig.enabled = true;
+    }
+  }
+  targetModuleRuleConfig.files = fileConfigs;
+  return targetModuleRuleConfig;
 };
 
 export default rule;

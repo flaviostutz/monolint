@@ -61,3 +61,16 @@ describe('when using intermediate configuration', () => {
     expectAllModuleResultsValid(results, 'mod1-reference', true);
   });
 });
+
+describe('when using expanded configuration', () => {
+  const modules = loadModulesForRule(baseDir, '.monolint3.json', 'module-same-contents');
+
+  it('mod1-reference should be selected automatically as the reference module because alphabetically it wins the tie', async () => {
+    const results = rule.checkModules(modules, baseDir);
+    expect(results).toHaveLength(3);
+    expectAllResourcesRegexValid(results, 'mod2-some-equal-files/dir1/file3', true, 'Reference.*');
+    expectAllResourcesRegexValid(results, 'mod4-all-same/dir1/file3', true, 'Similar to module mod2-some-equal-files.*');
+    expectAllResourcesRegexValid(results, 'mod1-reference/dir1/file3', true, 'Similar to module mod2-some-equal-files.*');
+    expectAllModuleResultsValid(results, 'mod2-some-equal-files', true);
+  });
+});
