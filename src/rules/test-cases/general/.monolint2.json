@@ -4,6 +4,5 @@
   "use-gitignore": false,
   "rules": {
     "packagejson-same-name": true
-  },
-  "defaults": false
+  }
 }
