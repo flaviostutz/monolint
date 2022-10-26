@@ -21,8 +21,10 @@ const fullContentSimilarityPerc = (file1: string, file2: string): number => {
  * @returns Percent of similarity of the selected contents inside file
  */
 const partialContentSimilarity = (
-    filePath1: string, jsonPointerFile1: string,
-    filePath2: string, jsonPointerFile2: string,
+  filePath1: string,
+  jsonPointerFile1: string,
+  filePath2: string,
+  jsonPointerFile2: string,
 ): number => {
   const contents1 = loadContents(filePath1);
   const partial1 = jsonpointer.get(contents1, jsonPointerFile1);
@@ -45,7 +47,7 @@ const partialContentSimilarity = (
  * @param filePath .json or .yml file
  * @returns JSON object
  */
-const loadContents = (filePath:string):object => {
+const loadContents = (filePath: string): object => {
   const contents = fs.readFileSync(filePath).toString();
   if (filePath.toLowerCase().endsWith('.yml')) {
     return yamlParse(contents);

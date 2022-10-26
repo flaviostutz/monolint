@@ -27,7 +27,6 @@ describe('when comparing the contents of two files', () => {
 });
 
 describe('when having two yml or json files', () => {
-
   it('same selector comparing with same file have similarity 100%', async () => {
     const dperc = partialContentSimilarity(
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
@@ -100,5 +99,4 @@ describe('when having two yml or json files', () => {
     );
     expect(dperc).toBe(0);
   });
-
 });

@@ -26,7 +26,7 @@ const rule: Rule = {
   name: 'module-same-contents',
 
   checkModules: (modules: Module[]): RuleResult[] | null => {
-    const ruleResults:RuleResult[] = [];
+    const ruleResults: RuleResult[] = [];
 
     for (let j = 0; j < modules.length; j += 1) {
       const targetModule = modules[j];
@@ -37,7 +37,9 @@ const rule: Rule = {
       }
 
       // expand simple configuration format to complete format
-      const targetModuleRuleConfig = expandConfig(<boolean | ConfigModuleSameContents>rules['module-same-contents']);
+      const targetModuleRuleConfig = expandConfig(
+        <boolean | ConfigModuleSameContents>rules['module-same-contents'],
+      );
 
       // reference module was set
       const refModuleName = targetModuleRuleConfig['reference-module'];
@@ -163,7 +165,7 @@ const rule: Rule = {
 const checkModule = (
   refModule: Module,
   targetModule: Module,
-  targetModuleRuleConfig:ConfigModuleSameContents,
+  targetModuleRuleConfig: ConfigModuleSameContents,
 ): RuleResult[] => {
   const results: RuleResult[] = [];
 
@@ -206,11 +208,16 @@ const checkModule = (
     }
     const minSimilarity = fileConfig['min-similarity'];
 
-
     // partial content comparison by jsonpointer selector
     if (fileConfig.selectors) {
-      if (!Array.isArray(fileConfig.selectors) || fileConfig.selectors.length === 0 || (typeof fileConfig.selectors[0] !== 'string')) {
-        throw new Error(`'selectors' config for file '${filename}' must be an array of jsonpointer expressions`);
+      if (
+        !Array.isArray(fileConfig.selectors) ||
+        fileConfig.selectors.length === 0 ||
+        typeof fileConfig.selectors[0] !== 'string'
+      ) {
+        throw new Error(
+          `'selectors' config for file '${filename}' must be an array of jsonpointer expressions`,
+        );
       }
 
       for (let i = 0; i < fileConfig.selectors.length; i += 1) {
@@ -247,7 +254,6 @@ const checkModule = (
       continue;
     }
 
-
     // full content comparison
     const sp = fullContentSimilarityPerc(targetFilePath, refFilePath);
     // eslint-disable-next-line @shopify/binary-assignment-parens
@@ -263,13 +269,14 @@ const checkModule = (
       rule: rule.name,
       module: targetModule,
     });
-
   }
   return results;
 };
 
-const expandConfig = (moduleConfig: boolean | ConfigModuleSameContents): ConfigModuleSameContents => {
-  let targetModuleRuleConfig:ConfigModuleSameContents = {};
+const expandConfig = (
+  moduleConfig: boolean | ConfigModuleSameContents,
+): ConfigModuleSameContents => {
+  let targetModuleRuleConfig: ConfigModuleSameContents = {};
 
   // some custom configuration was passed, not only a boolean for activating the module
   if (typeof moduleConfig !== 'boolean') {

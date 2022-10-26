@@ -69,8 +69,18 @@ describe('when using expanded configuration', () => {
     const results = rule.checkModules(modules, baseDir);
     expect(results).toHaveLength(3);
     expectAllResourcesRegexValid(results, 'mod2-some-equal-files/dir1/file3', true, 'Reference.*');
-    expectAllResourcesRegexValid(results, 'mod4-all-same/dir1/file3', true, 'Similar to module mod2-some-equal-files.*');
-    expectAllResourcesRegexValid(results, 'mod1-reference/dir1/file3', true, 'Similar to module mod2-some-equal-files.*');
+    expectAllResourcesRegexValid(
+      results,
+      'mod4-all-same/dir1/file3',
+      true,
+      'Similar to module mod2-some-equal-files.*',
+    );
+    expectAllResourcesRegexValid(
+      results,
+      'mod1-reference/dir1/file3',
+      true,
+      'Similar to module mod2-some-equal-files.*',
+    );
     expectAllModuleResultsValid(results, 'mod2-some-equal-files', true);
   });
 });
@@ -80,17 +90,52 @@ describe('when using selector for checking parts of files', () => {
 
   it('serverless.yml attributes among different modules should be checked accordingly', async () => {
     const results = rule.checkModules(modules, baseDir);
-    expectAllResourcesRegexValid(results, 'mod2-some-equal-files/serverless.yml\\[/provider/runtime\\]', true, 'Similar to module mod1-reference.*');
-    expectAllResourcesRegexValid(results, 'mod2-some-equal-files/serverless.yml\\[/plugins/0\\]', true, 'Similar to module mod1-reference.*');
-    expectAllResourcesRegexValid(results, 'mod2-some-equal-files/serverless.yml\\[/provider/stackName\\]', true, 'Similar to module mod1-reference.*');
+    expectAllResourcesRegexValid(
+      results,
+      'mod2-some-equal-files/serverless.yml\\[/provider/runtime\\]',
+      true,
+      'Similar to module mod1-reference.*',
+    );
+    expectAllResourcesRegexValid(
+      results,
+      'mod2-some-equal-files/serverless.yml\\[/plugins/0\\]',
+      true,
+      'Similar to module mod1-reference.*',
+    );
+    expectAllResourcesRegexValid(
+      results,
+      'mod2-some-equal-files/serverless.yml\\[/provider/stackName\\]',
+      true,
+      'Similar to module mod1-reference.*',
+    );
 
-    expectAllResourcesRegexValid(results, 'mod3-some-different-files/serverless.yml\\[/provider/runtime\\]', false, 'Different from .*/mod1-reference/serverless.yml\\[/provider/runtime\\]');
-    expectAllResourcesRegexValid(results, 'mod3-some-different-files/serverless.yml\\[/plugins/0\\]', false, 'Different from .*/mod1-reference/serverless.yml\\[/plugins/0\\]');
-    expectAllResourcesRegexValid(results, 'mod3-some-different-files/serverless.yml\\[/provider/stackName\\]', false, 'Different from .*/mod1-reference/serverless.yml\\[/provider/stackName\\]');
+    expectAllResourcesRegexValid(
+      results,
+      'mod3-some-different-files/serverless.yml\\[/provider/runtime\\]',
+      false,
+      'Different from .*/mod1-reference/serverless.yml\\[/provider/runtime\\]',
+    );
+    expectAllResourcesRegexValid(
+      results,
+      'mod3-some-different-files/serverless.yml\\[/plugins/0\\]',
+      false,
+      'Different from .*/mod1-reference/serverless.yml\\[/plugins/0\\]',
+    );
+    expectAllResourcesRegexValid(
+      results,
+      'mod3-some-different-files/serverless.yml\\[/provider/stackName\\]',
+      false,
+      'Different from .*/mod1-reference/serverless.yml\\[/provider/stackName\\]',
+    );
   });
 
-  it('should be invalid if reference file doesn\'t have contents for specified selector', async () => {
+  it("should be invalid if reference file doesn't have contents for specified selector", async () => {
     const results = rule.checkModules(modules, baseDir);
-    expectAllResourcesRegexValid(results, 'mod1-reference/package.json\\[/scripts/dist\\]', false, 'Config error: selector points to an unexisting');
+    expectAllResourcesRegexValid(
+      results,
+      'mod1-reference/package.json\\[/scripts/dist\\]',
+      false,
+      'Config error: selector points to an unexisting',
+    );
   });
 });

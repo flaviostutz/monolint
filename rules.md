@@ -63,7 +63,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 * Checks if specified files have the same content among the different modules
 * It doesn't complain or checks for files that aren't present on modules. If you need this, use rule 'module-required-files'
 * Default behavior:
-  * It will try to select the module with most files as the reference module and check the other modules's files against it  * Files checked: ["LICENSE","jest.config.js","tsconfig.json","tsconfig.eslint.json",".eslintrc.js","eslintignore",".prettierrc.js",".prettierignore"]  * Files must have the be exactly the same contents (min-similarity=100%)* With advanced configurations you can change which files are checked and the similarity threshold
+  * It will try to select the module with most files as the reference module and check the other modules's files against it  * Files checked: ["LICENSE","jest.config.js","tsconfig.json","tsconfig.eslint.json",".eslintrc.js","eslintignore",".prettierrc.js",".prettierignore"]  * Files must have the be exactly the same contents (min-similarity=100%)* With expanded configurations you can change which files are checked and the similarity threshold* Use jsonpointer selectors (https://www.rfc-editor.org/rfc/rfc6901) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)
 
 * Examples:
 
@@ -109,6 +109,32 @@ Those configurations should be added to a file in the root of the monorepo calle
         },
         "tsconfig.json": {
           "enabled": false
+        }
+      }
+    }
+  }
+}
+```
+
+  * Attributes 'provider.runtime' and 'provider/stackName' of serverless.yml and script 'test' of package.json must be equal among modules (it won't check the whole file). Jsonpointer (https://www.rfc-editor.org/rfc/rfc6901) notation was used to select the attributes
+
+```json
+{
+  "rules": {
+    "module-same-contents": {
+      "files": {
+        "serverless.yml": {
+          "selectors": [
+            "/provider/runtime",
+            "/provider/stackName",
+            "/plugins/0"
+          ]
+        },
+        "package.json": {
+          "selectors": [
+            "/scripts/dist",
+            "/repository/type"
+          ]
         }
       }
     }

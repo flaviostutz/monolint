@@ -23,7 +23,7 @@ publish:
 	npm version from-git
 	npm publish
 
-all: build lint unit-tests run
+all: build lint unit-tests
 
 rules-doc:
 	npx ts-node src/rules-doc.ts
