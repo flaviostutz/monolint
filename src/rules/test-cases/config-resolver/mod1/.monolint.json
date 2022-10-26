@@ -1,0 +1,6 @@
+{
+  "extends": ["monolint:serverless"],
+  "rules": {
+    "module-same-contents": false
+  }
+}

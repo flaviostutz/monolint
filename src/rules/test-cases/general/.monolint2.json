@@ -1,4 +1,5 @@
 {
+  "extends": [],
   "module-markers": ["_thisisamodule"],
   "use-gitignore": false,
   "rules": {

@@ -1,8 +1,7 @@
+import { loadBaseConfig } from '../config/config-resolver';
 import { discoverModules } from '../lint';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
-
-import { loadBaseConfig } from './config';
 
 const loadModulesForRule = (
   baseDir: string,
@@ -10,7 +9,7 @@ const loadModulesForRule = (
   ruleName: string,
 ): Module[] => {
   const baseConfig = loadBaseConfig(baseDir, baseConfigFileName);
-  const modules = discoverModules(baseDir, baseConfig);
+  const modules = discoverModules(baseDir, baseConfig, baseConfigFileName);
   return modules.filter((module) => {
     return ruleName in module.enabledRules;
   });
