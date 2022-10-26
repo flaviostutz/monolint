@@ -1,12 +1,13 @@
 import * as fs from 'fs';
 
-// import { config } from 'yargs';
+import jsonpointer from 'jsonpointer';
 
-import { similarityPerc } from '../utils/file';
+import { fullContentSimilarityPerc, loadContents, partialContentSimilarity } from '../utils/file';
 import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 import { RuleExample } from '../types/RuleExample';
+import { ConfigModuleSameContents, ConfigModuleSameContentsFile } from '../types/Config';
 // import { ConfigModuleSameContents } from '../types/Config';
 
 const defaultFiles = [
@@ -25,68 +26,74 @@ const rule: Rule = {
   name: 'module-same-contents',
 
   checkModules: (modules: Module[]): RuleResult[] | null => {
-    // const refModuleName:string|null = null;
+    const ruleResults: RuleResult[] = [];
 
-    // // look for the reference module name among configurations
-    // for (let i = 0; i < modules.length; i += 1) {
-    //   const mm = modules[i];
-    //   const { rules } = mm.config;
-    //   if (!rules || !rules['module-same-contents']) {
-    //     continue;
-    //   }
+    for (let j = 0; j < modules.length; j += 1) {
+      const targetModule = modules[j];
 
-    //   // get the config for this rule
-    //   const ruleConfig = rules['module-same-contents'] as ConfigModuleSameContents;
-
-    // }
-
-    const refFiles = defaultFiles;
-    const minSimilarityPerc = 100;
-
-    // reference module defined
-    // if (refModuleName) {
-    //   const fm = modules.filter((mm) => mm.name === refModuleName);
-    //   if (fm.length !== 1) {
-    //     return [{
-    //       valid: false,
-    //       resource: refModuleName,
-    //       message: `Reference module '${refModuleName}' points to multiple modules`,
-    //       rule: rule.name,
-    //     }];
-    //   }
-    //   const refModule = fm[0];
-    //   return checkModules(modules, refModule, refFiles, minSimilarityPerc);
-    // }
-
-    // reference module not defined
-    // find the module that have most of the reference files in it
-    // if two modules tie, use the one that creates less invalid checks
-    let bestFileCount = 0;
-    let sameCountBests: Module[] = [];
-    for (let i = 0; i < modules.length; i += 1) {
-      const rm = modules[i];
-      // only check if module has ref files and return one result per file found
-      const rr = checkModules([rm], rm, refFiles, minSimilarityPerc);
-      if (rr.length === bestFileCount) {
-        sameCountBests.push(rm);
+      const { rules } = targetModule.config;
+      if (!rules || !rules['module-same-contents']) {
+        throw new Error('module-same-contents is not enabled for this rule');
       }
-      if (rr.length > bestFileCount) {
-        bestFileCount = rr.length;
-        sameCountBests = [rm];
+
+      // expand simple configuration format to complete format
+      const targetModuleRuleConfig = expandConfig(
+        <boolean | ConfigModuleSameContents>rules['module-same-contents'],
+      );
+
+      // reference module was set
+      const refModuleName = targetModuleRuleConfig['reference-module'];
+      if (refModuleName) {
+        const rms = modules.filter((mm) => mm.name === refModuleName);
+        if (rms.length > 1) {
+          ruleResults.push({
+            valid: false,
+            resource: refModuleName,
+            message: `Reference module '${refModuleName}' points to multiple modules`,
+            rule: rule.name,
+          });
+          continue;
+        }
+        const refModule = rms[0];
+        const mr = checkModule(refModule, targetModule, targetModuleRuleConfig);
+        ruleResults.push(...mr);
+        continue;
+      }
+
+      // reference module not set
+
+      // find the module that have most of the reference files in it
+      let bestFileCount = 0;
+      let sameCountBestRefs: Module[] = [];
+      for (let i = 0; i < modules.length; i += 1) {
+        const rm = modules[i];
+        // only check if module has ref files and return one result per file found
+        const rr = checkModule(rm, rm, targetModuleRuleConfig);
+        if (rr.length === bestFileCount) {
+          sameCountBestRefs.push(rm);
+        }
+        if (rr.length > bestFileCount) {
+          bestFileCount = rr.length;
+          sameCountBestRefs = [rm];
+        }
+      }
+
+      // untie among best ref modules
+      let bestRefResults: RuleResult[] | null = null;
+      for (let i = 0; i < sameCountBestRefs.length; i += 1) {
+        const refModule = sameCountBestRefs[i];
+        const rr = checkModule(refModule, targetModule, targetModuleRuleConfig);
+        const irr = rr.filter((rrr) => !rrr.valid);
+        const ibr = bestRefResults?.filter((rrr) => !rrr.valid);
+        if (!bestRefResults || (ibr && irr.length < ibr.length)) {
+          bestRefResults = rr;
+        }
+      }
+      if (bestRefResults) {
+        ruleResults.push(...bestRefResults);
       }
     }
-
-    let bestRuleResults: RuleResult[] | null = null;
-    for (let i = 0; i < sameCountBests.length; i += 1) {
-      const refModule = sameCountBests[i];
-      const rr = checkModules(modules, refModule, refFiles, minSimilarityPerc);
-      const irr = rr.filter((rrr) => !rrr.valid);
-      const ibr = bestRuleResults?.filter((rrr) => !rrr.valid);
-      if (!bestRuleResults || (ibr && irr.length < ibr.length)) {
-        bestRuleResults = rr;
-      }
-    }
-    return bestRuleResults;
+    return ruleResults;
   },
   check(): RuleResult[] | null {
     return null;
@@ -101,7 +108,9 @@ const rule: Rule = {
     doc += `  * Files checked: ${JSON.stringify(defaultFiles)}`;
     doc += '  * Files must have the be exactly the same contents (min-similarity=100%)';
     doc +=
-      '* With advanced configurations you can change which files are checked and the similarity threshold';
+      '* With expanded configurations you can change which files are checked and the similarity threshold';
+    doc +=
+      '* Use jsonpointer selectors (https://www.rfc-editor.org/rfc/rfc6901) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)';
     return doc;
   },
   docExampleConfigs(): RuleExample[] {
@@ -135,57 +144,174 @@ const rule: Rule = {
           },
         },
       },
+      {
+        description:
+          "Attributes 'provider.runtime' and 'provider/stackName' of serverless.yml and script 'test' of package.json must be equal among modules (it won't check the whole file). Jsonpointer (https://www.rfc-editor.org/rfc/rfc6901) notation was used to select the attributes",
+        config: {
+          files: {
+            'serverless.yml': {
+              selectors: ['/provider/runtime', '/provider/stackName', '/plugins/0'],
+            },
+            'package.json': {
+              selectors: ['/scripts/dist', '/repository/type'],
+            },
+          },
+        },
+      },
     ];
   },
 };
 
-const checkModules = (
-  modules: Module[],
+const checkModule = (
   refModule: Module,
-  refFiles: string[],
-  minSimilarityPerc: number,
+  targetModule: Module,
+  targetModuleRuleConfig: ConfigModuleSameContents,
 ): RuleResult[] => {
   const results: RuleResult[] = [];
-  for (let j = 0; j < modules.length; j += 1) {
-    const module = modules[j];
 
-    refFiles.forEach((refFile) => {
-      const modFilePath = `${module.path}/${refFile}`;
-      const refFilePath = `${refModule.path}/${refFile}`;
-      if (!(fs.existsSync(refFilePath) && fs.existsSync(modFilePath))) {
-        return;
-      }
+  // check each file in module against ref module file
+  for (const filename in targetModuleRuleConfig.files) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!targetModuleRuleConfig.files.hasOwnProperty(filename)) {
+      continue;
+    }
 
-      // reference module
-      if (module.path === refModule.path) {
-        results.push({
-          valid: true,
-          resource: modFilePath,
-          message: 'Reference file for other modules',
-          rule: rule.name,
-          module,
-        });
-        return;
-      }
+    const targetFilePath = `${targetModule.path}/${filename}`;
+    const refFilePath = `${refModule.path}/${filename}`;
+    if (!(fs.existsSync(refFilePath) && fs.existsSync(targetFilePath))) {
+      continue;
+    }
 
-      // other modules
-      const sp = similarityPerc(modFilePath, refFilePath);
-      // eslint-disable-next-line @shopify/binary-assignment-parens
-      const valid = sp >= minSimilarityPerc;
-      let message = `Similar to module ${refModule.name} (${sp}%)`;
-      if (!valid) {
-        message = `Different from '${refFilePath}' (${sp}%)`;
-      }
+    // we will always have the expanded form here
+    const fileConfigs = <Record<string, ConfigModuleSameContentsFile>>targetModuleRuleConfig.files;
+    const fileConfig = fileConfigs[filename];
+
+    if (!fileConfig.enabled) {
+      continue;
+    }
+
+    // reference module
+    if (targetModule.path === refModule.path) {
       results.push({
-        valid,
-        resource: modFilePath,
-        message,
+        valid: true,
+        resource: targetFilePath,
+        message: 'Reference file for other modules',
         rule: rule.name,
-        module,
+        module: targetModule,
       });
+      continue;
+    }
+
+    // validate file config
+    if (typeof fileConfig['min-similarity'] !== 'number') {
+      throw new Error(`'min-similarity' config for file '${filename}' must be an integer`);
+    }
+    const minSimilarity = fileConfig['min-similarity'];
+
+    // partial content comparison by jsonpointer selector
+    if (fileConfig.selectors) {
+      if (
+        !Array.isArray(fileConfig.selectors) ||
+        fileConfig.selectors.length === 0 ||
+        typeof fileConfig.selectors[0] !== 'string'
+      ) {
+        throw new Error(
+          `'selectors' config for file '${filename}' must be an array of jsonpointer expressions`,
+        );
+      }
+
+      for (let i = 0; i < fileConfig.selectors.length; i += 1) {
+        const selector = fileConfig.selectors[i];
+
+        const contentsRef = loadContents(refFilePath);
+        const partial1 = jsonpointer.get(contentsRef, selector);
+        if (!partial1) {
+          results.push({
+            valid: false,
+            resource: `${refFilePath}[${selector}]`,
+            message: 'Config error: selector points to an unexisting content on reference file',
+            rule: rule.name,
+            module: targetModule,
+          });
+        }
+
+        const sp = partialContentSimilarity(targetFilePath, selector, refFilePath, selector);
+
+        // eslint-disable-next-line @shopify/binary-assignment-parens
+        const valid = sp >= minSimilarity;
+        let message = `Similar to module ${refModule.name} (${sp}%)`;
+        if (!valid) {
+          message = `Different from '${refFilePath}[${selector}]' (${sp}%)`;
+        }
+        results.push({
+          valid,
+          resource: `${targetFilePath}[${selector}]`,
+          message,
+          rule: rule.name,
+          module: targetModule,
+        });
+      }
+      continue;
+    }
+
+    // full content comparison
+    const sp = fullContentSimilarityPerc(targetFilePath, refFilePath);
+    // eslint-disable-next-line @shopify/binary-assignment-parens
+    const valid = sp >= minSimilarity;
+    let message = `Similar to module ${refModule.name} (${sp}%)`;
+    if (!valid) {
+      message = `Different from '${refFilePath}' (${sp}%)`;
+    }
+    results.push({
+      valid,
+      resource: targetFilePath,
+      message,
+      rule: rule.name,
+      module: targetModule,
     });
   }
   return results;
+};
+
+const expandConfig = (
+  moduleConfig: boolean | ConfigModuleSameContents,
+): ConfigModuleSameContents => {
+  let targetModuleRuleConfig: ConfigModuleSameContents = {};
+
+  // some custom configuration was passed, not only a boolean for activating the module
+  if (typeof moduleConfig !== 'boolean') {
+    targetModuleRuleConfig = moduleConfig;
+  }
+
+  // files wasn't defined, so use default files
+  let fileConfigs = targetModuleRuleConfig.files;
+  if (!fileConfigs) {
+    fileConfigs = defaultFiles;
+  }
+
+  // only an array of files was used, not the expanded full format, so expand it
+  if (Array.isArray(fileConfigs)) {
+    fileConfigs = fileConfigs.reduce<Record<string, ConfigModuleSameContentsFile>>((fc, rf) => {
+      fc[rf] = { enabled: true, 'min-similarity': 100 };
+      return fc;
+    }, {});
+  }
+
+  for (const fc in fileConfigs) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!fileConfigs.hasOwnProperty(fc)) {
+      continue;
+    }
+    const fileConfig = fileConfigs[fc];
+    if (typeof fileConfig['min-similarity'] !== 'number') {
+      fileConfig['min-similarity'] = 100;
+    }
+    if (typeof fileConfig.enabled !== 'boolean') {
+      fileConfig.enabled = true;
+    }
+  }
+  targetModuleRuleConfig.files = fileConfigs;
+  return targetModuleRuleConfig;
 };
 
 export default rule;

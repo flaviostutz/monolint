@@ -1,0 +1,22 @@
+{
+  "rules": {
+    "module-same-contents": {
+      "reference-module": "mod1-reference",
+      "files": {
+        "serverless.yml": {
+          "selectors": [
+            "/provider/runtime", 
+            "/provider/stackName", 
+            "/plugins/0"
+          ]
+        }, 
+        "package.json": {
+          "selectors": [
+            "/scripts/dist", 
+            "/repository/type"
+          ]
+        }
+      }
+    }
+  }
+}

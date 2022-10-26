@@ -17,13 +17,14 @@ type ConfigModuleRequiredFiles = {
 };
 
 type ConfigModuleSameContentsFile = {
-  'min-similarity': number;
-  enabled: boolean;
+  'min-similarity'?: number;
+  enabled?: boolean;
+  selectors?: string[];
 };
 
 type ConfigModuleSameContents = {
-  files: string[] | Record<string, ConfigModuleSameContentsFile>;
-  'reference-module': string;
+  files?: string[] | Record<string, ConfigModuleSameContentsFile>;
+  'reference-module'?: string;
 };
 
 type ConfigPackageJsonSameName = {

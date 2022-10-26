@@ -34,14 +34,14 @@ const expectAllResourcesRegexValid = (
     if (regexp.test(rr.resource)) {
       if (foundResult && validResult !== rr.valid) {
         throw new Error(
-          `Multiple rule results for ${resourceRegex} found with different 'valid' results`,
+          `Multiple rule results for '${resourceRegex}' found with different 'valid' results`,
         );
       }
 
       if (expectMessageRegex) {
         const regexpm = new RegExp(expectMessageRegex);
         if (!rr.message || !regexpm.test(rr.message)) {
-          throw new Error(`Message ${rr.message} doesn't match regex`);
+          throw new Error(`Message '${rr.message}' doesn't match regex`);
         }
       }
 
