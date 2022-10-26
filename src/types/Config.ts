@@ -17,8 +17,9 @@ type ConfigModuleRequiredFiles = {
 };
 
 type ConfigModuleSameContentsFile = {
-  'min-similarity': number;
-  enabled: boolean;
+  'min-similarity'?: number;
+  enabled?: boolean;
+  selectors?: string[];
 };
 
 type ConfigModuleSameContents = {

@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 
-// import { config } from 'yargs';
+import jsonpointer from 'jsonpointer';
 
-import { similarityPerc } from '../utils/file';
+import { fullContentSimilarityPerc, loadContents, partialContentSimilarity } from '../utils/file';
 import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
@@ -106,7 +106,9 @@ const rule: Rule = {
     doc += `  * Files checked: ${JSON.stringify(defaultFiles)}`;
     doc += '  * Files must have the be exactly the same contents (min-similarity=100%)';
     doc +=
-      '* With advanced configurations you can change which files are checked and the similarity threshold';
+      '* With expanded configurations you can change which files are checked and the similarity threshold';
+    doc +=
+      '* Use jsonpointer selectors (https://www.rfc-editor.org/rfc/rfc6901) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)';
     return doc;
   },
   docExampleConfigs(): RuleExample[] {
@@ -140,6 +142,20 @@ const rule: Rule = {
           },
         },
       },
+      {
+        description:
+          "Attributes 'provider.runtime' and 'provider/stackName' of serverless.yml and script 'test' of package.json must be equal among modules (it won't check the whole file). Jsonpointer (https://www.rfc-editor.org/rfc/rfc6901) notation was used to select the attributes",
+        config: {
+          files: {
+            'serverless.yml': {
+              selectors: ['/provider/runtime', '/provider/stackName', '/plugins/0'],
+            },
+            'package.json': {
+              selectors: ['/scripts/dist', '/repository/type'],
+            },
+          },
+        },
+      },
     ];
   },
 };
@@ -150,7 +166,6 @@ const checkModule = (
   targetModuleRuleConfig:ConfigModuleSameContents,
 ): RuleResult[] => {
   const results: RuleResult[] = [];
-
 
   // check each file in module against ref module file
   for (const filename in targetModuleRuleConfig.files) {
@@ -189,11 +204,54 @@ const checkModule = (
     if (typeof fileConfig['min-similarity'] !== 'number') {
       throw new Error(`'min-similarity' config for file '${filename}' must be an integer`);
     }
+    const minSimilarity = fileConfig['min-similarity'];
 
-    // check file similarity
-    const sp = similarityPerc(targetFilePath, refFilePath);
+
+    // partial content comparison by jsonpointer selector
+    if (fileConfig.selectors) {
+      if (!Array.isArray(fileConfig.selectors) || fileConfig.selectors.length === 0 || (typeof fileConfig.selectors[0] !== 'string')) {
+        throw new Error(`'selectors' config for file '${filename}' must be an array of jsonpointer expressions`);
+      }
+
+      for (let i = 0; i < fileConfig.selectors.length; i += 1) {
+        const selector = fileConfig.selectors[i];
+
+        const contentsRef = loadContents(refFilePath);
+        const partial1 = jsonpointer.get(contentsRef, selector);
+        if (!partial1) {
+          results.push({
+            valid: false,
+            resource: `${refFilePath}[${selector}]`,
+            message: 'Config error: selector points to an unexisting content on reference file',
+            rule: rule.name,
+            module: targetModule,
+          });
+        }
+
+        const sp = partialContentSimilarity(targetFilePath, selector, refFilePath, selector);
+
+        // eslint-disable-next-line @shopify/binary-assignment-parens
+        const valid = sp >= minSimilarity;
+        let message = `Similar to module ${refModule.name} (${sp}%)`;
+        if (!valid) {
+          message = `Different from '${refFilePath}[${selector}]' (${sp}%)`;
+        }
+        results.push({
+          valid,
+          resource: `${targetFilePath}[${selector}]`,
+          message,
+          rule: rule.name,
+          module: targetModule,
+        });
+      }
+      continue;
+    }
+
+
+    // full content comparison
+    const sp = fullContentSimilarityPerc(targetFilePath, refFilePath);
     // eslint-disable-next-line @shopify/binary-assignment-parens
-    const valid = sp >= fileConfig['min-similarity'];
+    const valid = sp >= minSimilarity;
     let message = `Similar to module ${refModule.name} (${sp}%)`;
     if (!valid) {
       message = `Different from '${refFilePath}' (${sp}%)`;

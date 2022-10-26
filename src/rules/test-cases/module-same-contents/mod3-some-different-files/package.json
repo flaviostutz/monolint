@@ -1,3 +1,6 @@
 {
-    "name": "mod3-other-files"
+    "name": "mod3-other-files",
+    "scripts": {
+        "dist": "another dist command"
+    }
 }
