@@ -6,7 +6,8 @@ import * as fs from 'fs';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { discoverModules, lint } from './lint';
+import { discoverModules } from './modules';
+import { lint } from './lint';
 import { renderResultsConsole } from './utils/console-renderer';
 import { loadBaseConfig } from './config/config-resolver';
 
