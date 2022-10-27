@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { discoverModules } from '../lint';
+import { discoverModules } from '../modules';
 import { loadBaseConfig } from '../config/config-resolver';
 
 import rule from './module-required-files';
