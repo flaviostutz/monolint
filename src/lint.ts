@@ -1,18 +1,16 @@
-import fs from 'fs';
-
 import fg from 'fast-glob';
 
 import { RuleResult } from './types/RuleResult';
 import { Module } from './types/Module';
 import { Config } from './types/Config';
 import { RuleConfig } from './types/RuleConfig';
-import { mergeConfigs, validateConfig, loadBaseConfig } from './utils/config';
 import { loadIgnorePatterns } from './utils/ignorefile';
 // when registry is imported, all rules are registered at bootstrap
 import { allRules, enabledRules } from './rules/registry';
+import { resolveModuleConfig } from './config/config-resolver';
 
-const lint = (baseDir: string, configFile: string | null): RuleResult[] => {
-  const baseConfig = loadBaseConfig(baseDir, configFile);
+const lint = (baseDir: string, configFileName: string): RuleResult[] => {
+  const baseConfig = resolveModuleConfig(baseDir, baseDir, configFileName);
   const results: RuleResult[] = [];
 
   // check generic rules
@@ -32,7 +30,7 @@ const lint = (baseDir: string, configFile: string | null): RuleResult[] => {
   }
 
   // check modules
-  const modules = discoverModules(baseDir, baseConfig);
+  const modules = discoverModules(baseDir, baseConfig, configFileName);
 
   // gather all modules for which a certain rule is enabled
   // Checking rules against modules
@@ -86,8 +84,9 @@ const lint = (baseDir: string, configFile: string | null): RuleResult[] => {
   return results;
 };
 
-const discoverModules = (baseDir: string, baseConfig: Config): Module[] => {
+const discoverModules = (baseDir: string, baseConfig: Config, configFileName: string): Module[] => {
   const patterns: string[] = [];
+
   const markers = baseConfig['module-markers'];
   if (!markers) {
     throw new Error('Base config should have "module-markers" config');
@@ -97,7 +96,12 @@ const discoverModules = (baseDir: string, baseConfig: Config): Module[] => {
     patterns.push(`${baseDir}/**/${elem}`);
   });
 
-  const ignorePatterns = loadIgnorePatterns(baseDir, baseConfig);
+  let useGitIgnoreFile = false;
+  if (baseConfig['use-gitignore']) {
+    useGitIgnoreFile = baseConfig['use-gitignore'];
+  }
+
+  const ignorePatterns = loadIgnorePatterns(baseDir, useGitIgnoreFile);
 
   const entries = fg.sync(patterns, {
     dot: true,
@@ -112,55 +116,16 @@ const discoverModules = (baseDir: string, baseConfig: Config): Module[] => {
   for (let i = 0; i < entries.length; i += 1) {
     const elem = entries[i];
 
-    const baseModulePath = elem.substring(0, elem.lastIndexOf('/'));
-    const moduleName = baseModulePath.substring(
-      baseModulePath.lastIndexOf('/') + 1,
-      elem.lastIndexOf('/'),
-    );
+    const modulePath = elem.substring(0, elem.lastIndexOf('/'));
+    const moduleName = modulePath.substring(modulePath.lastIndexOf('/') + 1, elem.lastIndexOf('/'));
 
     // check if this module was already added before
-    if (paths.includes(baseModulePath)) {
+    if (paths.includes(modulePath)) {
       continue;
     }
-    paths.push(baseModulePath);
+    paths.push(modulePath);
 
-    // // iterate over module path hierarchy
-    const modulePaths = baseModulePath.split('/');
-    let path = '';
-
-    let moduleConfig = baseConfig;
-
-    // iterate over path parts of the module for creating a merged config
-    for (let j = 0; j < modulePaths.length; j += 1) {
-      const pathPart = modulePaths[j];
-
-      if (path.length === 0) {
-        path = `${pathPart}`;
-      } else {
-        path = `${path}/${pathPart}`;
-      }
-
-      // only evaluate files one level deeper in the monorepo
-      if (path.length < baseDir.length || path === baseDir) {
-        continue;
-      }
-
-      // calculate merged config by looking at the module path hierarchy
-      const configFile2 = `${path}/.monolint.json`;
-      if (fs.existsSync(configFile2)) {
-        const cf = fs.readFileSync(configFile2);
-        try {
-          const loadedConfig = JSON.parse(cf.toString());
-          if (loadedConfig['module-markers']) {
-            throw new Error("'module-markers' is only valid on monorepo root level configuration");
-          }
-          moduleConfig = mergeConfigs(moduleConfig, loadedConfig);
-          validateConfig(moduleConfig);
-        } catch (err) {
-          throw new Error(`Error loading ${configFile2}. err=${err}`);
-        }
-      }
-    }
+    const moduleConfig = resolveModuleConfig(modulePath, baseDir, configFileName);
 
     const erules = enabledRules(moduleConfig);
     const ruleConfigs: Record<string, RuleConfig> = {};
@@ -174,7 +139,7 @@ const discoverModules = (baseDir: string, baseConfig: Config): Module[] => {
     }
 
     modules.push({
-      path: baseModulePath,
+      path: modulePath,
       name: moduleName,
       config: moduleConfig,
       enabledRules: ruleConfigs,

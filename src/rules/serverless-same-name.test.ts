@@ -1,11 +1,11 @@
+import { loadBaseConfig } from '../config/config-resolver';
 import { discoverModules } from '../lint';
-import { loadBaseConfig } from '../utils/config';
 
 import rule from './serverless-same-name';
 
 const baseDir = 'src/rules/test-cases/general';
 const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
-const modules = discoverModules(baseDir, baseConfig);
+const modules = discoverModules(baseDir, baseConfig, '.monolint.json');
 
 describe('serverless-same-name', () => {
   it('serverless with different service name is invalid', async () => {

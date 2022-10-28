@@ -8,7 +8,7 @@ import { hideBin } from 'yargs/helpers';
 
 import { discoverModules, lint } from './lint';
 import { renderResultsConsole } from './utils/console-renderer';
-import { loadBaseConfig } from './utils/config';
+import { loadBaseConfig } from './config/config-resolver';
 
 const argv = yargs(hideBin(process.argv))
   .option('verbose', {
@@ -45,7 +45,8 @@ const results = lint(argv.baseDir, argv.config);
 
 // show results
 if (argv.verbose) {
-  const modules = discoverModules(argv.baseDir, loadBaseConfig(argv.baseDir, argv.config));
+  const baseConfig = loadBaseConfig(argv.baseDir, argv.config);
+  const modules = discoverModules(argv.baseDir, baseConfig, argv.config);
   console.log(`Found ${modules.length} modules: ${modules.map((mm) => mm.path).toString()}`);
 }
 

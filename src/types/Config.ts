@@ -1,6 +1,7 @@
 type Config = {
   'module-markers'?: string[];
-  'use-gitignore': boolean;
+  'use-gitignore'?: boolean;
+  extends?: string[];
   rules?: Record<
     string,
     | boolean
