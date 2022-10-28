@@ -18,7 +18,7 @@ describe('when merging two configurations', () => {
     expect(config3['module-markers']?.includes('file3'));
   });
 
-  it('parent should be overriten by child', async () => {
+  it('parent should be overwritten by child', async () => {
     const config1: Config = {
       'use-gitignore': false,
     };
