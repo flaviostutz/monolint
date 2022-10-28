@@ -1,15 +1,18 @@
 import * as fs from 'fs';
 
+import jsonpointer from 'jsonpointer';
+
 import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 import { RuleExample } from '../types/RuleExample';
 import { ConfigPackageJsonSameName } from '../types/Config';
+import { FixType } from '../types/FixResult';
 
 const rule: Rule = {
   name: 'packagejson-same-name',
 
-  checkModules: (modules: Module[]): RuleResult[] | null => {
+  checkModules: (modules: Module[], baseDir: string, fix: boolean): RuleResult[] | null => {
     const results: RuleResult[] = [];
 
     for (let i = 0; i < modules.length; i += 1) {
@@ -35,12 +38,30 @@ const rule: Rule = {
       try {
         const cf = fs.readFileSync(packageFile, 'utf8');
         const loadedPackage = JSON.parse(cf.toString());
-        if (!(<string>loadedPackage.name).endsWith(module.name)) {
+        const name: string = jsonpointer.get(loadedPackage, '/name');
+        if (!name.endsWith(module.name)) {
+          // will fix
+          if (fix) {
+            jsonpointer.set(loadedPackage, '/name', module.name);
+            fs.writeFileSync(packageFile, JSON.stringify(loadedPackage, null, 2));
+            results.push({
+              valid: true,
+              resource: packageFile,
+              message: `Attribute 'name' should be '${module.name}'`,
+              rule: rule.name,
+              fixResult: { type: FixType.Fixed },
+              module,
+            });
+            continue;
+          }
+
+          // won't fix
           results.push({
             valid: false,
             resource: packageFile,
             message: `Attribute 'name' should be '${module.name}'`,
             rule: rule.name,
+            fixResult: { type: FixType.Possible },
             module,
           });
           continue;

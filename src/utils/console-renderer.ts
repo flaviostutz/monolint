@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 
+import { FixType } from '../types/FixResult';
 import { RuleResult } from '../types/RuleResult';
 
 type ResourceResult = {
@@ -53,8 +54,14 @@ const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void
     successRes.forEach((rr) => {
       console.log(`${chalk.underline(rr.resource)}`);
       rr.ruleResults.forEach((ruleResult) => {
+        let fixMessage = '';
+        if (ruleResult.fixResult?.type === FixType.Fixed) {
+          fixMessage = chalk.dim.yellow('fixed');
+        }
         console.log(
-          `  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`,
+          `  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(
+            ruleResult.rule,
+          )} ${fixMessage}`,
         );
       });
       console.log('');
@@ -63,6 +70,7 @@ const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void
 
   const failRes = ordByRes.filter((rr) => !rr.valid);
 
+  let fixableProblems = 0;
   failRes.forEach((rr) => {
     console.log(`${chalk.underline(rr.resource)}`);
     const sortRuleResults = rr.ruleResults.sort((aa, bb) => {
@@ -74,12 +82,33 @@ const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void
     sortRuleResults.forEach((ruleResult) => {
       if (ruleResult.valid) {
         if (verbose) {
+          let fixMessage = '';
+          if (ruleResult.fixResult?.type === FixType.Fixed) {
+            fixMessage = chalk.dim.yellow('fixed');
+          }
           console.log(
-            `  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`,
+            `  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(
+              ruleResult.rule,
+            )} ${fixMessage}`,
           );
         }
       } else {
-        console.log(`  ${chalk.red('error')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)}`);
+        let fixmsg = '';
+        if (ruleResult.fixResult && ruleResult.fixResult.type === FixType.Possible) {
+          fixableProblems += 1;
+          fixmsg = chalk.dim.yellow('fixable');
+        }
+        console.log(
+          `  ${chalk.red('error')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)} ${fixmsg}`,
+        );
+        if (
+          verbose &&
+          ruleResult.fixResult &&
+          ruleResult.fixResult.type === FixType.Possible &&
+          ruleResult.fixResult.message
+        ) {
+          console.log(`  ${chalk.grey(ruleResult.fixResult.message)}`);
+        }
       }
     });
     console.log('');
@@ -95,8 +124,14 @@ const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void
   }
 
   const failc = ruleResults.filter((rr) => !rr.valid).length;
+  let fixableMessage = '';
+  if (fixableProblems > 0) {
+    fixableMessage = chalk.dim.yellow(`(${fixableProblems} fixable)`);
+  }
   console.log(
-    `${chalk.bold.red('✖')} ${chalk.bold.red(failc)} ${chalk.bold.red('problems found')}`,
+    `${chalk.bold.red('✖')} ${chalk.bold.red(failc)} ${chalk.bold.red(
+      'problems found',
+    )} ${fixableMessage}`,
   );
 
   if (failRes.length > 0) {

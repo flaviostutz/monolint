@@ -43,7 +43,7 @@ const discoverModules = (baseDir: string, baseConfig: Config, configFileName: st
     const modulePath = elem.substring(0, elem.lastIndexOf('/'));
     const moduleName = modulePath.substring(modulePath.lastIndexOf('/') + 1, elem.lastIndexOf('/'));
 
-      // check if this module was already added before
+    // check if this module was already added before
     if (paths.includes(modulePath)) {
       continue;
     }
@@ -70,8 +70,8 @@ const discoverModules = (baseDir: string, baseConfig: Config, configFileName: st
     });
   }
 
-    // sort by module name ascending to make it previsible and easier to create
-    // newer modules for tests without breaking existing tests and to debug in general
+  // sort by module name ascending to make it previsible and easier to create
+  // newer modules for tests without breaking existing tests and to debug in general
   modules.sort((aa, bb) => {
     if (bb.name > aa.name) {
       return -1;
@@ -79,7 +79,7 @@ const discoverModules = (baseDir: string, baseConfig: Config, configFileName: st
     if (bb.name < aa.name) {
       return 1;
     }
-      // if name is the same, untie by path
+    // if name is the same, untie by path
     if (bb.path > aa.path) {
       return -1;
     }

@@ -40,11 +40,13 @@
   },
   "dependencies": {
     "@types/fast-levenshtein": "^0.0.2",
+    "@types/fs-extra": "^9.0.13",
     "@types/jsonpointer": "^4.0.0",
     "chalk": "^4.1.2",
     "diff": "^5.1.0",
     "fast-glob": "^3.2.12",
     "fast-levenshtein": "^3.0.0",
+    "fs-extra": "^10.1.0",
     "js-yaml": "^4.1.0",
     "jsonpointer": "^5.0.1",
     "yaml-cfn": "^0.3.1",

@@ -5,7 +5,7 @@ const baseDir = 'src/rules/test-cases/general';
 
 describe('when running lint', () => {
   it('lint test repo', async () => {
-    const results = lint(baseDir, '.monolint.json');
+    const results = lint(baseDir, '.monolint.json', false);
 
     expectAllResourcesRegexValid(
       results.filter((rr) => rr.rule === 'module-name-regex'),

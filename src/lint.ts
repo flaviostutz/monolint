@@ -5,7 +5,7 @@ import { allRules, enabledRules } from './rules/registry';
 import { resolveModuleConfig } from './config/config-resolver';
 import { discoverModules } from './modules';
 
-const lint = (baseDir: string, configFileName: string): RuleResult[] => {
+const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult[] => {
   const baseConfig = resolveModuleConfig(baseDir, baseDir, configFileName);
   const results: RuleResult[] = [];
 
@@ -14,7 +14,7 @@ const lint = (baseDir: string, configFileName: string): RuleResult[] => {
   const erules = enabledRules(baseConfig);
   for (let i = 0; i < erules.length; i += 1) {
     const rule = erules[i];
-    const ruleResults = rule.check(baseDir, baseConfig);
+    const ruleResults = rule.check(baseDir, baseConfig, fix);
     if (ruleResults === null) {
       continue;
     }
@@ -79,6 +79,5 @@ const lint = (baseDir: string, configFileName: string): RuleResult[] => {
 
   return results;
 };
-
 
 export { lint };
