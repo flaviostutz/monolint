@@ -1,4 +1,4 @@
 {
-  "name": "mod-error-mod1-simple-service-ok-1",
-  "description": "simple test with the same name of the folder as a parent. May be a common error"
+  "name": "mod-success-mod1-simple-service-ok-1",
+  "description": "shall pass due to parent name match"
 }

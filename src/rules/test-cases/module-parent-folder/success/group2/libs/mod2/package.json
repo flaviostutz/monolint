@@ -1,4 +1,4 @@
 {
-  "name": "mod-error-mod1-simple-lib-error-2",
-  "description": "simple test with the same name of the folder as a parent. May be a common error"
+  "name": "mod-error-mod1-simple-lib-success-2",
+  "description": "may pass due to glob pattern matching",
 }
