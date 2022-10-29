@@ -33,6 +33,15 @@ describe('given a rule config specifying parent folder directly, without glob pa
     expect(results).toHaveLength(0);
   });
 
+  test('when the parent folder doest not exists in a simple nested scenario with different folder names, it should fail', async () => {
+    const testCaseDir = `${baseTestcaseDir}/error/group2`;
+    const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
+    const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
+
+    const results = rule.checkModules(modules, testCaseDir);
+    expect(results).toHaveLength(0);
+  });
+
   test('when the parent folder doest not exists in a complex nested scenario, it should fail', async () => {
     const testCaseDir = `${baseTestcaseDir}/error/group1/mods1-g1/mod2-s1-g1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
@@ -82,6 +91,15 @@ describe('given a rule config specifying parent folder directly with glob patter
 
   test('when the config specifies a glob for one folder->anything, it should succeed', async () => {
     const testCaseDir = `${baseTestcaseDir}/success/group1/mods3-g1/mods3-s2-g2`;
+    const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
+    const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
+
+    const results = rule.checkModules(modules, testCaseDir);
+    expect(results).toHaveLength(0);
+  });
+
+  test('when the config specifies a list of folder with one for glob, it should succeed', async () => {
+    const testCaseDir = `${baseTestcaseDir}/success/group2`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
 
