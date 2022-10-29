@@ -38,7 +38,7 @@ const groupByResource = (ruleResults: RuleResult[]): ResourceResult[] => {
   return resourceList;
 };
 
-const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void => {
+const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean, fixCount: number): void => {
   console.log('');
 
   const byRes = groupByResource(ruleResults);
@@ -55,7 +55,7 @@ const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void
       console.log(`${chalk.underline(rr.resource)}`);
       rr.ruleResults.forEach((ruleResult) => {
         let fixMessage = '';
-        if (ruleResult.fixResult?.type === FixType.Fixed) {
+        if (ruleResult.fixResult && ruleResult.fixResult.type === FixType.Fixed) {
           fixMessage = chalk.dim.yellow('fixed');
         }
         console.log(
@@ -83,7 +83,7 @@ const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void
       if (ruleResult.valid) {
         if (verbose) {
           let fixMessage = '';
-          if (ruleResult.fixResult?.type === FixType.Fixed) {
+          if (ruleResult.fixResult && ruleResult.fixResult.type === FixType.Fixed) {
             fixMessage = chalk.dim.yellow('fixed');
           }
           console.log(
@@ -124,14 +124,17 @@ const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean): void
   }
 
   const failc = ruleResults.filter((rr) => !rr.valid).length;
-  let fixableMessage = '';
+  let fixMessage = '';
   if (fixableProblems > 0) {
-    fixableMessage = chalk.dim.yellow(`(${fixableProblems} fixable)`);
+    fixMessage = chalk.dim.yellow(`(${fixableProblems} fixable)`);
+  }
+  if (fixCount > 0) {
+    fixMessage = chalk.yellow(`(${fixCount} fixed)`);
   }
   console.log(
     `${chalk.bold.red('✖')} ${chalk.bold.red(failc)} ${chalk.bold.red(
       'problems found',
-    )} ${fixableMessage}`,
+    )} ${fixMessage}`,
   );
 
   if (failRes.length > 0) {

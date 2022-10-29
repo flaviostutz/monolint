@@ -11,6 +11,7 @@ import { lint } from './lint';
 import { renderResultsConsole } from './utils/console-renderer';
 import { loadBaseConfig } from './config/config-resolver';
 import { RuleResult } from './types/RuleResult';
+import { FixResult, FixType } from './types/FixResult';
 
 const argv = yargs(hideBin(process.argv))
   .option('verbose', {
@@ -32,7 +33,7 @@ const argv = yargs(hideBin(process.argv))
     default: '.monolint.json',
   })
   .option('fix', {
-    alias: 'c',
+    alias: 'f',
     type: 'boolean',
     description: "Try to fix failed checks automatically by changing files. Defaults to 'false'",
     default: false,
@@ -49,11 +50,25 @@ if (!fs.existsSync(argv.baseDir)) {
 }
 
 try {
-// run linter and possibly fix issues
+
+  const fixed = new Map<string, FixResult>();
+  // run linter and possibly fix issues
   let results: RuleResult[] = [];
+
+  // one fix can cause other issues, so run this a bunch of times to check it
   for (let i = 0; i < 10; i += 1) {
-  // check rules and possibly fix issues
+    // check rules and possibly fix issues
     results = lint(argv.baseDir, argv.config, argv.fix);
+
+    // keep track of previously fixed issues to show afterwards
+    const withFixResult = results.filter((rr) => rr.fixResult);
+    withFixResult.forEach((wfr) => {
+      const frkey = `${wfr.rule}:${wfr.resource}`;
+      if (wfr.fixResult && !fixed.get(frkey)) {
+        fixed.set(frkey, wfr.fixResult);
+      }
+    });
+
     const pendingIssues = results.filter((rr) => !rr.valid);
     if (pendingIssues.length === 0) {
       break;
@@ -63,14 +78,27 @@ try {
     }
   }
 
-// show results
+  // restore first fix results found for each resource
+  let fixCount = 0;
+  results.forEach((rr) => {
+    const frkey = `${rr.rule}:${rr.resource}`;
+    const fr = fixed.get(frkey);
+    if (fr) {
+      rr.fixResult = fr;
+      if (rr.fixResult.type === FixType.Fixed) {
+        fixCount += 1;
+      }
+    }
+  });
+
+  // show results
   if (argv.verbose) {
     const baseConfig = loadBaseConfig(argv.baseDir, argv.config);
     const modules = discoverModules(argv.baseDir, baseConfig, argv.config);
     console.log(`Found ${modules.length} modules: ${modules.map((mm) => mm.path).toString()}`);
   }
 
-  renderResultsConsole(results, argv.verbose);
+  renderResultsConsole(results, argv.verbose, fixCount);
 
 } catch (err) {
   const err1 = err as Error;

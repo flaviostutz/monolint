@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 import { RuleResult } from './types/RuleResult';
 import { Module } from './types/Module';
 // when registry is imported, all rules are registered at bootstrap
@@ -6,8 +8,14 @@ import { resolveModuleConfig } from './config/config-resolver';
 import { discoverModules } from './modules';
 
 const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult[] => {
+  if (!fs.existsSync(baseDir)) {
+    throw new Error(`base-dir '${baseDir}' doesn't exist`);
+  }
   const baseConfig = resolveModuleConfig(baseDir, baseDir, configFileName);
   const results: RuleResult[] = [];
+
+  console.log(baseDir);
+  console.log(JSON.stringify(baseConfig));
 
   // check generic rules
   // Checking base rules (outside modules)
@@ -37,7 +45,7 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
     });
 
     try {
-      const ruleResults = rule.checkModules(ruleModules, baseDir);
+      const ruleResults = rule.checkModules(ruleModules, baseDir, fix);
       if (ruleResults === null) {
         continue;
       }

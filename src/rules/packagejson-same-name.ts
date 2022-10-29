@@ -12,7 +12,7 @@ import { FixType } from '../types/FixResult';
 const rule: Rule = {
   name: 'packagejson-same-name',
 
-  checkModules: (modules: Module[], baseDir: string, fix: boolean): RuleResult[] | null => {
+  checkModules: (modules: Module[], _: string, fix: boolean): RuleResult[] | null => {
     const results: RuleResult[] = [];
 
     for (let i = 0; i < modules.length; i += 1) {
