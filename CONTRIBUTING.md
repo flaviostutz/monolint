@@ -15,7 +15,7 @@ Thank you for being interested in helping with Monolint!
 ```sh
 make build
 make lint
-make tests
+make test
 make rules-doc
 ```
 
