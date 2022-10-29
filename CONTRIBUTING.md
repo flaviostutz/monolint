@@ -8,7 +8,7 @@ Thank you for being interested in helping with Monolint!
 
 * Fork this project to your account
 
-- Implement it, create tests and run `make rules-doc` to update documentation
+- Implement it, create unit tests and run `make rules-doc` to update documentation
 - Create a PR after you complete it to master branch
 - Use make targets for common tasks (they are the same that are run during pipelines)
 
