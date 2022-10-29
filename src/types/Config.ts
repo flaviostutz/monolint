@@ -9,6 +9,7 @@ type Config = {
     | ConfigModuleRequiredFiles
     | ConfigPackageJsonSameName
     | ConfigModuleSameContents
+    | ConfigModuleParentFolder
   >;
 };
 
@@ -22,6 +23,8 @@ type ConfigModuleSameContentsFile = {
   enabled?: boolean;
   selectors?: string[];
 };
+
+type ConfigModuleParentFolder = string[];
 
 type ConfigModuleSameContents = {
   files?: string[] | Record<string, ConfigModuleSameContentsFile>;
@@ -38,4 +41,5 @@ export {
   ConfigPackageJsonSameName,
   ConfigModuleSameContents,
   ConfigModuleSameContentsFile,
+  ConfigModuleParentFolder,
 };

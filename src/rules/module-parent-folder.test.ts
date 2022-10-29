@@ -5,6 +5,17 @@ import rule from './module-parent-folder';
 
 const baseTestcaseDir = 'src/rules/test-cases/module-parent-folder';
 
+describe('given a rule config without this rule specified', () => {
+  test('when the module is in any folder, it should succeed', async () => {
+    const testCaseDir = `${baseTestcaseDir}/void`;
+    const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
+    const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
+
+    const results = rule.checkModules(modules, testCaseDir);
+    expect(results).toHaveLength(0);
+  });
+});
+
 describe('given a rule config specifying parent folder directly, without glob pattern', () => {
   test('when the parent folder exists, it should succeed', async () => {
     const testCaseDir = `${baseTestcaseDir}/success/mod1`;
@@ -14,7 +25,7 @@ describe('given a rule config specifying parent folder directly, without glob pa
     const results = rule.checkModules(modules, testCaseDir);
     expect(results).toHaveLength(1);
     if (results) {
-      expect(results[0].module?.name).toEqual('mod-success-mod1');
+      expect(results[0].module?.name).toEqual('lib-1');
       expect(results[0].valid).toBeTruthy();
     }
   });
@@ -27,7 +38,7 @@ describe('given a rule config specifying parent folder directly, without glob pa
     const results = rule.checkModules(modules, testCaseDir);
     expect(results).toHaveLength(1);
     if (results) {
-      expect(results[0].module?.name).toEqual('mod-error-mod1-simple');
+      expect(results[0].module?.name).toEqual('mod1');
       expect(results[0].valid).toBeFalsy();
     }
   });
@@ -40,9 +51,9 @@ describe('given a rule config specifying parent folder directly, without glob pa
     const results = rule.checkModules(modules, testCaseDir);
     expect(results).toHaveLength(2);
     if (results) {
-      expect(results[0].module?.name).toEqual('mod-error-mod1-simple');
+      expect(results[0].module?.name).toEqual('mod2-g1-1');
       expect(results[0].valid).toBeFalsy();
-      expect(results[1].module?.name).toEqual('mod-error-mod2-g1-2');
+      expect(results[1].module?.name).toEqual('mod2-g1-2');
       expect(results[1].valid).toBeFalsy();
     }
   });
@@ -55,14 +66,14 @@ describe('given a rule config specifying parent folder directly, without glob pa
     const results = rule.checkModules(modules, testCaseDir);
     expect(results).toHaveLength(4);
     if (results) {
-      expect(results[0].module?.name).toEqual('mod-error-mod1-simple-lib-error-1');
+      expect(results[0].module?.name).toEqual('mod1');
       expect(results[0].valid).toBeFalsy();
-      expect(results[1].module?.name).toEqual('mod-error-mod1-simple-lib-error-2');
+      expect(results[1].module?.name).toEqual('mod1');
       expect(results[1].valid).toBeFalsy();
-      expect(results[2].module?.name).toEqual('mod-error-mod1-simple-service-ok-1');
+      expect(results[2].module?.name).toEqual('mod1');
       expect(results[2].valid).toBeTruthy();
-      expect(results[3].module?.name).toEqual('mod-error-mod1-simple-web-ok-1');
-      expect(results[3].valid).toBeTruthy();
+      expect(results[3].module?.name).toEqual('mod2');
+      expect(results[3].valid).toBeFalsy();
     }
   });
 
