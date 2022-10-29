@@ -19,7 +19,7 @@ describe('given a rule config specifying parent folder directly, without glob pa
     }
   });
 
-  test('when the parent folder doest not exists in a non-nested scenario, it should fail', async () => {
+  test('when the parent folder does not exist in a non-nested scenario, it should fail', async () => {
     const testCaseDir = `${baseTestcaseDir}/error/mod1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
@@ -32,7 +32,7 @@ describe('given a rule config specifying parent folder directly, without glob pa
     }
   });
 
-  test('when the parent folder doest not exists in a simple nested scenario, it should fail', async () => {
+  test('when the parent folder does not exist in a simple nested scenario, it should fail', async () => {
     const testCaseDir = `${baseTestcaseDir}/error/group1/mod2-g1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
@@ -47,7 +47,7 @@ describe('given a rule config specifying parent folder directly, without glob pa
     }
   });
 
-  test('when the parent folder doest not exists in a simple nested scenario with different folder names, it should fail', async () => {
+  test('when the parent folder does not exist in a simple nested scenario with different folder names in path, it should fail', async () => {
     const testCaseDir = `${baseTestcaseDir}/error/group2`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
@@ -66,7 +66,7 @@ describe('given a rule config specifying parent folder directly, without glob pa
     }
   });
 
-  test('when the parent folder doest not exists in a complex nested scenario, it should fail', async () => {
+  test('when the parent folder does not exist in a complex nested scenario, it should fail', async () => {
     const testCaseDir = `${baseTestcaseDir}/error/group1/mods1-g1/mod2-s1-g1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
     const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
