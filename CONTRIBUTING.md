@@ -8,14 +8,14 @@ Thank you for being interested in helping with Monolint!
 
 * Fork this project to your account
 
-- Implement it, create unit tests and run `make rules-doc` to update documentation
+- Implement it, create tests and run `make rules-doc` to update documentation
 - Create a PR after you complete it to master branch
 - Use make targets for common tasks (they are the same that are run during pipelines)
 
 ```sh
 make build
 make lint
-make unit-tests
+make tests
 make rules-doc
 ```
 
@@ -33,7 +33,7 @@ make rules-doc
 ## When creating a new rule
 
 - Create the new rule under folder 'rules'
-- Create unit tests for it based on test monorepo at 'rules/test-monorepo'
+- Create tests for it based on test monorepo at 'rules/test-monorepo'
 - Register the new rule in file 'rules/registry.ts'
 - Add the rule as default in 'src/defaultConfig.ts' if it is a generic enough rule
 

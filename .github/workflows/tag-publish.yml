@@ -16,7 +16,7 @@ jobs:
       stage: prd
       target-build: true
       target-lint: true
-      target-unit-tests: true
+      target-tests: true
 
   publish:
     runs-on: ubuntu-latest
