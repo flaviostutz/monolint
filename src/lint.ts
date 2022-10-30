@@ -14,8 +14,8 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
   const baseConfig = resolveModuleConfig(baseDir, baseDir, configFileName);
   const results: RuleResult[] = [];
 
-  console.log(baseDir);
-  console.log(JSON.stringify(baseConfig));
+  // console.log(baseDir);
+  // console.log(JSON.stringify(baseConfig));
 
   // check generic rules
   // Checking base rules (outside modules)
