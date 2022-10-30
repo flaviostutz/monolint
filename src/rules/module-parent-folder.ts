@@ -85,7 +85,7 @@ const rule: Rule = {
   },
 
   docMarkdown(): string {
-    return '* Check whether all module folders has a parent folder, following the `glob` path pattern';
+    return '* Check whether all module folders has a parent folder, allowing the usage of `glob` path pattern';
   },
 
   docExampleConfigs(): RuleExample[] {
@@ -93,6 +93,26 @@ const rule: Rule = {
       {
         description: 'Deactivates this rule',
         config: false,
+      },
+      {
+        description:
+          "All modules should have the following possible parent folders: 'packages', 'apps', 'libs', 'services'",
+        config: {
+          'module-parent-folder': ['packages', 'apps', 'libs', 'services'],
+        },
+      },
+      {
+        description:
+          "All modules should be in a folder named 'package' that is a descendant of a folder named 'apps'",
+        config: {
+          'module-parent-folder': ['apps/**/packages'],
+        },
+      },
+      {
+        description: "All modules should have a parent folder named 'modules'",
+        config: {
+          'module-parent-folder': ['modules'],
+        },
       },
     ];
   },
