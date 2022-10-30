@@ -1,5 +1,5 @@
 {
     "rules": {
-        "module-parent-folder": ["**/success/**"]
+        "module-parent-folder": ["success/**"]
     }
 }

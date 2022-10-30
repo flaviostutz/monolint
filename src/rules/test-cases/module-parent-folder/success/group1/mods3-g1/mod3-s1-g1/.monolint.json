@@ -1,5 +1,5 @@
 {
     "rules": {
-        "module-parent-folder": ["success/**/mod3-s1-g1"]
+        "module-parent-folder": ["**/success/**/mod3-s1-g1"]
     }
 }

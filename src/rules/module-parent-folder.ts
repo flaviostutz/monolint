@@ -1,3 +1,5 @@
+import fg from 'fast-glob';
+
 import { ConfigModuleParentFolder } from '../types/Config';
 import { Module } from '../types/Module';
 import { Rule } from '../types/Rule';
@@ -16,18 +18,43 @@ const rule: Rule = {
         continue;
       }
 
-      const parentFolderPatternsList = rules['module-parent-folder'] as ConfigModuleParentFolder;
-      if (parentFolderPatternsList.length === 0) {
+      const parentFolderPatternsListOriginal = rules[
+        'module-parent-folder'
+      ] as ConfigModuleParentFolder;
+      if (parentFolderPatternsListOriginal.length === 0) {
         continue;
       }
+
+      const parentFolderPatternsList = parentFolderPatternsListOriginal.map((pattern) => {
+        let patternAug = pattern;
+        if (!patternAug.startsWith('**/')) {
+          patternAug = `**/${patternAug}`;
+        }
+        if (!patternAug.endsWith('/*')) {
+          patternAug = `${patternAug}/*/*`;
+        }
+        return patternAug;
+      });
 
       // then, get the parent folder name
       const parentFolderName = module.path.split('/').slice(-2)[0];
       // then, check if the parent folder matches any of the patterns
-      const parentFolderMatches = parentFolderPatternsList.some((pattern) => {
-        const regex = new RegExp(pattern);
-        return regex.test(parentFolderName);
+      const entries = fg.sync(parentFolderPatternsList, {
+        dot: true,
+        globstar: true,
+        extglob: true,
       });
+
+      const parentFolderMatches = entries.some((pattern) => {
+        const patternParts = pattern.split('/');
+        const patternPartsLength = patternParts.length;
+        const parentFolderNamePattern = patternParts[patternPartsLength - 3];
+        return parentFolderNamePattern === parentFolderName;
+      });
+      // const parentFolderMatches = parentFolderPatternsList.some((pattern) => {
+      //   const regex = new RegExp(pattern);
+      //   return regex.test(parentFolderName);
+      // });
       if (parentFolderMatches) {
         results.push({
           valid: true,

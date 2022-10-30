@@ -1,5 +1,5 @@
 {
     "rules": {
-        "module-parent-folder": ["services", "web", "lib*"]
+        "module-parent-folder": ["services", "web", "libs"]
     }
 }
