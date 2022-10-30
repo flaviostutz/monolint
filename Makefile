@@ -3,7 +3,8 @@ build:
 	npm run build
 
 run:
-	npx ts-node src/main.ts --base-dir=./src/rules/test-cases/general --verbose
+	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/general --verbose
+	npx ts-node src/main.ts --base-dir=./src/rules/.tmp/psn/test-cases/general --verbose --fix
 	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/module-required-files --verbose
 	# npx ts-node src/main.ts --base-dir=../large-monorepo --verbose
 
@@ -14,7 +15,9 @@ lint:
 	npm audit --audit-level high
 	npx ts-node src/rules-doc.ts --check
 
-test:
+test: unit-tests
+
+unit-tests:
 	npm run test
 
 publish:

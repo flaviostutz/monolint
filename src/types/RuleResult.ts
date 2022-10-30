@@ -1,3 +1,4 @@
+import { FixResult } from './FixResult';
 import { Module } from './Module';
 
 export type RuleResult = {
@@ -27,4 +28,9 @@ export type RuleResult = {
    * Related module
    */
   module?: Module;
+
+  /**
+   * Fix result for this check
+   */
+  fixResult?: FixResult;
 };

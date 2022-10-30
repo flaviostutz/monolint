@@ -5,4 +5,5 @@ dist
 .cache/
 .serverless/
 node_modules
+.tmp
 
