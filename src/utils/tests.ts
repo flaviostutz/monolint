@@ -1,5 +1,5 @@
 import { loadBaseConfig } from '../config/config-resolver';
-import { discoverModules } from '../lint';
+import { discoverModules } from '../modules';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 
