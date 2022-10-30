@@ -15,7 +15,7 @@ lint:
 	npm audit --audit-level high
 	npx ts-node src/rules-doc.ts --check
 
-unit-tests:
+test:
 	npm run test
 
 publish:
