@@ -49,7 +49,7 @@ describe('when fixing with packagejson-same-name', () => {
     if (!checked1) {
       throw new Error("checked1 shouldn't be null");
     }
-    console.log(JSON.stringify(checked1));
+    // console.log(JSON.stringify(checked1));
     expect(checked1.filter((rr) => !rr.valid).length).toBe(4);
 
     // fix
@@ -57,7 +57,7 @@ describe('when fixing with packagejson-same-name', () => {
     if (!checked2) {
       throw new Error("checked2 shouldn't be null");
     }
-    console.log(JSON.stringify(checked2));
+    // console.log(JSON.stringify(checked2));
     expect(checked2.filter((rr) => rr.fixResult?.type === FixType.Fixed).length).toBe(4);
 
     // check again
@@ -65,7 +65,7 @@ describe('when fixing with packagejson-same-name', () => {
     if (!checked3) {
       throw new Error("checked3 shouldn't be null");
     }
-    console.log(JSON.stringify(checked3));
+    // console.log(JSON.stringify(checked3));
     expect(checked3.filter((rr) => !rr.valid).length).toBe(0);
   });
 });
