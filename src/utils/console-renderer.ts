@@ -38,7 +38,11 @@ const groupByResource = (ruleResults: RuleResult[]): ResourceResult[] => {
   return resourceList;
 };
 
-const renderResultsConsole = (ruleResults: RuleResult[], verbose: boolean, fixCount: number): void => {
+const renderResultsConsole = (
+  ruleResults: RuleResult[],
+  verbose: boolean,
+  fixCount: number,
+): void => {
   console.log('');
 
   const byRes = groupByResource(ruleResults);
