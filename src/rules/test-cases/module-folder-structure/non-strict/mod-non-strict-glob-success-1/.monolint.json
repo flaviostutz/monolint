@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "module-folder-structure": {
+      "strict": false,
+      "folders": ["src/test", "src/**/utils", "src/libs/**/release"]
+    }
+  }
+}

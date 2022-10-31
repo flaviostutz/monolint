@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "module-folder-structure": {
+      "strict": false,
+      "folders": ["src", "tests", "docs"]
+    }
+  }
+}
