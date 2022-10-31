@@ -41,7 +41,7 @@ describe('given a folder with non-strict configuration', () => {
     it('then should return error accordingly to existent folder structure', async () => {
       const results = rule.checkModules(modules, baseDir);
 
-      expect(results).toHaveLength(9);
+      expect(results).toHaveLength(12);
       if (results) {
         const resultsByModule = getResultsByModule(results);
         resultsByModule['mod-non-strict-error-1'].forEach((result) => {
@@ -57,6 +57,11 @@ describe('given a folder with non-strict configuration', () => {
         });
 
         resultsByModule['mod-non-strict-success-1'].forEach((result) => {
+          expect(result.valid).toBeTruthy();
+        });
+
+        // With folders beyond the allowed ones
+        resultsByModule['mod-non-strict-success-2'].forEach((result) => {
           expect(result.valid).toBeTruthy();
         });
       }
