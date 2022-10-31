@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "module-same-contents": {
+      "reference-module": "mod2-some-equal-files",
+      "files": {
+        "file1": {
+          "enabled": false
+        }, 
+        "file2": {
+          "min-similarity": 80
+        },
+        "dir1/file3": {
+          "enabled": true,
+          "min-similarity": 95
+        }
+      }
+    }
+  }
+}

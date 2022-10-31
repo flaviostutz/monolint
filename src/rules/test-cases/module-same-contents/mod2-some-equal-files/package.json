@@ -1,0 +1,6 @@
+{
+  "name": "mod2-some-files",
+  "scripts": {
+    "dist": "dist command"
+  }
+}

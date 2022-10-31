@@ -1,7 +1,7 @@
 import fs from 'fs';
 
-import { discoverModules } from '../lint';
-import { loadBaseConfig } from '../utils/config';
+import { discoverModules } from '../modules';
+import { loadBaseConfig } from '../config/config-resolver';
 
 import rule from './module-required-files';
 
@@ -11,7 +11,7 @@ describe('given a folder with non-strict config', () => {
   describe('when required files not found in folder', () => {
     const testCaseDir = `${baseDir}/mod-non-strict-error-1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
-    const modules = discoverModules(testCaseDir, baseConfig);
+    const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
 
     it('then should return error', async () => {
       const results = rule.checkModules(modules, baseDir);
@@ -33,7 +33,7 @@ describe('given a folder with non-strict config', () => {
   describe('when required files not found in all child folders', () => {
     const testCaseDir = `${baseDir}/group-error-2`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
-    const modules = discoverModules(testCaseDir, baseConfig);
+    const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
 
     it('then should return error', async () => {
       const results = rule.checkModules(modules, baseDir);
@@ -58,7 +58,7 @@ describe('given a folder with non-strict config', () => {
   describe('when files in folder beyond the required', () => {
     const testCaseDir = `${baseDir}/mod-non-strict-success-1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
-    const modules = discoverModules(testCaseDir, baseConfig);
+    const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
 
     it('then should return success', async () => {
       const results = rule.checkModules(modules, baseDir);
@@ -77,7 +77,7 @@ describe('given a folder with non-strict config', () => {
   describe('when files in folder exactly the required', () => {
     const testCaseDir = `${baseDir}/mod-non-strict-success-2`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
-    const modules = discoverModules(testCaseDir, baseConfig);
+    const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
 
     it('then should return success', async () => {
       const results = rule.checkModules(modules, baseDir);
@@ -100,7 +100,7 @@ describe('given a folder with strict config', () => {
   describe('when files beyond required found in folder', () => {
     const testCaseDir = `${baseDir}/mod-strict-error-1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
-    const modules = discoverModules(testCaseDir, baseConfig);
+    const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
 
     it('then should return error', async () => {
       const results = rule.checkModules(modules, baseDir);
@@ -119,7 +119,7 @@ describe('given a folder with strict config', () => {
   describe('when required files not found in folder', () => {
     const testCaseDir = `${baseDir}/mod-strict-error-2`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
-    const modules = discoverModules(testCaseDir, baseConfig);
+    const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
 
     it('then should return error', async () => {
       const results = rule.checkModules(modules, baseDir);
@@ -145,7 +145,7 @@ describe('given a folder with strict config', () => {
   describe('when required files found in folder', () => {
     const testCaseDir = `${baseDir}/mod-strict-success-1`;
     const baseConfig = loadBaseConfig(testCaseDir, '.monolint.json');
-    const modules = discoverModules(testCaseDir, baseConfig);
+    const modules = discoverModules(testCaseDir, baseConfig, '.monolint.json');
     // create node_modules to simulate the .gitignore behavior
     if (!fs.existsSync(`${testCaseDir}/node_modules`)) {
       fs.mkdirSync(`${testCaseDir}/node_modules`);

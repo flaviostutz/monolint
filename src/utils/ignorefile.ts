@@ -1,11 +1,9 @@
 import fs from 'fs';
 
-import { Config } from '../types/Config';
-
-const loadIgnorePatterns = (baseDir: string, baseConfig: Config): string[] => {
+const loadIgnorePatterns = (baseDir: string, useGitIgnore: boolean): string[] => {
   const ignorePaths: string[] = [];
 
-  if (baseConfig['use-gitignore']) {
+  if (useGitIgnore) {
     const gfile = `${baseDir}/.gitignore`;
     if (fs.existsSync(gfile)) {
       const cf = fs.readFileSync(gfile);

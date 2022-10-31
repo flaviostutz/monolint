@@ -1,0 +1,4 @@
+{
+  "name": "mod2-s1-g1",
+  "description": "test with an ancestor folder name that is not parent and not specified through a glob pattern"
+}
