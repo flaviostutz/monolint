@@ -58,6 +58,62 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
+## **module-folder-structure**
+
+* Check whether all the required folders are present in the modules folders
+
+* Examples:
+
+  * Deactivates this rule
+
+  ```json
+  {
+    "rules": {
+      "module-folder-structure": false
+    }
+  }
+
+  ```
+  * Activates this rule using default folders (defaults: `["src"]`)
+
+  ```json
+  {
+    "rules": {
+      "module-folder-structure": true
+    }
+  }
+
+  ```
+
+  * Loosely requires module structure. 
+  > The module should contain **at least** this set of folders, but can still have others.
+
+  ```json
+  {
+    "rules": {
+      "module-folder-structure": {
+        "strict": false,
+        "folders": ["src", "docs", "libs"]
+      }
+    }
+  }
+
+  ```
+
+  * Strictly requires module structure 
+  > No extra folders allowed, should match exactly.
+
+  ```json
+  {
+    "rules": {
+      "module-folder-structure": {
+        "strict": true,
+        "folders": ["src/test", "src/**/utils", "src/libs/**/release"]
+      }
+    }
+  }
+  ```
+
 ## **module-same-contents**
 
 * Checks if specified files have the same content among the different modules

@@ -7,6 +7,7 @@ type Config = {
     | boolean
     | string
     | ConfigModuleRequiredFiles
+    | ConfigModuleFolderStructure
     | ConfigPackageJsonSameName
     | ConfigModuleSameContents
   >;
@@ -14,6 +15,11 @@ type Config = {
 
 type ConfigModuleRequiredFiles = {
   files: string[];
+  strict: boolean;
+};
+
+type ConfigModuleFolderStructure = {
+  folders: string[];
   strict: boolean;
 };
 
@@ -35,6 +41,7 @@ type ConfigPackageJsonSameName = {
 export {
   Config,
   ConfigModuleRequiredFiles,
+  ConfigModuleFolderStructure,
   ConfigPackageJsonSameName,
   ConfigModuleSameContents,
   ConfigModuleSameContentsFile,
