@@ -4,6 +4,64 @@ See below all rules that can be used for monorepo linting.
 
 Those configurations should be added to a file in the root of the monorepo called '.monolint.json'. If you create this file in intermediate folder (or even in the module folder), it will be merged to the root and default configurations also.
 
+## **gh-workflow-module-prefix**
+
+* Checks if workflow file name starts with a known module name. Additionally it can check for specific prefixes in the name, and, if required, if a set of suffixed file names exists for each module
+
+* Examples:
+
+
+  * Activates this rule. It will just check if workflow name prefix starts with an existing module name
+
+```json
+{
+  "rules": {
+    "gh-workflow-module-prefix": true
+  }
+}
+```
+
+  * Deactivates this rule
+
+```json
+{
+  "rules": {
+    "gh-workflow-module-prefix": false
+  }
+}
+```
+
+  * Checks if workflow file name starts with a known module name and ends with one of "-dev" or "-prd"
+
+```json
+{
+  "rules": {
+    "gh-workflow-module-prefix": {
+      "suffixes": [
+        "-dev",
+        "-prd"
+      ]
+    }
+  }
+}
+```
+
+  * Checks, for each existing module, if there exists a workflow file which name ends with "-dev" and another with "-prd". If we have modules "mod1" and "mod2", files "mod1-dev.yml, mod1-prd.yml, mod2-dev.yml, mod2-prd.yml" are required
+
+```json
+{
+  "rules": {
+    "gh-workflow-module-prefix": {
+      "required": true,
+      "suffixes": [
+        "-dev",
+        "-prd"
+      ]
+    }
+  }
+}
+```
+
 ## **module-name-regex**
 
 * Check if "name" attribute of the package.json file equals (or ends with) the name of the module

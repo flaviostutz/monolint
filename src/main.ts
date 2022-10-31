@@ -50,7 +50,6 @@ if (!fs.existsSync(argv.baseDir)) {
 }
 
 try {
-
   const fixed = new Map<string, FixResult>();
   // run linter and possibly fix issues
   let results: RuleResult[] = [];
@@ -99,7 +98,6 @@ try {
   }
 
   renderResultsConsole(results, argv.verbose, fixCount);
-
 } catch (err) {
   const err1 = err as Error;
   if (!argv.verbose && err1.message) {

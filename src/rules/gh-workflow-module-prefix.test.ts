@@ -18,7 +18,6 @@ describe('when using default configurations', () => {
       expectAllResourcesRegexValid(results, '.*/mod2-prd.yml', true);
     }
   });
-
 });
 
 describe('when using "required" with "-dev" and "-prd" sufixes', () => {
@@ -43,7 +42,6 @@ describe('when using "required" with "-dev" and "-prd" sufixes', () => {
     }
   });
 
-
   it('names without sufixes "-dev" or "-prd" should fail', async () => {
     const results = rule.checkModules(ruleModules, baseDir, false, baseConfig);
     if (results) {
@@ -59,9 +57,7 @@ describe('when using "required" with "-dev" and "-prd" sufixes', () => {
       expectAllResourcesRegexValid(results, '.*/mod2-prd.yml', true);
     }
   });
-
 });
-
 
 describe('when using "not required" with "-dev" and "-prd" sufixes', () => {
   const baseDir = 'src/rules/test-cases/gh-workflow-module-prefix';
@@ -97,6 +93,4 @@ describe('when using "not required" with "-dev" and "-prd" sufixes', () => {
       expectAllResourcesRegexValid(results, '.*/randomthing-dev.yml', false);
     }
   });
-
 });
-

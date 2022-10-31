@@ -9,9 +9,14 @@ import { Config, ConfigGhWorkflowModulePrefix } from '../types/Config';
 const rule: Rule = {
   name: 'gh-workflow-module-prefix',
 
-  checkModules: (modules: Module[], baseDir:boolean, fix:boolean, baseConfig: Config): RuleResult[] | null => {
+  checkModules: (
+    modules: Module[],
+    baseDir: string,
+    _: boolean,
+    baseConfig: Config,
+  ): RuleResult[] | null => {
     const ghBaseDir = `${baseDir}/.github/workflows`;
-    let workflowFiles:string[] = [];
+    let workflowFiles: string[] = [];
 
     if (fs.existsSync(ghBaseDir)) {
       workflowFiles = fs.readdirSync(ghBaseDir);
@@ -71,12 +76,13 @@ const rule: Rule = {
     return null;
   },
   docMarkdown(): string {
-    return '* ';
+    return '* Checks if workflow file name starts with a known module name. Additionally it can check for specific prefixes in the name, and, if required, if a set of suffixed file names exists for each module';
   },
   docExampleConfigs(): RuleExample[] {
     return [
       {
-        description: '',
+        description:
+          'Activates this rule. It will just check if workflow name prefix starts with an existing module name',
         config: true,
       },
       {
@@ -84,17 +90,25 @@ const rule: Rule = {
         config: false,
       },
       {
-        description: '',
-        config: '',
+        description:
+          'Checks if workflow file name starts with a known module name and ends with one of "-dev" or "-prd"',
+        config: {
+          suffixes: ['-dev', '-prd'],
+        },
+      },
+      {
+        description:
+          'Checks, for each existing module, if there exists a workflow file which name ends with "-dev" and another with "-prd". If we have modules "mod1" and "mod2", files "mod1-dev.yml, mod1-prd.yml, mod2-dev.yml, mod2-prd.yml" are required',
+        config: {
+          required: true,
+          suffixes: ['-dev', '-prd'],
+        },
       },
     ];
   },
 };
 
-const expandConfig = (
-  config?: any,
-): ConfigGhWorkflowModulePrefix | null => {
-
+const expandConfig = (config?: any): ConfigGhWorkflowModulePrefix | null => {
   // default values
   let econfig = {
     required: false,
@@ -106,7 +120,6 @@ const expandConfig = (
       return econfig;
     }
     return null;
-
   }
 
   const mconfig = config as ConfigGhWorkflowModulePrefix;
@@ -115,72 +128,72 @@ const expandConfig = (
   return econfig;
 };
 
-const checkExistingWorkflowNames =
-  (ghBaseDir:string,
-    baseConfig:Config,
-    workflowFiles:string[],
-    modules:Module[]): RuleResult[] => {
+const checkExistingWorkflowNames = (
+  ghBaseDir: string,
+  baseConfig: Config,
+  workflowFiles: string[],
+  modules: Module[],
+): RuleResult[] => {
+  if (!baseConfig.rules) {
+    return [];
+  }
+  const expConfig = expandConfig(baseConfig.rules['gh-workflow-module-prefix']);
+  if (!expConfig) {
+    return [];
+  }
 
-    if (!baseConfig.rules) {
-      return [];
-    }
-    const expConfig = expandConfig(baseConfig.rules['gh-workflow-module-prefix']);
-    if (!expConfig) {
-      return [];
-    }
+  const results: RuleResult[] = [];
+  for (let aa = 0; aa < workflowFiles.length; aa += 1) {
+    const wf = workflowFiles[aa];
+    let found = false;
+    let foundModule;
+    let validSuffix = false;
 
-    const results:RuleResult[] = [];
-    for (let aa = 0; aa < workflowFiles.length; aa += 1) {
-      const wf = workflowFiles[aa];
-      let found = false;
-      let foundModule;
-      let validSuffix = false;
-
-      // check if name prefix is a module name
-      for (let i = 0; i < modules.length; i += 1) {
-        const module = modules[i];
-        if (wf.startsWith(module.name)) {
-          found = true;
-          foundModule = module;
-          // check if name suffix is one of the allowed
-          for (let j = 0; j < expConfig.suffixes.length; j += 1) {
-            if (expConfig.suffixes[j] === '' || wf.endsWith(`${expConfig.suffixes[j]}.yml`)) {
-              validSuffix = true;
-              break;
-            }
+    // check if name prefix is a module name
+    for (let i = 0; i < modules.length; i += 1) {
+      const module = modules[i];
+      if (wf.startsWith(module.name)) {
+        found = true;
+        foundModule = module;
+        // check if name suffix is one of the allowed
+        for (let j = 0; j < expConfig.suffixes.length; j += 1) {
+          if (expConfig.suffixes[j] === '' || wf.endsWith(`${expConfig.suffixes[j]}.yml`)) {
+            validSuffix = true;
+            break;
           }
         }
       }
-
-      if (!found) {
-        results.push({
-          valid: false,
-          resource: `${ghBaseDir}/${wf}`,
-          message: 'File should have the name of a module as prefix',
-          rule: rule.name,
-        });
-        continue;
-      }
-
-      if (!validSuffix) {
-        results.push({
-          valid: false,
-          resource: `${ghBaseDir}/${wf}`,
-          message: `File name suffix should be one of ${expConfig.suffixes}`,
-          rule: rule.name,
-        });
-        continue;
-      }
-
-      results.push({
-        valid: true,
-        resource: `${ghBaseDir}/${wf}`,
-        message: 'Workflow file name is correct',
-        rule: rule.name,
-        module: foundModule,
-      });
     }
-    return results;
-  };
+
+    if (!found) {
+      results.push({
+        valid: false,
+        resource: `${ghBaseDir}/${wf}`,
+        message: 'File should have the name of a module as prefix',
+        rule: rule.name,
+      });
+      continue;
+    }
+
+    if (!validSuffix) {
+      results.push({
+        valid: false,
+        resource: `${ghBaseDir}/${wf}`,
+        message: `File name suffix should be one of ${expConfig.suffixes}`,
+        rule: rule.name,
+      });
+      continue;
+    }
+
+    results.push({
+      valid: true,
+      resource: `${ghBaseDir}/${wf}`,
+      message: 'Workflow file name is correct',
+      rule: rule.name,
+      module: foundModule,
+    });
+  }
+  return results;
+};
 
 export default rule;

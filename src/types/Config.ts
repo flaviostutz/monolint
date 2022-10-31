@@ -35,7 +35,7 @@ type ConfigPackageJsonSameName = {
 type ConfigGhWorkflowModulePrefix = {
   required: boolean;
   suffixes: string[];
-}
+};
 
 export {
   Config,

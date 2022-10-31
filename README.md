@@ -75,6 +75,7 @@ If you work or know a good public monorepo, please let us now so we can use it a
 - 'use-gitignore' - whatever use .gitignore (is exists) as the starting point for defining the patterns (along with .monolintignore) for ignore paths during module search. Defaults to true
 - 'rules' - activate/deactivate rules, or setup specific configurations for a rule
 - 'extends' - list of pre-defined configurations to be merged into this one. If not defined, 'monolint:recommended' will be used. Can be one of:
+
   - 'monolint:basic' - very few and basic rules activated
   - 'monolint:serverless' - configures module-marker and a few rules for Serverless Framework checks
   - 'monolint:packagejson' - configures module-marker and a few rules for packagejson checks
