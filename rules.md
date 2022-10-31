@@ -41,6 +41,68 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
+## **module-parent-folder**
+
+* Check whether all module folders has a parent folder, allowing the usage of `glob` path pattern
+
+* Examples:
+
+
+  * Deactivates this rule
+
+```json
+{
+  "rules": {
+    "module-parent-folder": false
+  }
+}
+```
+
+  * All modules should have the following possible parent folders: 'packages', 'apps', 'libs', 'services'
+
+```json
+{
+  "rules": {
+    "module-parent-folder": {
+      "module-parent-folder": [
+        "packages",
+        "apps",
+        "libs",
+        "services"
+      ]
+    }
+  }
+}
+```
+
+  * All modules should be in a folder named 'package' that is a descendant of a folder named 'apps'
+
+```json
+{
+  "rules": {
+    "module-parent-folder": {
+      "module-parent-folder": [
+        "apps/**/packages"
+      ]
+    }
+  }
+}
+```
+
+  * All modules should have a parent folder named 'modules'
+
+```json
+{
+  "rules": {
+    "module-parent-folder": {
+      "module-parent-folder": [
+        "modules"
+      ]
+    }
+  }
+}
+```
+
 ## **module-required-files**
 
 * Check whether all the required files are present in the modules folders

@@ -1,0 +1,5 @@
+{
+    "rules": {
+        "module-parent-folder": ["group1err/**/mods1-g1"]
+    }
+}

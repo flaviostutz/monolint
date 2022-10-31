@@ -38,7 +38,6 @@ describe('when refering to internal extensions', () => {
     expect(config).toBeDefined();
     expect(config['use-gitignore']).toBeTruthy();
     const mm = config['module-markers'];
-    console.log(mm);
     expect(mm?.includes('package.json')).toBeTruthy();
     expect(mm?.includes('serverless.yml')).toBeTruthy();
     const rr = config.rules;

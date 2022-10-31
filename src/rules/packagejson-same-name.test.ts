@@ -1,13 +1,16 @@
+import fs from 'fs-extra';
+
 import { loadBaseConfig } from '../config/config-resolver';
-import { discoverModules } from '../lint';
+import { discoverModules } from '../modules';
+import { FixType } from '../types/FixResult';
 
 import rule from './packagejson-same-name';
 
-const baseDir = 'src/rules/test-cases/general';
-const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
-const modules = discoverModules(baseDir, baseConfig, '.monolint.json');
-
 describe('packagejson-same-name', () => {
+  const baseDir = 'src/rules/test-cases/general';
+  const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
+  const modules = discoverModules(baseDir, baseConfig, '.monolint.json');
+
   it('package.json with different name is invalid', async () => {
     const results = rule.checkModules(modules, baseDir);
     expect(results).toHaveLength(6);
@@ -28,5 +31,41 @@ describe('packagejson-same-name', () => {
       expect(results[3].module?.name).toEqual('mod5-thx');
       expect(results[3].valid).toBeFalsy();
     }
+  });
+});
+
+describe('when fixing with packagejson-same-name', () => {
+  it('should fix package name in file automatically and return success', async () => {
+    // make a copy of test-case dir for fix tests
+    const baseDir = 'src/rules/.tmp/psn/test-cases/general';
+    fs.rmSync(baseDir, { recursive: true, force: true });
+    fs.copySync('src/rules/test-cases/general', baseDir);
+
+    const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
+    const modules = discoverModules(baseDir, baseConfig, '.monolint.json');
+
+    // check
+    const checked1 = rule.checkModules(modules, baseDir, false);
+    if (!checked1) {
+      throw new Error("checked1 shouldn't be null");
+    }
+    // console.log(JSON.stringify(checked1));
+    expect(checked1.filter((rr) => !rr.valid).length).toBe(4);
+
+    // fix
+    const checked2 = rule.checkModules(modules, baseDir, true);
+    if (!checked2) {
+      throw new Error("checked2 shouldn't be null");
+    }
+    // console.log(JSON.stringify(checked2));
+    expect(checked2.filter((rr) => rr.fixResult?.type === FixType.Fixed).length).toBe(4);
+
+    // check again
+    const checked3 = rule.checkModules(modules, baseDir, false);
+    if (!checked3) {
+      throw new Error("checked3 shouldn't be null");
+    }
+    // console.log(JSON.stringify(checked3));
+    expect(checked3.filter((rr) => !rr.valid).length).toBe(0);
   });
 });

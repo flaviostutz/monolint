@@ -10,6 +10,7 @@ type Config = {
     | ConfigModuleFolderStructure
     | ConfigPackageJsonSameName
     | ConfigModuleSameContents
+    | ConfigModuleParentFolder
   >;
 };
 
@@ -29,6 +30,8 @@ type ConfigModuleSameContentsFile = {
   selectors?: string[];
 };
 
+type ConfigModuleParentFolder = string[];
+
 type ConfigModuleSameContents = {
   files?: string[] | Record<string, ConfigModuleSameContentsFile>;
   'reference-module'?: string;
@@ -45,4 +48,5 @@ export {
   ConfigPackageJsonSameName,
   ConfigModuleSameContents,
   ConfigModuleSameContentsFile,
+  ConfigModuleParentFolder,
 };
