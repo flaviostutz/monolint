@@ -42,7 +42,7 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
     });
 
     try {
-      const ruleResults = rule.checkModules(ruleModules, baseDir, fix);
+      const ruleResults = rule.checkModules(ruleModules, baseDir, fix, baseConfig);
       if (ruleResults === null) {
         continue;
       }
