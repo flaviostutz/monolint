@@ -22,7 +22,6 @@ const rule: Rule = {
       if (!fs.existsSync(slsFile)) {
         continue;
       }
-      // console.debug(`Checking ${slsFile}`);
       try {
         const cf = fs.readFileSync(slsFile, 'utf8');
         const loadedSls = yamlParse(cf);

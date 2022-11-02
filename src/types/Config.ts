@@ -5,11 +5,11 @@ type Config = {
   rules?: Record<
     string,
     | boolean
-    | string
     | ConfigModuleRequiredFiles
     | ConfigPackageJsonSameName
     | ConfigModuleSameContents
     | ConfigModuleParentFolder
+    | ConfigGhWorkflowModulePrefix
   >;
 };
 
@@ -35,6 +35,11 @@ type ConfigPackageJsonSameName = {
   packageJsonFile: string;
 };
 
+type ConfigGhWorkflowModulePrefix = {
+  required: boolean;
+  suffixes: string[];
+};
+
 export {
   Config,
   ConfigModuleRequiredFiles,
@@ -42,4 +47,5 @@ export {
   ConfigModuleSameContents,
   ConfigModuleSameContentsFile,
   ConfigModuleParentFolder,
+  ConfigGhWorkflowModulePrefix,
 };

@@ -1,0 +1,9 @@
+{
+    "rules": {
+      "gh-workflow-module-prefix": {
+        "required": true,
+        "suffixes": ["-dev", "-prd"]
+      }
+    }
+  }
+  

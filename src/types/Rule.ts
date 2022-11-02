@@ -16,7 +16,12 @@ export interface Rule {
    *                                  or this rule doesn't check modules, simply
    *                                  return null to indicate that they were skipped
    */
-  checkModules(modules: Module[], baseDir: string, fix?: boolean): RuleResult[] | null;
+  checkModules(
+    modules: Module[],
+    baseDir: string,
+    fix?: boolean,
+    baseConfig?: Config
+  ): RuleResult[] | null;
 
   /**
    * Evaluate this rule against the base of the repo. Used for checks outside modules.

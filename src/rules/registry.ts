@@ -8,6 +8,7 @@ import r4 from './module-unique-name';
 import r5 from './module-required-files';
 import r6 from './module-same-contents';
 import r7 from './module-parent-folder';
+import r8 from './gh-workflow-module-prefix';
 
 const allRules: Rule[] = [];
 
@@ -23,6 +24,7 @@ register(r4);
 register(r5);
 register(r6);
 register(r7);
+register(r8);
 
 const getRule = (name: string): Rule | null => {
   const fr = allRules.filter((rule) => {
