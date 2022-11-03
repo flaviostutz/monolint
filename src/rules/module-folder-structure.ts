@@ -51,59 +51,57 @@ const rule: Rule = {
         dot: true,
       };
       const haveGlobPatterns = requiredFolderPatterns.some((pattern) => fg.isDynamicPattern(pattern, fgConfig));
+      const allModuleFolders = fs.readdirSync(path).filter((entry) => fs.statSync(`${path}/${entry}`).isDirectory());
 
       // ? We can't have patterns for strict mode, as fast-glob doesn't return unmatched patterns
       if (haveGlobPatterns) {
-        continue;
-
-        // TODO: implement glob patterns check
+        // TODO: implement glob patterns
         // const entries = fg.sync(requiredFolderPatterns, fgConfig);
 
         // console.log('entries', entries);
-      } else {
-        for (const requiredFolderPattern of requiredFolderPatterns) {
-          // check if the path exists (joining with module path)
-          const folderExists = fs.existsSync(`${path}/${requiredFolderPattern}`);
 
-          if (folderExists) {
-            results.push({
-              valid: true,
-              resource: requiredFolderPattern,
-              message: 'Required folder found',
-              rule: rule.name,
-              module,
-            });
-          } else {
-            results.push({
-              valid: false,
-              resource: requiredFolderPattern,
-              message: 'Required folder not found',
-              rule: rule.name,
-              module,
-            });
-          }
-        }
+        continue;
+      }
 
-        // check the strict mode
-        if (strict) {
-          const allFolders = fs.readdirSync(path).filter((entry) => fs.statSync(`${path}/${entry}`).isDirectory());
+      for (const requiredFolderPattern of requiredFolderPatterns) {
+          // check if the folder exists
+        const folderExists = allModuleFolders.includes(requiredFolderPattern);
 
-          allFolders.forEach((folder) => {
-            // if there are files in the folder that are not part of the required structure
-            // add a result as invalid
-            if (!requiredFolderPatterns.find((pattern) => pattern === folder)) {
-              results.push({
-                valid: false,
-                resource: folder,
-                message: 'File outside the required list not allowed (strict mode)',
-                rule: rule.name,
-                module,
-              });
-            }
+        if (folderExists) {
+          results.push({
+            valid: true,
+            resource: requiredFolderPattern,
+            message: 'Required folder found',
+            rule: rule.name,
+            module,
+          });
+        } else {
+          results.push({
+            valid: false,
+            resource: requiredFolderPattern,
+            message: 'Required folder not found',
+            rule: rule.name,
+            module,
           });
         }
       }
 
+        // check the strict mode
+      if (strict) {
+        allModuleFolders.forEach((folder) => {
+            // if there are folders in the module that are not part of the required structure
+            // add a result as invalid
+          if (!requiredFolderPatterns.includes(folder)) {
+            results.push({
+              valid: false,
+              resource: folder,
+              message: 'File outside the required list not allowed (strict mode)',
+              rule: rule.name,
+              module,
+            });
+          }
+        });
+      }
     }
     return results;
   },
