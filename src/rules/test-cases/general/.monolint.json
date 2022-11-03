@@ -1,6 +1,7 @@
 {
   "module-markers": ["package.json", "serverless.yml", "go.mod"],
   "rules": {
-    "module-same-contents": true
+    "module-same-contents": true,
+    "gh-workflow-module-prefix": true
   }
 }

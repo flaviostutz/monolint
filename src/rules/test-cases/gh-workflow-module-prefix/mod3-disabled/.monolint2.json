@@ -1,0 +1,5 @@
+{
+    "rules": {
+      "gh-workflow-module-prefix": false
+    }
+}

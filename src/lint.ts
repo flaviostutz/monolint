@@ -14,9 +14,6 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
   const baseConfig = resolveModuleConfig(baseDir, baseDir, configFileName);
   const results: RuleResult[] = [];
 
-  // console.log(baseDir);
-  // console.log(JSON.stringify(baseConfig));
-
   // check generic rules
   // Checking base rules (outside modules)
   const erules = enabledRules(baseConfig);
@@ -45,7 +42,7 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
     });
 
     try {
-      const ruleResults = rule.checkModules(ruleModules, baseDir, fix);
+      const ruleResults = rule.checkModules(ruleModules, baseDir, fix, baseConfig);
       if (ruleResults === null) {
         continue;
       }
