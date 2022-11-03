@@ -36,7 +36,7 @@ describe('given a folder with non-strict configuration', () => {
   const baseDir = 'src/rules/test-cases/module-folder-structure/non-strict';
 
   describe('when required folders are non-glob patterns', () => {
-    const modules = loadModulesForRule(baseDir, defaultConfigName, rule.name);
+    const modules = loadModulesForRule(`${baseDir}/without-glob`, defaultConfigName, rule.name);
 
     it('then should return error accordingly to existent folder structure', async () => {
       const results = rule.checkModules(modules, baseDir);
@@ -70,7 +70,7 @@ describe('given a folder with non-strict configuration', () => {
 
   // TODO: glob patterns
   describe.skip('when required folders are glob patterns', () => {
-    const modules = loadModulesForRule(`${baseDir}/mod-non-strict-glob-success-1`, defaultConfigName, rule.name);
+    const modules = loadModulesForRule(`${baseDir}/with-glob`, defaultConfigName, rule.name);
 
     it('then should return error accordingly to existent folder structure', async () => {
       const results = rule.checkModules(modules, baseDir);
@@ -88,7 +88,7 @@ describe('given a folder with strict configuration', () => {
   const baseDir = 'src/rules/test-cases/module-folder-structure/strict';
 
   describe('when required folders are non-glob patterns', () => {
-    const modules = loadModulesForRule(baseDir, defaultConfigName, rule.name);
+    const modules = loadModulesForRule(`${baseDir}/without-glob`, defaultConfigName, rule.name);
 
     it('then should return error accordingly to existent folder structure', async () => {
       const results = rule.checkModules(modules, baseDir);
@@ -111,7 +111,7 @@ describe('given a folder with strict configuration', () => {
         resultsByModule['mod-strict-error-3'].forEach((result) => {
           if (result.resource === 'another-folder') {
             expect(result.valid).toBeFalsy();
-            expect(result.message).toEqual('File outside the required list not allowed (strict mode)');
+            expect(result.message).toEqual('Folder outside the required list not allowed (strict mode)');
           } else {
             expect(result.valid).toBeTruthy();
           }
@@ -126,7 +126,7 @@ describe('given a folder with strict configuration', () => {
 
   // TODO: glob patterns
   describe.skip('when required folders are glob patterns', () => {
-    const modules = loadModulesForRule(`${baseDir}/mod-strict-glob-success-1`, defaultConfigName, rule.name);
+    const modules = loadModulesForRule(`${baseDir}/with-glob`, defaultConfigName, rule.name);
 
     it('then should return error accordingly to existent folder structure', async () => {
       const results = rule.checkModules(modules, baseDir);

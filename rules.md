@@ -114,9 +114,9 @@ Those configurations should be added to a file in the root of the monorepo calle
     "module-folder-structure": {
       "strict": true,
       "folders": [
-        "src",
-        "docs",
-        "libs"
+        "src/test",
+        "src/**/utils",
+        "src/libs/**/release"
       ]
     }
   }

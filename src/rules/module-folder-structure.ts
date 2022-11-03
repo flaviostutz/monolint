@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import fg from 'fast-glob';
 
 import { Rule } from '../types/Rule';
@@ -50,24 +48,14 @@ const rule: Rule = {
         extglob: true,
         dot: true,
       };
-      const haveGlobPatterns = requiredFolderPatterns.some((pattern) => fg.isDynamicPattern(pattern, fgConfig));
-      const allModuleFolders = fs.readdirSync(path).filter((entry) => fs.statSync(`${path}/${entry}`).isDirectory());
 
-      // ? We can't have patterns for strict mode, as fast-glob doesn't return unmatched patterns
-      if (haveGlobPatterns) {
-        // TODO: implement glob patterns
-        // const entries = fg.sync(requiredFolderPatterns, fgConfig);
+      const allModuleFolders = fg.sync('**/*', fgConfig);
 
-        // console.log('entries', entries);
-
-        continue;
-      }
-
+      // Evaluate the patterns one by one and check if there is any missing a match
       for (const requiredFolderPattern of requiredFolderPatterns) {
-          // check if the folder exists
-        const folderExists = allModuleFolders.includes(requiredFolderPattern);
+        const foldersMatching = fg.sync(requiredFolderPattern, fgConfig);
 
-        if (folderExists) {
+        if (foldersMatching.length) {
           results.push({
             valid: true,
             resource: requiredFolderPattern,
@@ -76,6 +64,7 @@ const rule: Rule = {
             module,
           });
         } else {
+            // If there is no match, then it's missing a required folder for this pattern
           results.push({
             valid: false,
             resource: requiredFolderPattern,
@@ -86,23 +75,24 @@ const rule: Rule = {
         }
       }
 
-        // check the strict mode
       if (strict) {
-        allModuleFolders.forEach((folder) => {
-            // if there are folders in the module that are not part of the required structure
-            // add a result as invalid
-          if (!requiredFolderPatterns.includes(folder)) {
+        const foldersMatchingAllPatterns = fg.sync(requiredFolderPatterns, fgConfig);
+        const extraEntries = allModuleFolders.filter((mFolder) => !foldersMatchingAllPatterns.includes(mFolder));
+
+        if (extraEntries.length) {
+          extraEntries.forEach((folder) => {
             results.push({
               valid: false,
               resource: folder,
-              message: 'File outside the required list not allowed (strict mode)',
+              message: 'Folder outside the required list not allowed (strict mode)',
               rule: rule.name,
               module,
             });
-          }
-        });
+          });
+        }
       }
     }
+
     return results;
   },
   check() {
@@ -132,9 +122,7 @@ const rule: Rule = {
         description: 'Strictly requires module structure. No extra folders allowed, should match exactly.',
         config: {
           strict: true,
-          // TODO: implement glob patterns
-          // "folders": ["src/test", "src/**/utils", "src/libs/**/release"]
-          folders: ['src', 'docs', 'libs'],
+          folders: ['src/test', 'src/**/utils', 'src/libs/**/release'],
         },
       },
     ];
