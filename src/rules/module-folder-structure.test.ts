@@ -68,17 +68,35 @@ describe('given a folder with non-strict configuration', () => {
     });
   });
 
-  // TODO: glob patterns
-  describe.skip('when required folders are glob patterns', () => {
+  describe('when required folders are glob patterns', () => {
     const modules = loadModulesForRule(`${baseDir}/with-glob`, defaultConfigName, rule.name);
 
     it('then should return error accordingly to existent folder structure', async () => {
       const results = rule.checkModules(modules, baseDir);
 
-      expect(results).toHaveLength(3);
+      expect(results).toHaveLength(12);
       if (results) {
-        // TODO: assertions
-        expect(results[0].valid).toBeFalsy();
+        const resultsByModule = getResultsByModule(results);
+
+        resultsByModule['mod-non-strict-glob-success-1'].forEach((result) => {
+          expect(result.valid).toBeTruthy();
+        });
+
+        resultsByModule['mod-non-strict-glob-success-2'].forEach((result) => {
+          expect(result.valid).toBeTruthy();
+        });
+
+        resultsByModule['mod-non-strict-glob-error-1'].forEach((result) => {
+          if (result.resource === 'src/**/utils') {
+            expect(result.valid).toBeFalsy();
+          } else {
+            expect(result.valid).toBeTruthy();
+          }
+        });
+
+        resultsByModule['mod-non-strict-glob-error-2'].forEach((result) => {
+          expect(result.valid).toBeFalsy();
+        });
       }
     });
   });
