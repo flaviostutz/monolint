@@ -142,17 +142,45 @@ describe('given a folder with strict configuration', () => {
     });
   });
 
-  // TODO: glob patterns
-  describe.skip('when required folders are glob patterns', () => {
+  describe('when required folders are glob patterns', () => {
     const modules = loadModulesForRule(`${baseDir}/with-glob`, defaultConfigName, rule.name);
 
     it('then should return error accordingly to existent folder structure', async () => {
       const results = rule.checkModules(modules, baseDir);
 
-      expect(results).toHaveLength(3);
+      expect(results).toHaveLength(19);
       if (results) {
-        // TODO: assertions
-        expect(results[0].valid).toBeFalsy();
+        const resultsByModule = getResultsByModule(results);
+
+        resultsByModule['mod-strict-glob-success-1'].forEach((result) => {
+          expect(result.valid).toBeTruthy();
+        });
+
+        resultsByModule['mod-strict-glob-success-2'].forEach((result) => {
+          expect(result.valid).toBeTruthy();
+        });
+
+        resultsByModule['mod-strict-glob-error-1'].forEach((result) => {
+          expect(result.valid).toBeFalsy();
+        });
+
+        // Missing folder
+        resultsByModule['mod-strict-glob-error-2'].forEach((result) => {
+          if (result.resource === 'src/test') {
+            expect(result.valid).toBeFalsy();
+          } else {
+            expect(result.valid).toBeTruthy();
+          }
+        });
+
+        // With extra folders
+        resultsByModule['mod-strict-glob-error-3'].forEach((result) => {
+          if (result.resource.includes('extra')) {
+            expect(result.valid).toBeFalsy();
+          } else {
+            expect(result.valid).toBeTruthy();
+          }
+        });
       }
     });
   });

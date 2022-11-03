@@ -1,4 +1,4 @@
-import fg from 'fast-glob';
+import fg, { Options } from 'fast-glob';
 
 import { Rule } from '../types/Rule';
 import { RuleResult } from '../types/RuleResult';
@@ -41,7 +41,7 @@ const rule: Rule = {
       // build the required file paths relative to module path
       const { path } = module;
 
-      const fgConfig = {
+      const fgConfig: Options = {
         cwd: path,
         onlyDirectories: true,
         globstar: true,
@@ -51,7 +51,7 @@ const rule: Rule = {
 
       const allModuleFolders = fg.sync('**/*', fgConfig);
 
-      // Evaluate the patterns one by one and check if there is any missing a match
+      // Evaluate the pattern one by one and check if there is any missing a match
       for (const requiredFolderPattern of requiredFolderPatterns) {
         const foldersMatching = fg.sync(requiredFolderPattern, fgConfig);
 
@@ -77,10 +77,18 @@ const rule: Rule = {
 
       if (strict) {
         const foldersMatchingAllPatterns = fg.sync(requiredFolderPatterns, fgConfig);
-        const extraEntries = allModuleFolders.filter((mFolder) => !foldersMatchingAllPatterns.includes(mFolder));
 
-        if (extraEntries.length) {
-          extraEntries.forEach((folder) => {
+        // ? If there's no match for all patterns, then we shouldn't check extra folders
+        if (foldersMatchingAllPatterns.length === 0) {
+          continue;
+        }
+
+        const extraFolders = allModuleFolders.filter((moduleFolder) => (
+          !foldersMatchingAllPatterns.some((matchedFolder) => matchedFolder === moduleFolder || matchedFolder.startsWith(`${moduleFolder}/`))
+        ));
+
+        if (extraFolders.length) {
+          extraFolders.forEach((folder) => {
             results.push({
               valid: false,
               resource: folder,
