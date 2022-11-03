@@ -111,14 +111,33 @@ const rule: Rule = {
     return null;
   },
   docMarkdown() {
-    return '* Check whether all the required files are present in the modules folders';
+    return '* Check whether the folder structure is present in the modules';
   },
-  // TODO: add examples
   docExampleConfigs() {
     return [
       {
         description: 'Deactivates this rule',
         config: false,
+      },
+      {
+        description: 'Activates this rule using default folders (defaults: `["src"]`)',
+        config: true,
+      },
+      {
+        description: 'Loosely requires module structure. The module should contain **at least** this set of folders, but can still have others.',
+        config: {
+          strict: false,
+          folders: ['src', 'docs', 'libs'],
+        },
+      },
+      {
+        description: 'Strictly requires module structure. No extra folders allowed, should match exactly.',
+        config: {
+          strict: true,
+          // TODO: implement glob patterns
+          // "folders": ["src/test", "src/**/utils", "src/libs/**/release"]
+          folders: ['src', 'docs', 'libs'],
+        },
       },
     ];
   },
