@@ -46,13 +46,12 @@ const resolveModuleConfig = (
       } catch (err) {
         throw new Error(`Error loading ${configFile}. err=${err}`);
       }
+      // only root level configurations should have this
+      if (loadedConfig['module-markers'] && path !== baseDir) {
+        throw new Error(`'module-markers' found on '${configFile}' is only valid on monorepo root level configuration`);
+      }
     } else if (path !== baseDir) {
       continue;
-    }
-
-      // only root level configurations should have this
-    if (loadedConfig['module-markers'] && path !== baseDir) {
-      throw new Error("'module-markers' is only valid on monorepo root level configuration");
     }
 
       // use default 'extends' configuration for config at base (if not defined)
