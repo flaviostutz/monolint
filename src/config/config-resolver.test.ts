@@ -97,10 +97,20 @@ describe('when loading base config with default contents', () => {
 });
 
 describe('when loading config for a module', () => {
-  it('base should extend monolint:recommended', async () => {
-    const config = resolveModuleConfig(`${baseDir}`, baseDir, '.monolint.json');
+  it('base with existing config file should extend monolint:recommended', async () => {
+    const config = resolveModuleConfig(baseDir, baseDir, '.monolint.json');
     if (!config.rules) {
       throw new Error('rules should be defined');
+    }
+    expect(config.rules['module-name-regex']).toBeTruthy();
+    expect(config.rules['module-same-contents']).toBeUndefined();
+    expect(config.rules['serverless-same-name']).toBeTruthy();
+  });
+
+  it('base without config file should extend monolint:recommended', async () => {
+    const config = resolveModuleConfig(baseDir, baseDir, '.monolint111.json');
+    if (!config.rules) {
+      throw new Error('default rules should be present');
     }
     expect(config.rules['module-name-regex']).toBeTruthy();
     expect(config.rules['module-same-contents']).toBeUndefined();

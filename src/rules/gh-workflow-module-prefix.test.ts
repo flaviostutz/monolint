@@ -68,7 +68,11 @@ describe('when using "required" with "-dev" and "-prd" sufixes', () => {
     fs.rmSync(baseDir2, { recursive: true, force: true });
     fs.copySync(baseDir1, baseDir2);
 
-    const ruleModules2 = loadModulesForRule(baseDir2, '.monolint2.json', 'gh-workflow-module-prefix');
+    const ruleModules2 = loadModulesForRule(
+      baseDir2,
+      '.monolint2.json',
+      'gh-workflow-module-prefix',
+    );
     const baseConfig2 = resolveModuleConfig(baseDir2, baseDir2, '.monolint2.json');
 
     const results = rule.checkModules(ruleModules2, baseDir2, true, baseConfig2);
@@ -77,16 +81,19 @@ describe('when using "required" with "-dev" and "-prd" sufixes', () => {
       expectAllResourcesRegexValid(results, '.*/mod1-prd.yml', true);
       expectAllResourcesRegexValid(results, '.*/mod2-dev.yml', true);
 
-      const r1 = results.filter((rr) => rr.resource.includes('mod1-prd') && rr.fixResult?.type === FixType.Fixed);
+      const r1 = results.filter(
+        (rr) => rr.resource.includes('mod1-prd') && rr.fixResult?.type === FixType.Fixed,
+      );
       expect(r1).toHaveLength(1);
       expect(fs.existsSync(r1[0].resource)).toBeTruthy();
 
-      const r2 = results.filter((rr) => rr.resource.includes('mod2-dev') && rr.fixResult?.type === FixType.Fixed);
+      const r2 = results.filter(
+        (rr) => rr.resource.includes('mod2-dev') && rr.fixResult?.type === FixType.Fixed,
+      );
       expect(r2).toHaveLength(1);
       expect(fs.existsSync(r2[0].resource)).toBeTruthy();
     }
   });
-
 });
 
 describe('when using "not required" with "-dev" and "-prd" sufixes', () => {

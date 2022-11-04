@@ -1,9 +1,35 @@
 import { lint } from './lint';
-import { expectAllResourcesRegexValid } from './utils/tests';
+import { expectAllModuleResultsValid, expectAllResourcesRegexValid } from './utils/tests';
 
-const baseDir = 'src/rules/test-cases/general';
+describe('when running lint in a repo without .monolint.json config', () => {
+  const baseDir = 'src/rules/test-cases/general/modules/group1';
+  it('default module discovery marks and rules should be used', async () => {
+    const results = lint(baseDir, '.monolint.json', false);
+
+    expect(results.filter((rr) => rr.rule === 'module-name-regex').length).toBeGreaterThan(0);
+    expect(results.filter((rr) => rr.rule === 'module-unique-name').length).toBeGreaterThan(0);
+    expect(results.filter((rr) => rr.rule === 'packagejson-same-name').length).toBeGreaterThan(0);
+    expect(results.filter((rr) => rr.rule === 'serverless-same-name').length).toBeGreaterThan(0);
+
+    expectAllResourcesRegexValid(
+      results.filter((rr) => rr.rule === 'module-name-regex'),
+      '.*/mod2-svc',
+      true,
+    );
+
+    expectAllModuleResultsValid(results, 'mod4-svc', true);
+
+    expectAllResourcesRegexValid(
+      results.filter((rr) => rr.rule === 'module-name-regex'),
+      '.*/mod2-svc',
+      true,
+    );
+
+  });
+});
 
 describe('when running lint', () => {
+  const baseDir = 'src/rules/test-cases/general';
   it('lint test repo', async () => {
     const results = lint(baseDir, '.monolint.json', false);
 

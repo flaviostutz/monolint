@@ -85,7 +85,6 @@ const rule: Rule = {
             fixResult: { type: FixType.Fixed },
           });
           continue;
-
         }
       }
     }
