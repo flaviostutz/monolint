@@ -35,48 +35,48 @@ const resolveModuleConfig = (
       continue;
     }
 
-    try {
       // calculate merged config by looking at the module path hierarchy
-      const configFile = `${path}/${configFileName}`;
-      let loadedConfig:Config = {};
+    const configFile = `${path}/${configFileName}`;
+    let loadedConfig:Config = {};
 
-      if (fs.existsSync(configFile)) {
-        const cf = fs.readFileSync(configFile);
+    if (fs.existsSync(configFile)) {
+      const cf = fs.readFileSync(configFile);
+      try {
         loadedConfig = JSON.parse(cf.toString()) as Config;
-      } else if (path !== baseDir) {
-        continue;
+      } catch (err) {
+        throw new Error(`Error loading ${configFile}. err=${err}`);
       }
+    } else if (path !== baseDir) {
+      continue;
+    }
 
       // only root level configurations should have this
-      if (loadedConfig['module-markers'] && path !== baseDir) {
-        throw new Error("'module-markers' is only valid on monorepo root level configuration");
-      }
+    if (loadedConfig['module-markers'] && path !== baseDir) {
+      throw new Error("'module-markers' is only valid on monorepo root level configuration");
+    }
 
       // use default 'extends' configuration for config at base (if not defined)
-      if (!loadedConfig.extends && path === baseDir) {
-        loadedConfig.extends = ['monolint:recommended'];
-      }
-      if (!loadedConfig.extends) {
-        loadedConfig.extends = [];
-      }
+    if (!loadedConfig.extends && path === baseDir) {
+      loadedConfig.extends = ['monolint:recommended'];
+    }
+    if (!loadedConfig.extends) {
+      loadedConfig.extends = [];
+    }
 
       // merge all configurations from "extends" into this one
-      for (let aa = 0; aa < loadedConfig.extends.length; aa += 1) {
-        const extend = loadedConfig.extends[aa];
-        const extendConfig = loadExtension(extend);
-        if (!extendConfig) {
-          throw new Error(`Cannot find extension '${extend}' defined in ${configFile}`);
-        }
-        moduleConfig = mergeConfigs(moduleConfig, extendConfig);
+    for (let aa = 0; aa < loadedConfig.extends.length; aa += 1) {
+      const extend = loadedConfig.extends[aa];
+      const extendConfig = loadExtension(extend);
+      if (!extendConfig) {
+        throw new Error(`Cannot find extension '${extend}' defined in ${configFile}`);
       }
+      moduleConfig = mergeConfigs(moduleConfig, extendConfig);
+    }
 
       // merge this configuration with previous configuration in path hierarchy
-      moduleConfig = mergeConfigs(moduleConfig, loadedConfig);
+    moduleConfig = mergeConfigs(moduleConfig, loadedConfig);
 
-      validateConfig(moduleConfig);
-    } catch (err) {
-      throw new Error(`Error loading ${configFile}. err=${err}`);
-    }
+    validateConfig(moduleConfig);
   }
   return moduleConfig;
 };
