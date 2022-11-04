@@ -35,7 +35,7 @@ const resolveModuleConfig = (
       continue;
     }
 
-      // calculate merged config by looking at the module path hierarchy
+    // calculate merged config by looking at the module path hierarchy
     const configFile = `${path}/${configFileName}`;
     let loadedConfig:Config = {};
 
@@ -54,7 +54,7 @@ const resolveModuleConfig = (
       continue;
     }
 
-      // use default 'extends' configuration for config at base (if not defined)
+    // use default 'extends' configuration for config at base (if not defined)
     if (!loadedConfig.extends && path === baseDir) {
       loadedConfig.extends = ['monolint:recommended'];
     }
@@ -62,7 +62,7 @@ const resolveModuleConfig = (
       loadedConfig.extends = [];
     }
 
-      // merge all configurations from "extends" into this one
+    // merge all configurations from "extends" into this one
     for (let aa = 0; aa < loadedConfig.extends.length; aa += 1) {
       const extend = loadedConfig.extends[aa];
       const extendConfig = loadExtension(extend);
@@ -72,7 +72,7 @@ const resolveModuleConfig = (
       moduleConfig = mergeConfigs(moduleConfig, extendConfig);
     }
 
-      // merge this configuration with previous configuration in path hierarchy
+    // merge this configuration with previous configuration in path hierarchy
     moduleConfig = mergeConfigs(moduleConfig, loadedConfig);
 
     validateConfig(moduleConfig);
