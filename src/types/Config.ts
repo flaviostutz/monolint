@@ -6,6 +6,7 @@ type Config = {
     string,
     | boolean
     | ConfigModuleRequiredFiles
+    | ConfigModuleFolderStructure
     | ConfigPackageJsonSameName
     | ConfigModuleSameContents
     | ConfigModuleParentFolder
@@ -15,6 +16,11 @@ type Config = {
 
 type ConfigModuleRequiredFiles = {
   files: string[];
+  strict: boolean;
+};
+
+type ConfigModuleFolderStructure = {
+  folders: string[];
   strict: boolean;
 };
 
@@ -43,6 +49,7 @@ type ConfigGhWorkflowModulePrefix = {
 export {
   Config,
   ConfigModuleRequiredFiles,
+  ConfigModuleFolderStructure,
   ConfigPackageJsonSameName,
   ConfigModuleSameContents,
   ConfigModuleSameContentsFile,

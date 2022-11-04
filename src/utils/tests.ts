@@ -3,6 +3,20 @@ import { discoverModules } from '../modules';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 
+const getResultsByModule = (ruleResults: RuleResult[]): Record<string, RuleResult[]> => {
+  return ruleResults.reduce((acc, result) => {
+    const { module } = result;
+    if (module) {
+      if (!Array.isArray(acc[module.name])) {
+        acc[module.name] = [];
+      }
+
+      acc[module.name].push(result);
+    }
+    return acc;
+  }, {} as Record<string, RuleResult[]>);
+};
+
 const loadModulesForRule = (
   baseDir: string,
   baseConfigFileName: string,
@@ -98,4 +112,4 @@ const expectAllModuleResultsValid = (
   }
 };
 
-export { loadModulesForRule, expectAllResourcesRegexValid, expectAllModuleResultsValid };
+export { loadModulesForRule, expectAllResourcesRegexValid, expectAllModuleResultsValid, getResultsByModule };
