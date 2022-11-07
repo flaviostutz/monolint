@@ -35,7 +35,7 @@ const resolveModuleConfig = (
       continue;
     }
 
-      // calculate merged config by looking at the module path hierarchy
+    // calculate merged config by looking at the module path hierarchy
     const configFile = `${path}/${configFileName}`;
     let loadedConfig:Config = {};
 
@@ -46,16 +46,15 @@ const resolveModuleConfig = (
       } catch (err) {
         throw new Error(`Error loading ${configFile}. err=${err}`);
       }
+      // only root level configurations should have this
+      if (loadedConfig['module-markers'] && path !== baseDir) {
+        throw new Error(`'module-markers' found on '${configFile}' is only valid on monorepo root level configuration`);
+      }
     } else if (path !== baseDir) {
       continue;
     }
 
-      // only root level configurations should have this
-    if (loadedConfig['module-markers'] && path !== baseDir) {
-      throw new Error("'module-markers' is only valid on monorepo root level configuration");
-    }
-
-      // use default 'extends' configuration for config at base (if not defined)
+    // use default 'extends' configuration for config at base (if not defined)
     if (!loadedConfig.extends && path === baseDir) {
       loadedConfig.extends = ['monolint:recommended'];
     }
@@ -63,7 +62,7 @@ const resolveModuleConfig = (
       loadedConfig.extends = [];
     }
 
-      // merge all configurations from "extends" into this one
+    // merge all configurations from "extends" into this one
     for (let aa = 0; aa < loadedConfig.extends.length; aa += 1) {
       const extend = loadedConfig.extends[aa];
       const extendConfig = loadExtension(extend);
@@ -73,7 +72,7 @@ const resolveModuleConfig = (
       moduleConfig = mergeConfigs(moduleConfig, extendConfig);
     }
 
-      // merge this configuration with previous configuration in path hierarchy
+    // merge this configuration with previous configuration in path hierarchy
     moduleConfig = mergeConfigs(moduleConfig, loadedConfig);
 
     validateConfig(moduleConfig);
