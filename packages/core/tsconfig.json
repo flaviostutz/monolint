@@ -1,18 +1,6 @@
 {
-  "compilerOptions": {
-    // copied from @tsconfig/node14/tsconfig.json (not working on ci)
-    "lib": ["es2020"],
-    "module": "commonjs",
-    "target": "es2020",
-    "strict": true,
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "preserveConstEnums": true
-  },
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {},
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["src/**/*.test.*", "src/**/tests/**/*"]
 }
