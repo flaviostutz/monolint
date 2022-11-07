@@ -7,10 +7,10 @@
 
 This PR fixes/implements the following **bugs/features**
 
-* [ ] Bug 1
-* [ ] Bug 2
-* [ ] Feature 1
-* [ ] Feature 2
+- [ ] Bug 1
+- [ ] Bug 2
+- [ ] Feature 1
+- [ ] Feature 2
 
 <!-- You can skip this if you're fixing a typo or adding an app to the Showcase. -->
 
@@ -22,9 +22,10 @@ Explain the **motivation** for making this change. What existing problem does th
 
 <!-- If you are already aware of any (possible) breaking changes, list them here -->
 
-* [ ] Breaking change 1
+- [ ] Breaking change 1
 
 **Closing issues**
 
 <!-- Put `closes #XXXX` in your comment to auto-close the issue that your PR fixes (if such). -->
+
 Fixes #
