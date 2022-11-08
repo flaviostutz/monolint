@@ -2,6 +2,7 @@
 
 [![This is a Poppins project](https://raw.githubusercontent.com/bancodobrasil/poppins/master/badge-poppins.svg)](https://github.com/bancodobrasil/poppins)
 [![first-timers-only](https://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](https://www.firsttimersonly.com/)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fflaviostutz%2Fmonolint.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fflaviostutz%2Fmonolint?ref=badge_shield)
 
 Linter for monorepos. Checks folder structure, module contents, file contents and naming conventions of a monorepo.
 
@@ -150,3 +151,7 @@ Each check that you want to do in the monorepo is done by a "rule". You can enab
 - [Contribute to this Project](https://github.com/Syknapse/Contribute-To-This-Project): This is for absolute beginners. If you know how to write and edit an anchor tag <a href="" target=""></a> then you should be able to do it.
 - [Contribute to open source](https://github.com/danthareja/contribute-to-open-source):
   Learn the GitHub workflow by contributing code in a fun simulation project
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fflaviostutz%2Fmonolint.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fflaviostutz%2Fmonolint?ref=badge_large)
