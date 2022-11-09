@@ -129,7 +129,9 @@ describe('given a folder with strict configuration', () => {
         resultsByModule['mod-strict-error-3'].forEach((result) => {
           if (result.resource === 'another-folder') {
             expect(result.valid).toBeFalsy();
-            expect(result.message).toEqual('Folder outside the required list not allowed (strict mode)');
+            expect(result.message).toEqual(
+              'Folder outside the required list not allowed (strict mode)',
+            );
           } else {
             expect(result.valid).toBeTruthy();
           }

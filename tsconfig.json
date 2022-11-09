@@ -13,6 +13,5 @@
     "resolveJsonModule": true,
     "preserveConstEnums": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["dist", "**/dist", "node_modules", "**/node_modules", "**/jest.setup.ts"]
 }

@@ -112,4 +112,9 @@ const expectAllModuleResultsValid = (
   }
 };
 
-export { loadModulesForRule, expectAllResourcesRegexValid, expectAllModuleResultsValid, getResultsByModule };
+export {
+  loadModulesForRule,
+  expectAllResourcesRegexValid,
+  expectAllModuleResultsValid,
+  getResultsByModule,
+};

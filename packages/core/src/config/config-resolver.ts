@@ -37,7 +37,7 @@ const resolveModuleConfig = (
 
     // calculate merged config by looking at the module path hierarchy
     const configFile = `${path}/${configFileName}`;
-    let loadedConfig:Config = {};
+    let loadedConfig: Config = {};
 
     if (fs.existsSync(configFile)) {
       const cf = fs.readFileSync(configFile);

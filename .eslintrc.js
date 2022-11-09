@@ -1,12 +1,13 @@
 // eslint-disable-next-line import/no-commonjs
 module.exports = {
+  root: true,
   parserOptions: {
     // needed by some typescript rules
-    project: ['./tsconfig.eslint.json'],
+    // https://typescript-eslint.io/docs/linting/typed-linting/monorepos#one-tsconfigjson-per-package-and-an-optional-one-in-the-root
+    project: ['./tsconfig.eslint.json', './packages/*/tsconfig.json'],
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  root: true,
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'jest', 'prettier'],
   extends: [

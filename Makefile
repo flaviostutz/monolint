@@ -1,3 +1,5 @@
+# TODO: FIX THIS!! Use NX commands
+
 build: 
 	npm ci
 	npm run build
