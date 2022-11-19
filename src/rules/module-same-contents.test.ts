@@ -92,40 +92,40 @@ describe('when using selector for checking parts of files', () => {
     const results = rule.checkModules(modules, baseDir);
     expectAllResourcesRegexValid(
       results,
-      'mod2-some-equal-files/serverless.yml\\[/provider/runtime\\]',
+      'mod2-some-equal-files/serverless.yml\\[provider.runtime\\]',
       true,
       'Similar to module mod1-reference.*',
     );
     expectAllResourcesRegexValid(
       results,
-      'mod2-some-equal-files/serverless.yml\\[/plugins/0\\]',
+      'mod2-some-equal-files/serverless.yml\\[plugins\\[0\\]\\]',
       true,
       'Similar to module mod1-reference.*',
     );
     expectAllResourcesRegexValid(
       results,
-      'mod2-some-equal-files/serverless.yml\\[/provider/stackName\\]',
+      'mod2-some-equal-files/serverless.yml\\[provider.stackName\\]',
       true,
       'Similar to module mod1-reference.*',
     );
 
     expectAllResourcesRegexValid(
       results,
-      'mod3-some-different-files/serverless.yml\\[/provider/runtime\\]',
+      'mod3-some-different-files/serverless.yml\\[provider.runtime\\]',
       false,
-      'Different from .*/mod1-reference/serverless.yml\\[/provider/runtime\\]',
+      'Different from .*/mod1-reference/serverless.yml\\[provider.runtime\\]',
     );
     expectAllResourcesRegexValid(
       results,
-      'mod3-some-different-files/serverless.yml\\[/plugins/0\\]',
+      'mod3-some-different-files/serverless.yml\\[plugins\\[0\\]\\]',
       false,
-      'Different from .*/mod1-reference/serverless.yml\\[/plugins/0\\]',
+      'Different from .*/mod1-reference/serverless.yml\\[plugins\\[0\\]\\]',
     );
     expectAllResourcesRegexValid(
       results,
-      'mod3-some-different-files/serverless.yml\\[/provider/stackName\\]',
+      'mod3-some-different-files/serverless.yml\\[provider.stackName\\]',
       false,
-      'Different from .*/mod1-reference/serverless.yml\\[/provider/stackName\\]',
+      'Different from .*/mod1-reference/serverless.yml\\[provider.stackName\\]',
     );
   });
 
@@ -133,7 +133,7 @@ describe('when using selector for checking parts of files', () => {
     const results = rule.checkModules(modules, baseDir);
     expectAllResourcesRegexValid(
       results,
-      'mod1-reference/package.json\\[/scripts/dist\\]',
+      'mod1-reference/package.json\\[scripts.dist\\]',
       false,
       'Config error: selector points to an unexisting',
     );

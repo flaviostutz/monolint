@@ -24,7 +24,10 @@
   "devDependencies": {
     "@shopify/eslint-plugin": "^42.0.1",
     "@types/diff": "^5.0.2",
+    "@types/fast-levenshtein": "^0.0.2",
+    "@types/fs-extra": "^9.0.13",
     "@types/jest": "^29.1.2",
+    "@types/jmespath": "^0.15.0",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^18.11.0",
     "@types/yargs": "^17.0.13",
@@ -39,16 +42,13 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@types/fast-levenshtein": "^0.0.2",
-    "@types/fs-extra": "^9.0.13",
-    "@types/jsonpointer": "^4.0.0",
     "chalk": "^5.1.2",
     "diff": "^5.1.0",
     "fast-glob": "^3.2.12",
     "fast-levenshtein": "^3.0.0",
     "fs-extra": "^10.1.0",
+    "jmespath": "^0.16.0",
     "js-yaml": "^4.1.0",
-    "jsonpointer": "^5.0.1",
     "yaml-cfn": "^0.3.1",
     "yargs": "^17.6.0"
   }

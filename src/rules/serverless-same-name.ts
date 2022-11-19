@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 
 import { yamlParse } from 'yaml-cfn';
-import jsonpointer from 'jsonpointer';
+import jmespath from 'jmespath';
 
 import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
@@ -25,11 +25,11 @@ const rule: Rule = {
       try {
         const cf = fs.readFileSync(slsFile, 'utf8');
         const loadedSls = yamlParse(cf);
-        const service: string = jsonpointer.get(loadedSls, '/service');
+        const service: string = jmespath.search(loadedSls, 'service');
         if (!service.endsWith(module.name)) {
           // will fix
           if (fix) {
-            jsonpointer.set(loadedSls, '/service', module.name);
+            loadedSls.service = module.name;
             fs.writeFileSync(slsFile, JSON.stringify(loadedSls, null, 2));
             results.push({
               valid: true,

@@ -5,15 +5,15 @@
       "files": {
         "serverless.yml": {
           "selectors": [
-            "/provider/runtime", 
-            "/provider/stackName", 
-            "/plugins/0"
+            "provider.runtime", 
+            "provider.stackName", 
+            "plugins[0]"
           ]
-        }, 
+        },
         "package.json": {
           "selectors": [
-            "/scripts/dist", 
-            "/repository/type"
+            "scripts.dist", 
+            "repository.type"
           ]
         }
       }
