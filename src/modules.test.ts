@@ -40,4 +40,10 @@ describe('when running lint', () => {
       expect(results[6].config.rules['packagejson-same-name']).toBeFalsy();
     }
   });
+
+  it('modules that have other modules inside its path hierarchy should be ignored', async () => {
+    const results = discoverModules(baseDir, baseConfig, '.monolint.json');
+    expect(results).toHaveLength(7);
+  });
+
 });
