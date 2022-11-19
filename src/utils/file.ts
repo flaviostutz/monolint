@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-import jsonpointer from 'jsonpointer';
+import jmespath from 'jmespath';
 import levenshtein from 'fast-levenshtein';
 import { yamlParse } from 'yaml-cfn';
 
@@ -14,25 +14,31 @@ const fullContentSimilarityPerc = (file1: string, file2: string): number => {
 /**
  * Extracts part of content from file1 and compare with part of the content of file2
  * Files must be *.yml or *.json
- * @param filePath1 File which contents will be extracted using jsonPointerFile1
- * @param jsonPointerFile1 jsonPointer selector
- * @param filePath2 File which contents will be extracted using jsonPointerFile2
- * @param jsonPointerFile2 jsonPointer selector
+ * @param filePath1 File which contents will be extracted using jmespathFile1
+ * @param jmespathFile1 jmespath query
+ * @param filePath2 File which contents will be extracted using jmespathFile2
+ * @param jmespathFile2 jmespath query
  * @returns Percent of similarity of the selected contents inside file
  */
 const partialContentSimilarity = (
   filePath1: string,
-  jsonPointerFile1: string,
+  jmespathFile1: string,
   filePath2: string,
-  jsonPointerFile2: string,
+  jmespathFile2: string,
 ): number => {
   const contents1 = loadContents(filePath1);
-  const partial1 = jsonpointer.get(contents1, jsonPointerFile1);
-  const partialText1 = JSON.stringify(partial1);
+  const partial1 = jmespath.search(contents1, jmespathFile1);
+  let partialText1 = '';
+  if (partial1) {
+    partialText1 = JSON.stringify(partial1);
+  }
 
   const contents2 = loadContents(filePath2);
-  const partial2 = jsonpointer.get(contents2, jsonPointerFile2);
-  const partialText2 = JSON.stringify(partial2);
+  const partial2 = jmespath.search(contents2, jmespathFile2);
+  let partialText2 = '';
+  if (partial2) {
+    partialText2 = JSON.stringify(partial2);
+  }
 
   if (!partialText1 || !partialText2) {
     return 0;

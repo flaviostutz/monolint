@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-import jsonpointer from 'jsonpointer';
+import jmespath from 'jmespath';
 
 import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
@@ -38,11 +38,11 @@ const rule: Rule = {
       try {
         const cf = fs.readFileSync(packageFile, 'utf8');
         const loadedPackage = JSON.parse(cf.toString());
-        const name: string = jsonpointer.get(loadedPackage, '/name');
+        const name: string = jmespath.search(loadedPackage, 'name');
         if (!name.endsWith(module.name)) {
           // will fix
           if (fix) {
-            jsonpointer.set(loadedPackage, '/name', module.name);
+            loadedPackage.name = module.name;
             fs.writeFileSync(packageFile, JSON.stringify(loadedPackage, null, 2));
             results.push({
               valid: true,

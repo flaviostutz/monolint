@@ -2,5 +2,10 @@
     "name": "mod3-other-files",
     "scripts": {
         "dist": "another dist command"
-    }
+    },
+    "dependencies": {
+        "lib1": "1.0",
+        "lib4": "4.0",
+        "lib5": "5.0"
+      }
 }

@@ -1,3 +1,8 @@
 {
-  "name": "mod4-all-files"
+  "name": "mod4-all-files",
+  "dependencies": {
+    "lib1": "1.0",
+    "lib2": "2.0",
+    "lib3": "3.0"
+  }
 }

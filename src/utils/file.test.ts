@@ -30,9 +30,9 @@ describe('when having two yml or json files', () => {
   it('same selector comparing with same file have similarity 100%', async () => {
     const dperc = partialContentSimilarity(
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
-      '/hospital',
+      'hospital',
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
-      '/hospital',
+      'hospital',
     );
     expect(dperc).toBe(100);
   });
@@ -40,9 +40,9 @@ describe('when having two yml or json files', () => {
   it('same selector comparing two files with different extracts contents should be <100% similarity', async () => {
     const dperc = partialContentSimilarity(
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
-      '/hospital',
+      'hospital',
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare2.json',
-      '/hospital',
+      'hospital',
     );
     expect(dperc).toBeGreaterThan(50);
     expect(dperc).toBeLessThan(60);
@@ -51,9 +51,9 @@ describe('when having two yml or json files', () => {
   it('comparison with similar selector for same content yml and json should work', async () => {
     const dperc = partialContentSimilarity(
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
-      '/hospital',
+      'hospital',
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.yml',
-      '/hospital',
+      'hospital',
     );
     expect(dperc).toBe(100);
   });
@@ -61,9 +61,9 @@ describe('when having two yml or json files', () => {
   it('comparison with similar selector for different contents of yml and json should work', async () => {
     const dperc = partialContentSimilarity(
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
-      '/hospital',
+      'hospital',
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare2.yml',
-      '/hospital',
+      'hospital',
     );
     expect(dperc).toBeGreaterThan(50);
     expect(dperc).toBeLessThan(60);
@@ -72,9 +72,9 @@ describe('when having two yml or json files', () => {
   it('comparison with similar contents in complex structures should work', async () => {
     const dperc = partialContentSimilarity(
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
-      '/medications/0/aceInhibitors',
+      'medications[0].aceInhibitors',
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.yml',
-      '/medications/0/aceInhibitors',
+      'medications[0].aceInhibitors',
     );
     expect(dperc).toBe(100);
   });
@@ -82,9 +82,9 @@ describe('when having two yml or json files', () => {
   it('comparison with different contents in complex structures should work', async () => {
     const dperc = partialContentSimilarity(
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
-      '/medications/0/aceInhibitors',
+      'medications[0].aceInhibitors',
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare2.yml',
-      '/medications/0/aceInhibitors',
+      'medications[0].aceInhibitors',
     );
     expect(dperc).toBeGreaterThan(90);
     expect(dperc).toBeLessThan(95);
@@ -93,9 +93,9 @@ describe('when having two yml or json files', () => {
   it('comparison with unexistent contents should return 0', async () => {
     const dperc = partialContentSimilarity(
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
-      '/medications/0/aceInhibitors',
+      'medications[0].aceInhibitors',
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare2.yml',
-      '/medications/0/aceInhibitors/0/0',
+      'medications[0].aceInhibitors[0][0]',
     );
     expect(dperc).toBe(0);
   });

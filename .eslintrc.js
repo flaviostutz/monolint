@@ -89,6 +89,8 @@ module.exports = {
     '@babel/object-curly-spacing': 'off',
     'line-comment-position': 'off',
     'no-warning-comments': ['error', { terms: ['fixme'] }],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
     // "@typescript-eslint/typedef": ["error", {arrowParameter: true, variableDeclaration: true}],
     // "jsx-no-complex-expressions": "error",
     quotes: [2, 'single', { avoidEscape: true }],
