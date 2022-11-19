@@ -70,9 +70,27 @@ const discoverModules = (baseDir: string, baseConfig: Config, configFileName: st
     });
   }
 
+  // remove modules that aren't leaves (they have other modules inside them #55)
+  const fmodules: Module[] = [];
+  for (let aa = 0; aa < modules.length; aa += 1) {
+    const candidateModule = modules[aa];
+    let foundParent = false;
+    for (let bb = 0; bb < modules.length; bb += 1) {
+      const otherModule = modules[bb];
+      if (otherModule.path !== candidateModule.path &&
+        otherModule.path.startsWith(candidateModule.path)) {
+        foundParent = true;
+        break;
+      }
+    }
+    if (!foundParent) {
+      fmodules.push(candidateModule);
+    }
+  }
+
   // sort by module name ascending to make it previsible and easier to create
   // newer modules for tests without breaking existing tests and to debug in general
-  modules.sort((aa, bb) => {
+  fmodules.sort((aa, bb) => {
     if (bb.name > aa.name) {
       return -1;
     }
@@ -89,7 +107,7 @@ const discoverModules = (baseDir: string, baseConfig: Config, configFileName: st
     return 0;
   });
 
-  return modules;
+  return fmodules;
 };
 
 export { discoverModules };
