@@ -1,4 +1,8 @@
 ---
+dependencies:
+  lib1: 1.0.0
+  lib3: 1.0.1
+  lib4: 0.0.2
 hospital: St German Different
 responsible:
   name: George Ortega

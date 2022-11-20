@@ -38,16 +38,17 @@ const expectAllResourcesRegexValid = (
   if (!ruleResults) {
     throw new Error('ruleResults should be defined');
   }
-  let foundResult = false;
-  let validResult = false;
+  let prevResult = null;
   for (let j = 0; j < ruleResults.length; j += 1) {
     const rr = ruleResults[j];
 
     const regexp = new RegExp(resourceRegex);
     if (regexp.test(rr.resource)) {
-      if (foundResult && validResult !== rr.valid) {
+      if (prevResult && prevResult.valid !== rr.valid) {
+        const res1 = { valid: prevResult.valid, resource: prevResult.resource, message: prevResult.message };
+        const res2 = { valid: rr.valid, resource: rr.resource, message: rr.message };
         throw new Error(
-          `Multiple rule results for '${resourceRegex}' found with different 'valid' results`,
+          `Multiple rule results for '${resourceRegex}' found with different 'valid' results. res1=${JSON.stringify(res1)}; res2=${JSON.stringify(res2)}`,
         );
       }
 
@@ -58,20 +59,19 @@ const expectAllResourcesRegexValid = (
         }
       }
 
-      foundResult = true;
-      validResult = rr.valid;
+      prevResult = rr;
     }
   }
 
-  if (!foundResult) {
+  if (!prevResult) {
     throw new Error(`No resources that match '${resourceRegex}' found in rule results`);
   }
 
-  if (expectValid !== validResult) {
+  if (expectValid !== prevResult.valid) {
     throw new Error(
       `All rule results for resource ${resourceRegex} should be ${
         expectValid ? 'valid' : 'invalid'
-      }`,
+      }. last=${JSON.stringify({ valid: prevResult.valid, resource: prevResult.resource, message: prevResult.message })}`,
     );
   }
 };

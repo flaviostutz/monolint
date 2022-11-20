@@ -137,5 +137,31 @@ describe('when using selector for checking parts of files', () => {
       false,
       'Config error: selector points to an unexisting',
     );
+
+    expectAllResourcesRegexValid(
+      results,
+      'mod1-reference/package.json\\[unexistingthing\\]',
+      false,
+      'Config error: selector points to an unexisting',
+    );
   });
+
+  it('should match existing attributes of a selected part of the file', async () => {
+    const results = rule.checkModules(modules, baseDir);
+    expectAllResourcesRegexValid(
+      results,
+      'mod2-some-equal-files/package.json\\[dependencies\\]',
+      true,
+    );
+  });
+
+  it('should match existing attributes of a selected part of the file and fail if different', async () => {
+    const results = rule.checkModules(modules, baseDir);
+    expectAllResourcesRegexValid(
+      results,
+      'mod3-some-different-files/package.json\\[dependencies.lib3\\]',
+      false,
+    );
+  });
+
 });

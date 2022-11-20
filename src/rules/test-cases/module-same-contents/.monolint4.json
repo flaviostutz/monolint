@@ -13,7 +13,9 @@
         "package.json": {
           "selectors": [
             "scripts.dist", 
-            "repository.type"
+            "repository.type",
+            "unexistingthing",
+            "dependencies"
           ]
         }
       }
