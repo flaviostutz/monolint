@@ -99,18 +99,21 @@ const rule: Rule = {
     return null;
   },
   docMarkdown(): string {
-    let doc = '* Checks if specified files have the same content among the different modules\n';
+    let doc = '* Checks if specified files have the same content among different modules\n';
     doc +=
       "* It doesn't complain or checks for files that aren't present on modules. If you need this, use rule 'module-required-files'\n";
     doc += '* Default behavior:\n';
     doc +=
       "  * It will try to select the module with most files as the reference module and check the other modules's files against it";
-    doc += `  * Files checked: ${JSON.stringify(defaultFiles)}`;
+    doc += `  * Files checked if nothing is specified: ${JSON.stringify(defaultFiles)}`;
     doc += '  * Files must have the be exactly the same contents (min-similarity=100%)';
+    doc += '* Expanded configuration:\n';
     doc +=
-      '* With expanded configurations you can change which files are checked and the similarity threshold';
+      '  * With expanded configurations you can change which files are checked and the similarity threshold';
     doc +=
-      '* Use jmespath queries (https://jmespath.org) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)';
+      '  * Use jmespath queries (https://jmespath.org) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)';
+    doc += '  * If jmespath query resolves ao a primitive attribute value, its similarity will be compared\n';
+    doc += '  * If jmespath query resolves ao an object with attributes, only the attributes that are present in both modules/files will be checked\n';
     return doc;
   },
   docExampleConfigs(): RuleExample[] {
@@ -154,6 +157,17 @@ const rule: Rule = {
             },
             'package.json': {
               selectors: ['scripts.dist', 'repository.type'],
+            },
+          },
+        },
+      },
+      {
+        description:
+          "The attributes inside 'dependencies' present both in reference and in the other modules must match, if exists. In this example, it will enforce all dependencies that exists in both reference module and the other modules to have the same version, but will ignore all other dependencies that are not in both modules.",
+        config: {
+          files: {
+            'package.json': {
+              selectors: ['dependencies'],
             },
           },
         },
@@ -235,17 +249,20 @@ const checkModule = (
           });
         }
 
-        const sp = partialContentSimilarity(targetFilePath, selector, refFilePath, selector);
+        const sp = partialContentSimilarity(targetFilePath, selector, refFilePath, selector, true);
 
         // eslint-disable-next-line @shopify/binary-assignment-parens
-        const valid = sp >= minSimilarity;
-        let message = `Similar to module ${refModule.name} (${sp}%)`;
+        const valid = sp._all >= minSimilarity;
+        let message = `Similar to module ${refModule.name} (${sp._all}%)`;
+        let selectorMsg = selector;
         if (!valid) {
-          message = `Different from '${refFilePath}[${selector}]' (${sp}%)`;
+          const dm = getDiffMessage(refFilePath, selector, sp);
+          message = dm.dmessage;
+          selectorMsg = dm.dselector;
         }
         results.push({
           valid,
-          resource: `${targetFilePath}[${selector}]`,
+          resource: `${targetFilePath}[${selectorMsg}]`,
           message,
           rule: rule.name,
           module: targetModule,
@@ -312,6 +329,33 @@ const expandConfig = (
   }
   targetModuleRuleConfig.files = fileConfigs;
   return targetModuleRuleConfig;
+};
+
+const getDiffMessage = (refFilePath: string, dselector: string,
+    similarityResults: Record<string, number>): {dmessage:string, dselector:string} => {
+  let dmessage = `Different from '${refFilePath}[${dselector}]' (${similarityResults._all}%)`;
+
+  // add more details, if exists
+  let worstSimilarity = 100;
+  let worstKey = null;
+  for (const key in similarityResults) {
+    if (key === '_all') {
+      continue;
+    }
+    // eslint-disable-next-line no-prototype-builtins
+    if (similarityResults.hasOwnProperty(key)) {
+      if (similarityResults[key] <= worstSimilarity) {
+        worstSimilarity = similarityResults[key];
+        worstKey = key;
+      }
+    }
+  }
+  if (worstKey) {
+    dmessage = `Different from '${refFilePath}[${dselector}.${worstKey}]' (${worstSimilarity}%)`;
+    return { dmessage, dselector: `${dselector}.${worstKey}` };
+  }
+
+  return { dmessage, dselector };
 };
 
 export default rule;

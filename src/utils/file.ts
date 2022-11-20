@@ -13,38 +13,77 @@ const fullContentSimilarityPerc = (file1: string, file2: string): number => {
 
 /**
  * Extracts part of content from file1 and compare with part of the content of file2
- * Files must be *.yml or *.json
+ * Files must be *.yml or *.json.
  * @param filePath1 File which contents will be extracted using jmespathFile1
  * @param jmespathFile1 jmespath query
  * @param filePath2 File which contents will be extracted using jmespathFile2
  * @param jmespathFile2 jmespath query
- * @returns Percent of similarity of the selected contents inside file
+ * @param onlyMatchingAttributes If jmespath query resolves to a map of attributes (object),
+ * only the matching attribute's value will be compared
+ * @returns Percent of similarity of the contents inside file for each attribute.
+ * '_all' attribute is always returned with the overall similarity
  */
 const partialContentSimilarity = (
   filePath1: string,
   jmespathFile1: string,
   filePath2: string,
   jmespathFile2: string,
-): number => {
+  onlyMatchingAttributes: boolean = false,
+): Record<string, number> => {
   const contents1 = loadContents(filePath1);
   const partial1 = jmespath.search(contents1, jmespathFile1);
-  let partialText1 = '';
-  if (partial1) {
-    partialText1 = JSON.stringify(partial1);
-  }
 
   const contents2 = loadContents(filePath2);
   const partial2 = jmespath.search(contents2, jmespathFile2);
-  let partialText2 = '';
-  if (partial2) {
-    partialText2 = JSON.stringify(partial2);
+
+  const similarities:Record<string, number> = {};
+
+  // check only matching attributes
+  // and return average similarity
+  if (onlyMatchingAttributes &&
+      (typeof partial1 === 'object') && (typeof partial2 === 'object')) {
+    let sum = 0;
+    let count = 0;
+    for (const key in partial1) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (partial1.hasOwnProperty(key)) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (partial2.hasOwnProperty(key)) {
+          const p1 = partial1[key];
+          const p2 = partial2[key];
+          const vv = similarity(p1, p2);
+          similarities[key] = vv;
+          sum += vv;
+          count += 1;
+        }
+      }
+    }
+    similarities._all = Math.round((sum / count) * 100) / 100;
+    return similarities;
   }
 
-  if (!partialText1 || !partialText2) {
+  // compare only simple attribute values found by jmespath query
+  if (!partial1 && !partial2) {
+    similarities._all = 100;
+    return similarities;
+  }
+  if (!partial1 || !partial2) {
+    similarities._all = 0;
+    return similarities;
+  }
+  similarities._all = similarity(JSON.stringify(partial1), JSON.stringify(partial2));
+  return similarities;
+};
+
+const similarity = (text1:string, text2:string):number => {
+  if (!text1 && !text2) {
+    return 100;
+  }
+  if (!text1 || !text2) {
     return 0;
   }
-  const diffDist = levenshtein.get(partialText1, partialText2);
-  const max = Math.round(Math.max(partialText1.length, partialText2.length));
+  const diffDist = levenshtein.get(text1, text2);
+  const max = Math.round(Math.max(text1.length, text2.length));
   return Math.round(((max - diffDist) / max) * 10000) / 100;
 };
 

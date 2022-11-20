@@ -1,4 +1,9 @@
 {
+    "dependencies": {
+        "lib1": "1.0.0",
+        "lib5": "1.0.0",
+        "lib6": "1.0.1"
+    },
     "hospital": "St German",
     "responsible": {
         "name": "George Ortega",
