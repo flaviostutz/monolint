@@ -241,10 +241,13 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 ## **module-same-contents**
 
-* Checks if specified files have the same content among the different modules
+* Checks if specified files have the same content among different modules
 * It doesn't complain or checks for files that aren't present on modules. If you need this, use rule 'module-required-files'
 * Default behavior:
-  * It will try to select the module with most files as the reference module and check the other modules's files against it  * Files checked: ["LICENSE","jest.config.js","tsconfig.json","tsconfig.eslint.json",".eslintrc.js","eslintignore",".prettierrc.js",".prettierignore"]  * Files must have the be exactly the same contents (min-similarity=100%)* With expanded configurations you can change which files are checked and the similarity threshold* Use jmespath queries (https://jmespath.org) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)
+  * It will try to select the module with most files as the reference module and check the other modules's files against it  * Files checked if nothing is specified: ["LICENSE","jest.config.js","tsconfig.json","tsconfig.eslint.json",".eslintrc.js","eslintignore",".prettierrc.js",".prettierignore"]  * Files must have the be exactly the same contents (min-similarity=100%)* Expanded configuration:
+  * With expanded configurations you can change which files are checked and the similarity threshold  * Use jmespath queries (https://jmespath.org) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)  * If jmespath query resolves ao a primitive attribute value, its similarity will be compared
+  * If jmespath query resolves ao an object with attributes, only the attributes that are present in both modules/files will be checked
+
 
 * Examples:
 
@@ -315,6 +318,24 @@ Those configurations should be added to a file in the root of the monorepo calle
           "selectors": [
             "scripts.dist",
             "repository.type"
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+  * The attributes inside 'dependencies' present both in reference and in the other modules must match, if exists. In this example, it will enforce all dependencies that exists in both reference module and the other modules to have the same version, but will ignore all other dependencies that are not in both modules.
+
+```json
+{
+  "rules": {
+    "module-same-contents": {
+      "files": {
+        "package.json": {
+          "selectors": [
+            "dependencies"
           ]
         }
       }
