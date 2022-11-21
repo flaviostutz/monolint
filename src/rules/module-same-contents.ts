@@ -112,8 +112,9 @@ const rule: Rule = {
       '  * With expanded configurations you can change which files are checked and the similarity threshold';
     doc +=
       '  * Use jmespath queries (https://jmespath.org) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)';
-    doc += '  * If jmespath query resolves ao a primitive attribute value, its similarity will be compared\n';
-    doc += '  * If jmespath query resolves ao an object with attributes, only the attributes that are present in both modules/files will be checked\n';
+    doc += '  * If jmespath query resolves to a primitive attribute value, its similarity will be compared\n';
+    doc += '  * If jmespath query resolves to an object with attributes, only the attributes that are present in both modules/files will be checked\n';
+    doc += '  * If jmespath is \'\', all matching attributes of the file will be checked against similarity\n';
     return doc;
   },
   docExampleConfigs(): RuleExample[] {
@@ -181,7 +182,7 @@ const checkModule = (
   targetModule: Module,
   targetModuleRuleConfig: ConfigModuleSameContents,
 ): RuleResult[] => {
-  const results: RuleResult[] = [];
+  let results: RuleResult[] = [];
 
   // check each file in module against ref module file
   for (const filename in targetModuleRuleConfig.files) {
@@ -236,37 +237,11 @@ const checkModule = (
 
       for (let i = 0; i < fileConfig.selectors.length; i += 1) {
         const selector = fileConfig.selectors[i];
-
-        const contentsRef = loadContents(refFilePath);
-        const partial1 = jmespath.search(contentsRef, selector);
-        if (!partial1) {
-          results.push({
-            valid: false,
-            resource: `${refFilePath}[${selector}]`,
-            message: 'Config error: selector points to an unexisting content on reference file',
-            rule: rule.name,
-            module: targetModule,
-          });
-        }
-
-        const sp = partialContentSimilarity(targetFilePath, selector, refFilePath, selector, true);
-
-        // eslint-disable-next-line @shopify/binary-assignment-parens
-        const valid = sp._all >= minSimilarity;
-        let message = `Similar to module ${refModule.name} (${sp._all}%)`;
-        let selectorMsg = selector;
-        if (!valid) {
-          const dm = getDiffMessage(refFilePath, selector, sp);
-          message = dm.dmessage;
-          selectorMsg = dm.dselector;
-        }
-        results.push({
-          valid,
-          resource: `${targetFilePath}[${selectorMsg}]`,
-          message,
-          rule: rule.name,
-          module: targetModule,
+        const presults = checkPartialSimilarity({
+          selector, refFilePath, targetModule,
+          targetFilePath, minSimilarity, refModule,
         });
+        results = [...results, ...presults];
       }
       continue;
     }
@@ -331,31 +306,104 @@ const expandConfig = (
   return targetModuleRuleConfig;
 };
 
-const getDiffMessage = (refFilePath: string, dselector: string,
-    similarityResults: Record<string, number>): {dmessage:string, dselector:string} => {
-  let dmessage = `Different from '${refFilePath}[${dselector}]' (${similarityResults._all}%)`;
+// const getDiffMessage = (refFilePath: string, dselector: string,
+//     similarityResults: Record<string, number>): {dmessage:string, dselector:string} => {
+//   let dmessage = `Different from '${refFilePath}[${dselector}]' (${similarityResults._all}%)`;
 
-  // add more details, if exists
-  let worstSimilarity = 100;
-  let worstKey = null;
-  for (const key in similarityResults) {
+//   // add more details, if exists
+//   let worstSimilarity = 100;
+//   let worstKey = null;
+//   for (const key in similarityResults) {
+//     if (key === '_all') {
+//       continue;
+//     }
+//     // eslint-disable-next-line no-prototype-builtins
+//     if (similarityResults.hasOwnProperty(key)) {
+//       if (similarityResults[key] <= worstSimilarity) {
+//         worstSimilarity = similarityResults[key];
+//         worstKey = key;
+//       }
+//     }
+//   }
+//   if (worstKey) {
+//     dmessage = `Different from '${refFilePath}[${dselector}.${worstKey}]' (${worstSimilarity}%)`;
+//     return { dmessage, dselector: `${dselector}.${worstKey}` };
+//   }
+
+//   return { dmessage, dselector };
+// };
+
+const checkPartialSimilarity = (pp:
+    {
+      selector: string, refFilePath:string, targetModule:Module,
+      targetFilePath: string, minSimilarity:number, refModule:Module
+    }):RuleResult[] => {
+
+  const results:RuleResult[] = [];
+  const contentsRef = loadContents(pp.refFilePath);
+  if (pp.selector !== '') {
+    const partial1 = jmespath.search(contentsRef, pp.selector);
+    if (!partial1) {
+      results.push({
+        valid: false,
+        resource: `${pp.refFilePath}[${pp.selector}]`,
+        message: 'Config error: selector points to an unexisting content on reference file',
+        rule: rule.name,
+        module: pp.targetModule,
+      });
+    }
+  }
+
+  const sp = partialContentSimilarity(pp.targetFilePath, pp.selector, pp.refFilePath, pp.selector, true);
+
+  // eslint-disable-next-line @shopify/binary-assignment-parens
+  const valid = sp._all >= pp.minSimilarity;
+  let message = `Similar to module ${pp.refModule.name} (${sp._all}%)`;
+  let selectorMsg = `[${pp.selector}]`;
+  if (!pp.selector) {
+    selectorMsg = '';
+  }
+
+  if (valid) {
+    results.push({
+      valid,
+      resource: `${pp.targetFilePath}${selectorMsg}`,
+      message,
+      rule: rule.name,
+      module: pp.targetModule,
+    });
+    return results;
+  }
+
+  // generate results for failed checks
+  message = `Different from '${pp.refFilePath}${selectorMsg}' (${sp._all}%)`;
+
+  for (const key in sp) {
     if (key === '_all') {
       continue;
     }
     // eslint-disable-next-line no-prototype-builtins
-    if (similarityResults.hasOwnProperty(key)) {
-      if (similarityResults[key] <= worstSimilarity) {
-        worstSimilarity = similarityResults[key];
-        worstKey = key;
-      }
+    if (!sp.hasOwnProperty(key)) {
+      continue;
     }
-  }
-  if (worstKey) {
-    dmessage = `Different from '${refFilePath}[${dselector}.${worstKey}]' (${worstSimilarity}%)`;
-    return { dmessage, dselector: `${dselector}.${worstKey}` };
+    if (pp.selector) {
+      selectorMsg = `[${pp.selector}.${key}]`;
+    } else {
+      selectorMsg = `[${key}]`;
+    }
+    message = `Different from '${pp.refFilePath}${selectorMsg}' (${sp[key]}%)`;
+
+    results.push({
+      valid,
+      resource: `${pp.targetFilePath}${selectorMsg}`,
+      message,
+      rule: rule.name,
+      module: pp.targetModule,
+    });
   }
 
-  return { dmessage, dselector };
+  return results;
 };
+
 
 export default rule;
