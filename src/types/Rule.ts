@@ -4,7 +4,6 @@ import { RuleResult } from './RuleResult';
 import { RuleExample } from './RuleExample';
 
 export interface Rule {
-
   /**
    * Evaluate this rule against a set of modules
    * @param {Module[]} modules - All modules that have this rule enabled and must be checked
