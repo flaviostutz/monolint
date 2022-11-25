@@ -68,7 +68,6 @@ const rule: Rule = {
           valid: false,
           resource: module.path,
           message: `Module parent folder name does not match any of the patterns: ${parentFolderPatternsList.join(
-
             ', ',
           )}`,
           rule: rule.name,

@@ -1,4 +1,3 @@
-
 export enum FixType {
   Skipped = 1,
   NotPossible = 1,
