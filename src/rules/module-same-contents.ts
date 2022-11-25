@@ -364,20 +364,23 @@ const checkPartialSimilarity = (pp:
     selectorMsg = '';
   }
 
+  if (!valid) {
+    message = `Different from '${pp.refFilePath}${selectorMsg}' (${sp._all}%)`;
+  }
+
+  results.push({
+    valid,
+    resource: `${pp.targetFilePath}${selectorMsg}`,
+    message,
+    rule: rule.name,
+    module: pp.targetModule,
+  });
+
   if (valid) {
-    results.push({
-      valid,
-      resource: `${pp.targetFilePath}${selectorMsg}`,
-      message,
-      rule: rule.name,
-      module: pp.targetModule,
-    });
     return results;
   }
 
   // generate results for failed checks
-  message = `Different from '${pp.refFilePath}${selectorMsg}' (${sp._all}%)`;
-
   for (const key in sp) {
     if (key === '_all') {
       continue;

@@ -1,3 +1,5 @@
+import { addAbortSignal } from 'stream';
+
 import {
   expectAllModuleResultsValid,
   expectAllResourcesRegexValid,
@@ -108,6 +110,8 @@ describe('when using selector for checking parts of files', () => {
       true,
       'Similar to module mod1-reference.*',
     );
+
+    console.log(JSON.stringify(results?.filter((aa) => aa.resource.includes('serverless.yml[')).map((bb) => bb.resource)));
 
     expectAllResourcesRegexValid(
       results,
