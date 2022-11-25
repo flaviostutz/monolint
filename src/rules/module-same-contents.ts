@@ -102,6 +102,7 @@ const rule: Rule = {
     let doc = '* Checks if specified files have the same content among different modules\n';
     doc +=
       "* It doesn't complain or checks for files that aren't present on modules. If you need this, use rule 'module-required-files'\n";
+    doc += '* For partial contents, selectors can be used in yml, json or Makefile files. yml files will be converted to json before being checked against the jmespath rule and Makefiles will expose their "targets" as first level attributes to be checked\n';
     doc += '* Default behavior:\n';
     doc +=
       "  * It will try to select the module with most files as the reference module and check the other modules's files against it";
@@ -172,6 +173,17 @@ const rule: Rule = {
           files: {
             'package.json': {
               selectors: ['dependencies'],
+            },
+          },
+        },
+      },
+      {
+        description:
+          "Makefile targets 'build' and 'deploy' must have the same content in Makefiles around the monorepo. They still can have other targets at will.",
+        config: {
+          files: {
+            Makefile: {
+              selectors: ['build', 'deploy'],
             },
           },
         },
