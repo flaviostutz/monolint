@@ -245,8 +245,9 @@ Those configurations should be added to a file in the root of the monorepo calle
 * It doesn't complain or checks for files that aren't present on modules. If you need this, use rule 'module-required-files'
 * Default behavior:
   * It will try to select the module with most files as the reference module and check the other modules's files against it  * Files checked if nothing is specified: ["LICENSE","jest.config.js","tsconfig.json","tsconfig.eslint.json",".eslintrc.js","eslintignore",".prettierrc.js",".prettierignore"]  * Files must have the be exactly the same contents (min-similarity=100%)* Expanded configuration:
-  * With expanded configurations you can change which files are checked and the similarity threshold  * Use jmespath queries (https://jmespath.org) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)  * If jmespath query resolves ao a primitive attribute value, its similarity will be compared
-  * If jmespath query resolves ao an object with attributes, only the attributes that are present in both modules/files will be checked
+  * With expanded configurations you can change which files are checked and the similarity threshold  * Use jmespath queries (https://jmespath.org) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)  * If jmespath query resolves to a primitive attribute value, its similarity will be compared
+  * If jmespath query resolves to an object with attributes, only the attributes that are present in both modules/files will be checked
+  * If jmespath is '', all matching attributes of the file will be checked against similarity
 
 
 * Examples:

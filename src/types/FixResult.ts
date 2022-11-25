@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-shadow
 export enum FixType {
   Skipped = 1,
   NotPossible = 1,

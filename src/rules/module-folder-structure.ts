@@ -64,7 +64,7 @@ const rule: Rule = {
             module,
           });
         } else {
-            // If there is no match, then it's missing a required folder for this pattern
+          // If there is no match, then it's missing a required folder for this pattern
           results.push({
             valid: false,
             resource: requiredFolderPattern,
@@ -83,9 +83,13 @@ const rule: Rule = {
           continue;
         }
 
-        const extraFolders = allModuleFolders.filter((moduleFolder) => (
-          !foldersMatchingAllPatterns.some((matchedFolder) => matchedFolder === moduleFolder || matchedFolder.startsWith(`${moduleFolder}/`))
-        ));
+        const extraFolders = allModuleFolders.filter(
+          (moduleFolder) =>
+            !foldersMatchingAllPatterns.some(
+              (matchedFolder) =>
+                matchedFolder === moduleFolder || matchedFolder.startsWith(`${moduleFolder}/`),
+            ),
+        );
 
         if (extraFolders.length) {
           extraFolders.forEach((folder) => {
@@ -120,14 +124,16 @@ const rule: Rule = {
         config: true,
       },
       {
-        description: 'Loosely requires module structure. The module should contain **at least** this set of folders, but can still have others.',
+        description:
+          'Loosely requires module structure. The module should contain **at least** this set of folders, but can still have others.',
         config: {
           strict: false,
           folders: ['src', 'docs', 'libs'],
         },
       },
       {
-        description: 'Strictly requires module structure. No extra folders allowed, should match exactly.',
+        description:
+          'Strictly requires module structure. No extra folders allowed, should match exactly.',
         config: {
           strict: true,
           folders: ['src/test', 'src/**/utils', 'src/libs/**/release'],

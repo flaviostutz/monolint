@@ -45,10 +45,16 @@ const expectAllResourcesRegexValid = (
     const regexp = new RegExp(resourceRegex);
     if (regexp.test(rr.resource)) {
       if (prevResult && prevResult.valid !== rr.valid) {
-        const res1 = { valid: prevResult.valid, resource: prevResult.resource, message: prevResult.message };
+        const res1 = {
+          valid: prevResult.valid,
+          resource: prevResult.resource,
+          message: prevResult.message,
+        };
         const res2 = { valid: rr.valid, resource: rr.resource, message: rr.message };
         throw new Error(
-          `Multiple rule results for '${resourceRegex}' found with different 'valid' results. res1=${JSON.stringify(res1)}; res2=${JSON.stringify(res2)}`,
+          `Multiple rule results for '${resourceRegex}' found with different 'valid' results. res1=${JSON.stringify(
+            res1,
+          )}; res2=${JSON.stringify(res2)}`,
         );
       }
 
@@ -71,7 +77,11 @@ const expectAllResourcesRegexValid = (
     throw new Error(
       `All rule results for resource ${resourceRegex} should be ${
         expectValid ? 'valid' : 'invalid'
-      }. last=${JSON.stringify({ valid: prevResult.valid, resource: prevResult.resource, message: prevResult.message })}`,
+      }. last=${JSON.stringify({
+        valid: prevResult.valid,
+        resource: prevResult.resource,
+        message: prevResult.message,
+      })}`,
     );
   }
 };
@@ -112,4 +122,9 @@ const expectAllModuleResultsValid = (
   }
 };
 
-export { loadModulesForRule, expectAllResourcesRegexValid, expectAllModuleResultsValid, getResultsByModule };
+export {
+  loadModulesForRule,
+  expectAllResourcesRegexValid,
+  expectAllModuleResultsValid,
+  getResultsByModule,
+};

@@ -31,17 +31,23 @@ const partialContentSimilarity = (
   onlyMatchingAttributes: boolean = false,
 ): Record<string, number> => {
   const contents1 = loadContents(filePath1);
-  const partial1 = jmespath.search(contents1, jmespathFile1);
+
+  let partial1 = contents1;
+  if (jmespathFile1) {
+    partial1 = jmespath.search(contents1, jmespathFile1);
+  }
 
   const contents2 = loadContents(filePath2);
-  const partial2 = jmespath.search(contents2, jmespathFile2);
+  let partial2 = contents2;
+  if (jmespathFile2) {
+    partial2 = jmespath.search(contents2, jmespathFile2);
+  }
 
-  const similarities:Record<string, number> = {};
+  const similarities: Record<string, number> = {};
 
   // check only matching attributes
   // and return average similarity
-  if (onlyMatchingAttributes &&
-      (typeof partial1 === 'object') && (typeof partial2 === 'object')) {
+  if (onlyMatchingAttributes && typeof partial1 === 'object' && typeof partial2 === 'object') {
     let sum = 0;
     let count = 0;
     for (const key in partial1) {
@@ -51,7 +57,7 @@ const partialContentSimilarity = (
         if (partial2.hasOwnProperty(key)) {
           const p1 = partial1[key];
           const p2 = partial2[key];
-          const vv = similarity(p1, p2);
+          const vv = similarity(JSON.stringify(p1), JSON.stringify(p2));
           similarities[key] = vv;
           sum += vv;
           count += 1;
@@ -75,7 +81,7 @@ const partialContentSimilarity = (
   return similarities;
 };
 
-const similarity = (text1:string, text2:string):number => {
+const similarity = (text1: string, text2: string): number => {
   if (!text1 && !text2) {
     return 100;
   }
@@ -88,18 +94,62 @@ const similarity = (text1:string, text2:string):number => {
 };
 
 /**
- * Loads a .yml or .json file as an JSON object
- * @param filePath .json or .yml file
+ * Loads a .yml, .json or Makefile file as an JSON object
+ * @param filePath .json, .yml or Makefile file
  * @returns JSON object
  */
-const loadContents = (filePath: string): object => {
+const loadContents = (filePath: string): any => {
   const contents = fs.readFileSync(filePath).toString();
   if (filePath.toLowerCase().endsWith('.yml')) {
     return yamlParse(contents);
   } else if (filePath.toLowerCase().endsWith('.json')) {
     return JSON.parse(contents);
+  } else if (filePath.endsWith('/Makefile')) {
+    return makefileToJSON(contents);
   }
   throw new Error('Only files with extension .yml or .json are supported');
 };
 
-export { fullContentSimilarityPerc, partialContentSimilarity, loadContents };
+/**
+ * Convert Makefile to a JSON structure
+ * Example:
+ * # this is an example
+ * target1:
+ *   ls
+ * target2: target1
+ *   ls /
+ *
+ * Converts to
+ * {
+ *   targets: {
+ *     "target1": {
+ *       "contents": "ls"
+ *     }
+ *     "target2": {
+ *       "dependencies": "target1"
+ *       "contents": "ls /"
+ *     }
+ *   }
+ * }
+ * Ignores all .PHONY contents
+ * @param Makefile contents
+ */
+const makefileToJSON = (contents: string): any => {
+  // open https://regex101.com/ with contents of file src/rules/test-cases/general/group1/mod3-svc/Makefile
+  // to develop regex
+  const re = /(^([a-zA-Z0-9]*)\s*:\s*([a-zA-Z0-9]*)\n)([\s|\t]+.*?\n(?=[^\s|^\t]))/gms;
+  const matches = contents.matchAll(re);
+  const rr = <Record<string, any>>{};
+  for (const match of matches) {
+    const targetName = match[2].trim();
+    const targetDep = match[3].trim();
+    const targetContents = match[4].trim();
+    rr[targetName] = {
+      dependencies: targetDep,
+      contents: targetContents,
+    };
+  }
+  return rr;
+};
+
+export { fullContentSimilarityPerc, partialContentSimilarity, loadContents, makefileToJSON };

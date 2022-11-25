@@ -1,4 +1,4 @@
-import { fullContentSimilarityPerc, partialContentSimilarity } from './file';
+import { fullContentSimilarityPerc, loadContents, partialContentSimilarity } from './file';
 
 describe('when comparing the contents of two files', () => {
   it('similarity perc of chars changed big text is found', async () => {
@@ -137,8 +137,50 @@ describe('when having two yml or json files', () => {
     expect(dperc.lib3).not.toBeDefined();
     expect(dperc.lib4).not.toBeDefined();
     expect(dperc.lib5).toEqual(100);
-    expect(dperc.lib6).toEqual(80);
-    expect(dperc._all).toEqual(93.33);
+    expect(dperc.lib6).toEqual(85.71);
+    expect(dperc._all).toEqual(95.24);
   });
 
+  it('when selector is empty, compare all attributes', async () => {
+    const dperc = partialContentSimilarity(
+      'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
+      '',
+      'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
+      '',
+      true,
+    );
+    expect(dperc.dependencies).toEqual(100);
+    expect(dperc._all).toEqual(100);
+  });
+
+  it('when selector is empty, compare all attributes 2', async () => {
+    const dperc = partialContentSimilarity(
+      'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
+      '',
+      'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare2.json',
+      '',
+      true,
+    );
+    expect(dperc.dependencies).toEqual(86.96);
+    expect(dperc._all).toEqual(89.69);
+  });
+
+  describe('when converting Makefile to JSON', () => {
+    it('Makefile can be represented as a JSON file, even with target dependencies', () => {
+      const tgs = loadContents('src/rules/test-cases/general/modules/group1/mod3-svc/Makefile');
+      expect(tgs.target1).toBeDefined();
+      expect(tgs.target1.dependencies).toBe('');
+      expect(tgs.target1.contents).toContain('target1 contents');
+      expect(tgs.target1.contents).toContain('testing second line');
+      expect(tgs.target2).toBeDefined();
+      expect(tgs.target2.dependencies).toBe('target1');
+      expect(tgs.target2.contents).toContain('target 2a contents');
+      expect(tgs.target2.contents).toContain('target 2 contents');
+      expect(tgs.target2.contents).toContain('abc');
+      expect(tgs.target3).toBeDefined();
+      expect(tgs.target3.dependencies).toBe('');
+      expect(tgs.target3.contents).not.toContain('.PHONY');
+      // console.log(JSON.stringify(mfjson));
+    });
+  });
 });

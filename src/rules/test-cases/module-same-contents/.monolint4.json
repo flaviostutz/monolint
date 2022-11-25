@@ -17,6 +17,9 @@
             "unexistingthing",
             "dependencies"
           ]
+        },
+        "Makefile": {
+          "selectors": [ "" ]
         }
       }
     }

@@ -45,5 +45,4 @@ describe('when running lint', () => {
     const results = discoverModules(baseDir, baseConfig, '.monolint.json');
     expect(results).toHaveLength(7);
   });
-
 });

@@ -2,7 +2,6 @@ import { FixResult } from './FixResult';
 import { Module } from './Module';
 
 export type RuleResult = {
-
   /**
    * Path of the file evaluated
    */
