@@ -35,3 +35,6 @@ all: build lint unit-tests
 rules-doc:
 	npx ts-node src/rules-doc.ts
 
+upgrade-deps:
+	npx npm-check-updates -u
+

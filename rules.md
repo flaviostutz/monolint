@@ -8,10 +8,10 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 * Checks if workflow file name starts with a known module name. Additionally it can check for specific prefixes in the name, and, if required, if a set of suffixed file names exists for each module
 
-* Examples:
+- Examples:
 
 
-  * Activates this rule. It will just check if workflow name prefix starts with an existing module name
+  - Activates this rule. It will just check if workflow name prefix starts with an existing module name
 
 ```json
 {
@@ -21,7 +21,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Deactivates this rule
+  - Deactivates this rule
 
 ```json
 {
@@ -31,7 +31,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Checks if workflow file name starts with a known module name and ends with one of "-dev" or "-prd"
+  - Checks if workflow file name starts with a known module name and ends with one of "-dev" or "-prd"
 
 ```json
 {
@@ -46,7 +46,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Checks, for each existing module, if there exists a workflow file which name ends with "-dev" and another with "-prd". If we have modules "mod1" and "mod2", files "mod1-dev.yml, mod1-prd.yml, mod2-dev.yml, mod2-prd.yml" are required
+  - Checks, for each existing module, if there exists a workflow file which name ends with "-dev" and another with "-prd". If we have modules "mod1" and "mod2", files "mod1-dev.yml, mod1-prd.yml, mod2-dev.yml, mod2-prd.yml" are required
 
 ```json
 {
@@ -66,10 +66,10 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 * Check whether the folder structure is present in the modules
 
-* Examples:
+- Examples:
 
 
-  * Deactivates this rule
+  - Deactivates this rule
 
 ```json
 {
@@ -79,7 +79,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Activates this rule using default folders (defaults: `["src"]`)
+  - Activates this rule using default folders (defaults: `["src"]`)
 
 ```json
 {
@@ -89,7 +89,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Loosely requires module structure. The module should contain **at least** this set of folders, but can still have others.
+  - Loosely requires module structure. The module should contain **at least** this set of folders, but can still have others.
 
 ```json
 {
@@ -106,7 +106,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Strictly requires module structure. No extra folders allowed, should match exactly.
+  - Strictly requires module structure. No extra folders allowed, should match exactly.
 
 ```json
 {
@@ -127,10 +127,10 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 * Check if "name" attribute of the package.json file equals (or ends with) the name of the module
 
-* Examples:
+- Examples:
 
 
-  * Activates this rule with default regex "[a-z]+[a-z0-9-_]{4,12}"
+  - Activates this rule with default regex "[a-z]+[a-z0-9-_]{4,12}"
 
 ```json
 {
@@ -140,7 +140,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Deactivates this rule
+  - Deactivates this rule
 
 ```json
 {
@@ -150,7 +150,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Module names should be sufixed by "-svc" or "web"
+  - Module names should be sufixed by "-svc" or "web"
 
 ```json
 {
@@ -164,10 +164,10 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 * Check whether all module folders has a parent folder, allowing the usage of `glob` path pattern
 
-* Examples:
+- Examples:
 
 
-  * Deactivates this rule
+  - Deactivates this rule
 
 ```json
 {
@@ -177,7 +177,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * All modules should have the following possible parent folders: 'packages', 'apps', 'libs', 'services'
+  - All modules should have the following possible parent folders: 'packages', 'apps', 'libs', 'services'
 
 ```json
 {
@@ -194,7 +194,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * All modules should be in a folder named 'package' that is a descendant of a folder named 'apps'
+  - All modules should be in a folder named 'package' that is a descendant of a folder named 'apps'
 
 ```json
 {
@@ -208,7 +208,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * All modules should have a parent folder named 'modules'
+  - All modules should have a parent folder named 'modules'
 
 ```json
 {
@@ -226,10 +226,10 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 * Check whether all the required files are present in the modules folders
 
-* Example:
+- Example:
 
 
-  * Deactivates this rule
+  - Deactivates this rule
 
 ```json
 {
@@ -243,6 +243,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 * Checks if specified files have the same content among different modules
 * It doesn't complain or checks for files that aren't present on modules. If you need this, use rule 'module-required-files'
+* For partial contents, selectors can be used in yml, json or Makefile files. yml files will be converted to json before being checked against the jmespath rule and Makefiles will expose their "targets" as first level attributes to be checked
 * Default behavior:
   * It will try to select the module with most files as the reference module and check the other modules's files against it  * Files checked if nothing is specified: ["LICENSE","jest.config.js","tsconfig.json","tsconfig.eslint.json",".eslintrc.js","eslintignore",".prettierrc.js",".prettierignore"]  * Files must have the be exactly the same contents (min-similarity=100%)* Expanded configuration:
   * With expanded configurations you can change which files are checked and the similarity threshold  * Use jmespath queries (https://jmespath.org) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)  * If jmespath query resolves to a primitive attribute value, its similarity will be compared
@@ -250,10 +251,10 @@ Those configurations should be added to a file in the root of the monorepo calle
   * If jmespath is '', all matching attributes of the file will be checked against similarity
 
 
-* Examples:
+- Examples:
 
 
-  * Deactivate this rule
+  - Deactivate this rule
 
 ```json
 {
@@ -263,7 +264,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Overwrites default checked files with a new set of files that must be 100% similar and forces reference module to be 'my-best-module'
+  - Overwrites default checked files with a new set of files that must be 100% similar and forces reference module to be 'my-best-module'
 
 ```json
 {
@@ -279,7 +280,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * File 'README.md' must be at least 70% and 'src/config.js' must be 98% similar to the same files on reference module. 'tsconfig.json' won't be checked anymore. All other default files will continue to be checked
+  - File 'README.md' must be at least 70% and 'src/config.js' must be 98% similar to the same files on reference module. 'tsconfig.json' won't be checked anymore. All other default files will continue to be checked
 
 ```json
 {
@@ -301,7 +302,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * Attributes 'provider.runtime' and 'provider.stackName' of serverless.yml and script 'test' of package.json must be equal among modules (it won't check the whole file). Jmespath (jmespath.org) notation was used to select the attributes
+  - Attributes 'provider.runtime' and 'provider.stackName' of serverless.yml and script 'test' of package.json must be equal among modules (it won't check the whole file). Jmespath (jmespath.org) notation was used to select the attributes
 
 ```json
 {
@@ -327,7 +328,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  * The attributes inside 'dependencies' present both in reference and in the other modules must match, if exists. In this example, it will enforce all dependencies that exists in both reference module and the other modules to have the same version, but will ignore all other dependencies that are not in both modules.
+  - The attributes inside 'dependencies' present both in reference and in the other modules must match, if exists. In this example, it will enforce all dependencies that exists in both reference module and the other modules to have the same version, but will ignore all other dependencies that are not in both modules.
 
 ```json
 {
@@ -345,14 +346,33 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
+  - Makefile targets 'build' and 'deploy' must have the same content in Makefiles around the monorepo. They still can have other targets at will.
+
+```json
+{
+  "rules": {
+    "module-same-contents": {
+      "files": {
+        "Makefile": {
+          "selectors": [
+            "build",
+            "deploy"
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
 ## **module-unique-name**
 
 * Checks if the name of the modules are unique in the entire monorepo, regardless of the which folder it is present
 
-* Example:
+- Example:
 
 
-  * Disable this rule
+  - Disable this rule
 
 ```json
 {
@@ -366,10 +386,10 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 * Check if "name" attribute of the package.json file equals (or ends with) the name of the module
 
-* Example:
+- Example:
 
 
-  * Deactivates this rule
+  - Deactivates this rule
 
 ```json
 {
@@ -383,10 +403,10 @@ Those configurations should be added to a file in the root of the monorepo calle
 
 * Check if "service" attribute of the serverless.yml file equals (or ends with) the name of the module
 
-* Example:
+- Example:
 
 
-  * Deactivates this rule
+  - Deactivates this rule
 
 ```json
 {
