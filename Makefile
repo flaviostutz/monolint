@@ -15,7 +15,7 @@ lint:
 	npm audit --audit-level high
 	npx ts-node src/rules-doc.ts --check
 
-lint-fix:
+lint-fix: rules-doc
 	npx prettier --loglevel warn --write .
 	npx eslint . --ext .ts --fix
 

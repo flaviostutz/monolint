@@ -189,6 +189,17 @@ const rule: Rule = {
           },
         },
       },
+      {
+        description:
+          'All targets that exists in both Makefiles from reference module and the target module will be checked for similarity',
+        config: {
+          files: {
+            Makefile: {
+              selectors: [''],
+            },
+          },
+        },
+      },
     ];
   },
 };
@@ -325,33 +336,6 @@ const expandConfig = (
   targetModuleRuleConfig.files = fileConfigs;
   return targetModuleRuleConfig;
 };
-
-// const getDiffMessage = (refFilePath: string, dselector: string,
-//     similarityResults: Record<string, number>): {dmessage:string, dselector:string} => {
-//   let dmessage = `Different from '${refFilePath}[${dselector}]' (${similarityResults._all}%)`;
-
-//   // add more details, if exists
-//   let worstSimilarity = 100;
-//   let worstKey = null;
-//   for (const key in similarityResults) {
-//     if (key === '_all') {
-//       continue;
-//     }
-//     // eslint-disable-next-line no-prototype-builtins
-//     if (similarityResults.hasOwnProperty(key)) {
-//       if (similarityResults[key] <= worstSimilarity) {
-//         worstSimilarity = similarityResults[key];
-//         worstKey = key;
-//       }
-//     }
-//   }
-//   if (worstKey) {
-//     dmessage = `Different from '${refFilePath}[${dselector}.${worstKey}]' (${worstSimilarity}%)`;
-//     return { dmessage, dselector: `${dselector}.${worstKey}` };
-//   }
-
-//   return { dmessage, dselector };
-// };
 
 const checkPartialSimilarity = (pp: {
   selector: string;

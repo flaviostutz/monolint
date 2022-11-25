@@ -365,6 +365,24 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
+  - All targets that exists in both Makefiles from reference module and the target module will be checked for similarity
+
+```json
+{
+  "rules": {
+    "module-same-contents": {
+      "files": {
+        "Makefile": {
+          "selectors": [
+            ""
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
 ## **module-unique-name**
 
 * Checks if the name of the modules are unique in the entire monorepo, regardless of the which folder it is present
