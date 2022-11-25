@@ -24,7 +24,6 @@ describe('when running lint in a repo without .monolint.json config', () => {
       '.*/mod2-svc',
       true,
     );
-
   });
 });
 

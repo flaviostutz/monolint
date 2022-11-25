@@ -77,8 +77,10 @@ const discoverModules = (baseDir: string, baseConfig: Config, configFileName: st
     let foundParent = false;
     for (let bb = 0; bb < modules.length; bb += 1) {
       const otherModule = modules[bb];
-      if (otherModule.path !== candidateModule.path &&
-        otherModule.path.startsWith(candidateModule.path)) {
+      if (
+        otherModule.path !== candidateModule.path &&
+        otherModule.path.startsWith(candidateModule.path)
+      ) {
         foundParent = true;
         break;
       }

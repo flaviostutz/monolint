@@ -150,4 +150,3 @@ Each check that you want to do in the monorepo is done by a "rule". You can enab
 - [Contribute to this Project](https://github.com/Syknapse/Contribute-To-This-Project): This is for absolute beginners. If you know how to write and edit an anchor tag <a href="" target=""></a> then you should be able to do it.
 - [Contribute to open source](https://github.com/danthareja/contribute-to-open-source):
   Learn the GitHub workflow by contributing code in a fun simulation project
-

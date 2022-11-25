@@ -1,5 +1,3 @@
-import { addAbortSignal } from 'stream';
-
 import {
   expectAllModuleResultsValid,
   expectAllResourcesRegexValid,
@@ -111,7 +109,11 @@ describe('when using selector for checking parts of files', () => {
       'Similar to module mod1-reference.*',
     );
 
-    console.log(JSON.stringify(results?.filter((aa) => aa.resource.includes('serverless.yml[')).map((bb) => bb.resource)));
+    console.log(
+      JSON.stringify(
+        results?.filter((aa) => aa.resource.includes('serverless.yml[')).map((bb) => bb.resource),
+      ),
+    );
 
     expectAllResourcesRegexValid(
       results,
@@ -170,26 +172,13 @@ describe('when using selector for checking parts of files', () => {
 
   it('should identify some-equals-file Makefile as OK', async () => {
     const results = rule.checkModules(modules, baseDir);
-    expectAllResourcesRegexValid(
-      results,
-      'mod2-some-equal-files/Makefile',
-      true,
-    );
+    expectAllResourcesRegexValid(results, 'mod2-some-equal-files/Makefile', true);
   });
 
   it('should identify some-different-file Makefile as NOT OK', async () => {
     const results = rule.checkModules(modules, baseDir);
     // console.log(JSON.stringify(results?.filter((aa) => aa.resource.includes('target3'))));
-    expectAllResourcesRegexValid(
-      results,
-      'mod3-some-different-files/Makefile\\[target2\\]',
-      false,
-    );
-    expectAllResourcesRegexValid(
-      results,
-      'mod3-some-different-files/Makefile\\[target3\\]',
-      false,
-    );
+    expectAllResourcesRegexValid(results, 'mod3-some-different-files/Makefile\\[target2\\]', false);
+    expectAllResourcesRegexValid(results, 'mod3-some-different-files/Makefile\\[target3\\]', false);
   });
-
 });

@@ -37,7 +37,7 @@ const resolveModuleConfig = (
 
     // calculate merged config by looking at the module path hierarchy
     const configFile = `${path}/${configFileName}`;
-    let loadedConfig:Config = {};
+    let loadedConfig: Config = {};
 
     if (fs.existsSync(configFile)) {
       const cf = fs.readFileSync(configFile);
@@ -48,7 +48,9 @@ const resolveModuleConfig = (
       }
       // only root level configurations should have this
       if (loadedConfig['module-markers'] && path !== baseDir) {
-        throw new Error(`'module-markers' found on '${configFile}' is only valid on monorepo root level configuration`);
+        throw new Error(
+          `'module-markers' found on '${configFile}' is only valid on monorepo root level configuration`,
+        );
       }
     } else if (path !== baseDir) {
       continue;

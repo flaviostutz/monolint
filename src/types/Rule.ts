@@ -20,7 +20,7 @@ export interface Rule {
     modules: Module[],
     baseDir: string,
     fix?: boolean,
-    baseConfig?: Config
+    baseConfig?: Config,
   ): RuleResult[] | null;
 
   /**

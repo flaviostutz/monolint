@@ -112,9 +112,12 @@ const rule: Rule = {
       '  * With expanded configurations you can change which files are checked and the similarity threshold';
     doc +=
       '  * Use jmespath queries (https://jmespath.org) to define which parts of the file must be equal among files using attribute "selector". Supported file types are yml and json (yml files are transformed into json before being checked)';
-    doc += '  * If jmespath query resolves to a primitive attribute value, its similarity will be compared\n';
-    doc += '  * If jmespath query resolves to an object with attributes, only the attributes that are present in both modules/files will be checked\n';
-    doc += '  * If jmespath is \'\', all matching attributes of the file will be checked against similarity\n';
+    doc +=
+      '  * If jmespath query resolves to a primitive attribute value, its similarity will be compared\n';
+    doc +=
+      '  * If jmespath query resolves to an object with attributes, only the attributes that are present in both modules/files will be checked\n';
+    doc +=
+      "  * If jmespath is '', all matching attributes of the file will be checked against similarity\n";
     return doc;
   },
   docExampleConfigs(): RuleExample[] {
@@ -238,8 +241,12 @@ const checkModule = (
       for (let i = 0; i < fileConfig.selectors.length; i += 1) {
         const selector = fileConfig.selectors[i];
         const presults = checkPartialSimilarity({
-          selector, refFilePath, targetModule,
-          targetFilePath, minSimilarity, refModule,
+          selector,
+          refFilePath,
+          targetModule,
+          targetFilePath,
+          minSimilarity,
+          refModule,
         });
         results = [...results, ...presults];
       }
@@ -333,13 +340,15 @@ const expandConfig = (
 //   return { dmessage, dselector };
 // };
 
-const checkPartialSimilarity = (pp:
-    {
-      selector: string, refFilePath:string, targetModule:Module,
-      targetFilePath: string, minSimilarity:number, refModule:Module
-    }):RuleResult[] => {
-
-  const results:RuleResult[] = [];
+const checkPartialSimilarity = (pp: {
+  selector: string;
+  refFilePath: string;
+  targetModule: Module;
+  targetFilePath: string;
+  minSimilarity: number;
+  refModule: Module;
+}): RuleResult[] => {
+  const results: RuleResult[] = [];
   const contentsRef = loadContents(pp.refFilePath);
   if (pp.selector !== '') {
     const partial1 = jmespath.search(contentsRef, pp.selector);
@@ -354,7 +363,13 @@ const checkPartialSimilarity = (pp:
     }
   }
 
-  const sp = partialContentSimilarity(pp.targetFilePath, pp.selector, pp.refFilePath, pp.selector, true);
+  const sp = partialContentSimilarity(
+    pp.targetFilePath,
+    pp.selector,
+    pp.refFilePath,
+    pp.selector,
+    true,
+  );
 
   // eslint-disable-next-line @shopify/binary-assignment-parens
   const valid = sp._all >= pp.minSimilarity;
@@ -407,6 +422,5 @@ const checkPartialSimilarity = (pp:
 
   return results;
 };
-
 
 export default rule;

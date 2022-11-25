@@ -183,5 +183,4 @@ describe('when having two yml or json files', () => {
       // console.log(JSON.stringify(mfjson));
     });
   });
-
 });

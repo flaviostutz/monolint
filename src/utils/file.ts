@@ -43,12 +43,11 @@ const partialContentSimilarity = (
     partial2 = jmespath.search(contents2, jmespathFile2);
   }
 
-  const similarities:Record<string, number> = {};
+  const similarities: Record<string, number> = {};
 
   // check only matching attributes
   // and return average similarity
-  if (onlyMatchingAttributes &&
-      (typeof partial1 === 'object') && (typeof partial2 === 'object')) {
+  if (onlyMatchingAttributes && typeof partial1 === 'object' && typeof partial2 === 'object') {
     let sum = 0;
     let count = 0;
     for (const key in partial1) {
@@ -82,7 +81,7 @@ const partialContentSimilarity = (
   return similarities;
 };
 
-const similarity = (text1:string, text2:string):number => {
+const similarity = (text1: string, text2: string): number => {
   if (!text1 && !text2) {
     return 100;
   }
@@ -135,7 +134,7 @@ const loadContents = (filePath: string): any => {
  * Ignores all .PHONY contents
  * @param Makefile contents
  */
-const makefileToJSON = (contents:string):any => {
+const makefileToJSON = (contents: string): any => {
   // open https://regex101.com/ with contents of file src/rules/test-cases/general/group1/mod3-svc/Makefile
   // to develop regex
   const re = /(^([a-zA-Z0-9]*)\s*:\s*([a-zA-Z0-9]*)\n)([\s|\t]+.*?\n(?=[^\s|^\t]))/gms;
