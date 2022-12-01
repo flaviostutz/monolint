@@ -47,7 +47,7 @@
     "diff": "^5.1.0",
     "fast-glob": "^3.2.12",
     "fast-levenshtein": "^3.0.0",
-    "fs-extra": "^10.1.0",
+    "fs-extra": "^11.1.0",
     "jmespath": "^0.16.0",
     "js-yaml": "^4.1.0",
     "yaml-cfn": "^0.3.2",
