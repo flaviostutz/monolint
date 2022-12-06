@@ -102,6 +102,8 @@ const rule: Rule = {
     let doc = '* Checks if specified files have the same content among different modules\n';
     doc +=
       "* It doesn't complain or checks for files that aren't present on modules. If you need this, use rule 'module-required-files'\n";
+    doc +=
+      '* For partial contents, selectors can be used in yml, json or Makefile files. yml files will be converted to json before being checked against the jmespath rule and Makefiles will expose their "targets" as first level attributes to be checked\n';
     doc += '* Default behavior:\n';
     doc +=
       "  * It will try to select the module with most files as the reference module and check the other modules's files against it";
@@ -172,6 +174,28 @@ const rule: Rule = {
           files: {
             'package.json': {
               selectors: ['dependencies'],
+            },
+          },
+        },
+      },
+      {
+        description:
+          "Makefile targets 'build' and 'deploy' must have the same content in Makefiles around the monorepo. They still can have other targets at will.",
+        config: {
+          files: {
+            Makefile: {
+              selectors: ['build', 'deploy'],
+            },
+          },
+        },
+      },
+      {
+        description:
+          'All targets that exists in both Makefiles from reference module and the target module will be checked for similarity',
+        config: {
+          files: {
+            Makefile: {
+              selectors: [''],
             },
           },
         },
@@ -312,33 +336,6 @@ const expandConfig = (
   targetModuleRuleConfig.files = fileConfigs;
   return targetModuleRuleConfig;
 };
-
-// const getDiffMessage = (refFilePath: string, dselector: string,
-//     similarityResults: Record<string, number>): {dmessage:string, dselector:string} => {
-//   let dmessage = `Different from '${refFilePath}[${dselector}]' (${similarityResults._all}%)`;
-
-//   // add more details, if exists
-//   let worstSimilarity = 100;
-//   let worstKey = null;
-//   for (const key in similarityResults) {
-//     if (key === '_all') {
-//       continue;
-//     }
-//     // eslint-disable-next-line no-prototype-builtins
-//     if (similarityResults.hasOwnProperty(key)) {
-//       if (similarityResults[key] <= worstSimilarity) {
-//         worstSimilarity = similarityResults[key];
-//         worstKey = key;
-//       }
-//     }
-//   }
-//   if (worstKey) {
-//     dmessage = `Different from '${refFilePath}[${dselector}.${worstKey}]' (${worstSimilarity}%)`;
-//     return { dmessage, dselector: `${dselector}.${worstKey}` };
-//   }
-
-//   return { dmessage, dselector };
-// };
 
 const checkPartialSimilarity = (pp: {
   selector: string;
