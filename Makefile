@@ -12,7 +12,7 @@ lint:
 	npx prettier --loglevel warn --check .
 	npx eslint . --ext .ts
 	npx tsc -noEmit --skipLibCheck
-	npm audit --audit-level moderate
+	npm audit --audit-level critical
 	npx ts-node src/rules-doc.ts --check
 
 lint-fix: rules-doc
