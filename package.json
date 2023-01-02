@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@stutzlab/eslint-config": "^0.0.8",
-    "chalk": "^5.1.2",
+    "chalk": "^5.2.0",
     "diff": "^5.1.0",
     "fast-glob": "^3.2.12",
     "fast-levenshtein": "^3.0.0",
