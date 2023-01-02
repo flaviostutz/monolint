@@ -7,12 +7,12 @@ export const Serverless: Config = {
     'module-same-contents': {
       files: {
         'serverless.yml': {
-          selectors: [
-            'provider.runtime',
-            'provider.lambdaHashingVersion',
-            'provider.logRetentionInDays',
-            'provider.tracing',
-          ],
+          selectors: {
+            'provider.runtime': false,
+            'provider.lambdaHashingVersion': false,
+            'provider.logRetentionInDays': false,
+            'provider.tracing': false,
+          },
         },
       },
     },

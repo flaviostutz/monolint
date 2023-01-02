@@ -1,3 +1,4 @@
+
 import * as fs from 'fs';
 
 import jmespath from 'jmespath';
@@ -9,7 +10,6 @@ import { RuleResult } from '../types/RuleResult';
 import { RuleExample } from '../types/RuleExample';
 import { ConfigModuleSameContents, ConfigModuleSameContentsFile } from '../types/Config';
 import { quoteQuery } from '../utils/quoteQuery';
-// import { ConfigModuleSameContents } from '../types/Config';
 
 const defaultFiles = [
   'LICENSE',
@@ -214,8 +214,8 @@ const checkModule = (
 
   // check each file in module against ref module file
   for (const filename in targetModuleRuleConfig.files) {
-    // eslint-disable-next-line no-prototype-builtins
-    if (!targetModuleRuleConfig.files.hasOwnProperty(filename)) {
+    // eslint-disable-next-line no-prototype-builtins, @typescript-eslint/no-unnecessary-condition
+    if (!targetModuleRuleConfig.files || !targetModuleRuleConfig.files.hasOwnProperty(filename)) {
       continue;
     }
 
@@ -253,20 +253,28 @@ const checkModule = (
 
     // partial content comparison by jmespath selector
     if (fileConfig.selectors) {
-      if (
-        !Array.isArray(fileConfig.selectors) ||
-        fileConfig.selectors.length === 0 ||
-        typeof fileConfig.selectors[0] !== 'string'
-      ) {
-        throw new Error(
-          `'selectors' config for file '${filename}' must be an array of jmespath queries`,
-        );
-      }
+      // if (
+      //   !Array.isArray(fileConfig.selectors) ||
+      //   fileConfig.selectors.length === 0 ||
+      //   typeof fileConfig.selectors[0] !== 'string'
+      // ) {
+      //   throw new Error(
+      //     `'selectors' config for file '${filename}' must be an array of jmespath queries`,
+      //   );
+      // }
 
-      for (let i = 0; i < fileConfig.selectors.length; i += 1) {
-        const selector = fileConfig.selectors[i];
+      for (const selconf in fileConfig.selectors) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (!fileConfig.selectors.hasOwnProperty(selconf)) {
+          continue;
+        }
+        let strictSelector = false;
+        if (!Array.isArray(fileConfig.selectors)) {
+          strictSelector = fileConfig.selectors[selconf];
+        }
         const presults = checkPartialSimilarity({
-          selector,
+          selector: selconf,
+          strictSelector,
           refFilePath,
           targetModule,
           targetFilePath,
@@ -340,6 +348,7 @@ const expandConfig = (
 
 const checkPartialSimilarity = (pp: {
   selector: string;
+  strictSelector: boolean;
   refFilePath: string;
   targetModule: Module;
   targetFilePath: string;
@@ -350,7 +359,7 @@ const checkPartialSimilarity = (pp: {
   const contentsRef = loadContents(pp.refFilePath);
   if (pp.selector !== '') {
     const partial1 = jmespath.search(contentsRef, quoteQuery(pp.selector));
-    if (!partial1) {
+    if (!partial1 && pp.strictSelector) {
       results.push({
         valid: false,
         resource: `${pp.refFilePath}[${pp.selector}]`,
@@ -368,6 +377,11 @@ const checkPartialSimilarity = (pp: {
     pp.selector,
     true,
   );
+
+  // minSim is NaN when content is not found in source file
+  if (!pp.strictSelector && !Number.isNaN(pp.minSimilarity)) {
+    return results;
+  }
 
   // eslint-disable-next-line @shopify/binary-assignment-parens
   const valid = sp._all >= pp.minSimilarity;

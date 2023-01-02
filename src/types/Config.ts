@@ -27,7 +27,7 @@ type ConfigModuleFolderStructure = {
 type ConfigModuleSameContentsFile = {
   'min-similarity'?: number;
   enabled?: boolean;
-  selectors?: string[];
+  selectors?: string[] | Record<string, boolean>;
 };
 
 type ConfigModuleParentFolder = string[];

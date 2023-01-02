@@ -54,9 +54,9 @@ const partialContentSimilarity = (
     let count = 0;
     for (const key in partial1) {
       // eslint-disable-next-line no-prototype-builtins
-      if (partial1.hasOwnProperty(key)) {
+      if (partial1 && partial1.hasOwnProperty(key)) {
         // eslint-disable-next-line no-prototype-builtins
-        if (partial2.hasOwnProperty(key)) {
+        if (partial2 && partial2.hasOwnProperty(key)) {
           const p1 = partial1[key];
           const p2 = partial2[key];
           const vv = similarity(JSON.stringify(p1), JSON.stringify(p2));

@@ -44,19 +44,19 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
       continue;
     }
 
-    try {
-      const ruleResults = rule.checkModules(ruleModules, baseDir, fix, baseConfig);
-      if (ruleResults === null) {
-        continue;
-      }
-      for (let kk = 0; kk < ruleResults.length; kk += 1) {
-        const ruleResult = ruleResults[kk];
-        ruleResult.rule = rule.name;
-        results.push(ruleResult);
-      }
-    } catch (err) {
-      throw new Error(`Error checking rule ${rule.name}: ${err}`);
+    // try {
+    const ruleResults = rule.checkModules(ruleModules, baseDir, fix, baseConfig);
+    if (ruleResults === null) {
+      continue;
     }
+    for (let kk = 0; kk < ruleResults.length; kk += 1) {
+      const ruleResult = ruleResults[kk];
+      ruleResult.rule = rule.name;
+      results.push(ruleResult);
+    }
+    // } catch (err) {
+      // throw new Error(`Error checking rule ${rule.name}: ${err}`);
+    // }
   }
 
   results.sort((aa, bb) => {

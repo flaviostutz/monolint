@@ -5,19 +5,19 @@ export const Makefile: Config = {
     'module-same-contents': {
       files: {
         Makefile: {
-          selectors: [
-            'build',
-            'lint',
-            'test',
-            'unit-tests',
-            'integration-tests',
-            'package',
-            'deploy',
-            'undeploy',
-            'start',
-            'clean',
-            'install',
-          ],
+          selectors: {
+            build: false,
+            lint: false,
+            test: false,
+            'unit-tests': false,
+            'integration-tests': false,
+            package: false,
+            deploy: false,
+            undeploy: false,
+            start: false,
+            clean: false,
+            install: false,
+          },
         },
       },
     },
