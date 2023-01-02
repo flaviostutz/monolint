@@ -2,6 +2,7 @@ import fs from 'fs';
 
 import { Config } from '../types/Config';
 import { getRule } from '../rules/registry';
+import { mergeDeep } from '../utils/mergeDeep';
 
 import { loadExtension } from './extensions';
 
@@ -83,21 +84,8 @@ const resolveModuleConfig = (
 };
 
 const mergeConfigs = (parentConfig: Config, childConfig: Config): Config => {
-  // merge markers
-  let mergedMarkers = parentConfig['module-markers'];
-  if (!mergedMarkers) {
-    mergedMarkers = [];
-  }
-  if (childConfig['module-markers']) {
-    mergedMarkers = mergedMarkers.concat(childConfig['module-markers']);
-  }
-
   // merge rules
-  const mergedRules = { ...parentConfig.rules, ...childConfig.rules };
-
-  const config = <Config>{ ...parentConfig, ...childConfig };
-  config['module-markers'] = mergedMarkers;
-  config.rules = mergedRules;
+  const config = mergeDeep([parentConfig, childConfig]);
   // eslint-disable-next-line no-undefined
   config.extends = undefined;
   return config;

@@ -40,6 +40,9 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
     const ruleModules: Module[] = modules.filter((module) => {
       return rule.name in module.enabledRules;
     });
+    if (ruleModules.length === 0) {
+      continue;
+    }
 
     try {
       const ruleResults = rule.checkModules(ruleModules, baseDir, fix, baseConfig);

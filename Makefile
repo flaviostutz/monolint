@@ -4,7 +4,7 @@ build:
 
 run:
 	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/general --verbose
-	npx ts-node src/main.ts --base-dir=./src/rules/.tmp/psn/test-cases/general --verbose --fix
+	npx ts-node src/main.ts --base-dir=../nx --verbose
 	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/module-required-files --verbose
 	# npx ts-node src/main.ts --base-dir=../large-monorepo --verbose
 
@@ -12,7 +12,7 @@ lint:
 	npx prettier --loglevel warn --check .
 	npx eslint . --ext .ts
 	npx tsc -noEmit --skipLibCheck
-	npm audit --audit-level high
+	npm audit --audit-level critical
 	npx ts-node src/rules-doc.ts --check
 
 lint-fix:

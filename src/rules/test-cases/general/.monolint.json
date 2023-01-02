@@ -1,6 +1,11 @@
 {
+  "extends": [],
   "module-markers": ["package.json", "serverless.yml", "go.mod"],
   "rules": {
+    "serverless-same-name": true, 
+    "packagejson-same-name": true,
+    "module-name-regex": true,
+    "module-unique-name": true,
     "module-same-contents": true,
     "gh-workflow-module-prefix": true
   }

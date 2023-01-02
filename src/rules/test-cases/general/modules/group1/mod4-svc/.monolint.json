@@ -1,4 +1,5 @@
 {
+  "extends": [],
   "rules": {
     "module-name-regex": false
   }

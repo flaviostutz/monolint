@@ -180,7 +180,6 @@ describe('when having two yml or json files', () => {
       expect(tgs.target3).toBeDefined();
       expect(tgs.target3.dependencies).toBe('');
       expect(tgs.target3.contents).not.toContain('.PHONY');
-      // console.log(JSON.stringify(mfjson));
     });
   });
 });

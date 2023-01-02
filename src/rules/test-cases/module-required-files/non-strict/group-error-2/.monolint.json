@@ -1,4 +1,6 @@
 {
+  "extends": [],
+  "module-markers": ["package.json"],
   "rules": {
     "module-required-files": {
       "strict": false,

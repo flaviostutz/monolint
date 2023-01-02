@@ -1,4 +1,6 @@
 {
+  "extends": [],
+  "module-markers": ["package.json"],
   "rules": {
     "module-same-contents": {
       "reference-module": "mod1-reference",

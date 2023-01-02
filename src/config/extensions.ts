@@ -4,6 +4,7 @@ import { Recommended } from './defaults/recommended';
 import { Basic } from './defaults/basic';
 import { Serverless } from './defaults/serverless';
 import { PackageJson } from './defaults/packagejson';
+import { Makefile } from './defaults/makefile';
 import { mergeConfigs } from './config-resolver';
 
 const configExtensions = new Map<string, Config>();
@@ -40,5 +41,6 @@ registerConfigExtension('monolint:basic', Basic);
 registerConfigExtension('monolint:serverless', Serverless);
 registerConfigExtension('monolint:packagejson', PackageJson);
 registerConfigExtension('monolint:recommended', Recommended);
+registerConfigExtension('monolint:makefile', Makefile);
 
 export { loadExtension, registerConfigExtension };

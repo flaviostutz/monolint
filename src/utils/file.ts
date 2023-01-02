@@ -4,6 +4,8 @@ import jmespath from 'jmespath';
 import levenshtein from 'fast-levenshtein';
 import { yamlParse } from 'yaml-cfn';
 
+import { quoteQuery } from './quoteQuery';
+
 const fullContentSimilarityPerc = (file1: string, file2: string): number => {
   const file1Contents = fs.readFileSync(file1).toString();
   const file2Contents = fs.readFileSync(file2).toString();
@@ -34,13 +36,13 @@ const partialContentSimilarity = (
 
   let partial1 = contents1;
   if (jmespathFile1) {
-    partial1 = jmespath.search(contents1, jmespathFile1);
+    partial1 = jmespath.search(contents1, quoteQuery(jmespathFile1));
   }
 
   const contents2 = loadContents(filePath2);
   let partial2 = contents2;
   if (jmespathFile2) {
-    partial2 = jmespath.search(contents2, jmespathFile2);
+    partial2 = jmespath.search(contents2, quoteQuery(jmespathFile2));
   }
 
   const similarities: Record<string, number> = {};

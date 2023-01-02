@@ -103,7 +103,7 @@ describe('when loading config for a module', () => {
       throw new Error('rules should be defined');
     }
     expect(config.rules['module-name-regex']).toBeTruthy();
-    expect(config.rules['module-same-contents']).toBeUndefined();
+    expect(config.rules['module-same-contents']).toBeTruthy();
     expect(config.rules['serverless-same-name']).toBeTruthy();
   });
 
@@ -113,7 +113,7 @@ describe('when loading config for a module', () => {
       throw new Error('default rules should be present');
     }
     expect(config.rules['module-name-regex']).toBeTruthy();
-    expect(config.rules['module-same-contents']).toBeUndefined();
+    expect(config.rules['module-same-contents']).toBeTruthy();
     expect(config.rules['serverless-same-name']).toBeTruthy();
   });
 

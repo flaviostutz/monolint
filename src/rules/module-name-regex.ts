@@ -14,7 +14,7 @@ const rule: Rule = {
 
       const config = module.enabledRules['module-name-regex'].ruleConfig;
 
-      let regex = '[a-z]+[a-z0-9-_]{4,12}';
+      let regex = '[a-zA-Z]+[a-zA-Z0-9-_]{3,12}';
 
       if (typeof config !== 'string' && typeof config !== 'boolean') {
         results.push({

@@ -8,6 +8,7 @@ import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';
 import { RuleExample } from '../types/RuleExample';
 import { ConfigModuleSameContents, ConfigModuleSameContentsFile } from '../types/Config';
+import { quoteQuery } from '../utils/quoteQuery';
 // import { ConfigModuleSameContents } from '../types/Config';
 
 const defaultFiles = [
@@ -351,7 +352,7 @@ const checkPartialSimilarity = (pp: {
   const results: RuleResult[] = [];
   const contentsRef = loadContents(pp.refFilePath);
   if (pp.selector !== '') {
-    const partial1 = jmespath.search(contentsRef, pp.selector);
+    const partial1 = jmespath.search(contentsRef, quoteQuery(pp.selector));
     if (!partial1) {
       results.push({
         valid: false,

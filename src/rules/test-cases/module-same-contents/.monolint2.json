@@ -1,4 +1,6 @@
 {
+  "extends": [],
+  "module-markers": ["package.json"],
   "rules": {
     "module-same-contents": {
       "files": ["file1", "file2", "dir1/file3"]

@@ -1,4 +1,5 @@
 {
+  "extends": [],
   "rules": {
     "serverless-same-name": false
   }

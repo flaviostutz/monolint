@@ -8,9 +8,16 @@ const loadIgnorePatterns = (baseDir: string, useGitIgnore: boolean): string[] =>
     if (fs.existsSync(gfile)) {
       const cf = fs.readFileSync(gfile);
       const ignorePatterns = cf.toString().trim().split('\n');
-      const fi = ignorePatterns.filter((elem) => {
-        return elem.trim().length > 0 && !elem.trim().startsWith('#');
-      });
+      const fi = ignorePatterns
+        .filter((elem) => {
+          return elem.trim().length > 0 && !elem.trim().startsWith('#');
+        })
+        .map((elem) => {
+          if (elem.startsWith('/')) {
+            return elem.substring(1);
+          }
+          return elem;
+        });
       ignorePaths.push(...fi);
     }
   }

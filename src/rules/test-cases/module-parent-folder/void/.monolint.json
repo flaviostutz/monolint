@@ -1,3 +1,5 @@
 {
+    "extends": [],
+    "module-markers": ["package.json"],
     "rules": {}
 }
