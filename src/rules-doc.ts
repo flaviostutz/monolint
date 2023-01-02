@@ -42,9 +42,9 @@ for (let i = 0; i < rules.length; i += 1) {
   }
   if (examples.length > 0) {
     if (examples.length === 1) {
-      doc += '* Example:\n\n';
+      doc += '- Example:\n\n';
     } else {
-      doc += '* Examples:\n\n';
+      doc += '- Examples:\n\n';
     }
 
     for (let j = 0; j < examples.length; j += 1) {
@@ -53,7 +53,7 @@ for (let i = 0; i < rules.length; i += 1) {
         console.log(`Example description for ${rule.name} -> example ${j + 1} is too short`);
         process.exit(1);
       }
-      doc += `\n  * ${ex.description}\n\n`;
+      doc += `\n  - ${ex.description}\n\n`;
       doc += '```json\n';
       const econf = { rules: <Record<string, any>>{} };
 

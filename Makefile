@@ -15,7 +15,7 @@ lint:
 	npm audit --audit-level critical
 	npx ts-node src/rules-doc.ts --check
 
-lint-fix:
+lint-fix: rules-doc
 	npx prettier --loglevel warn --write .
 	npx eslint . --ext .ts --fix
 
@@ -34,4 +34,7 @@ all: build lint unit-tests
 
 rules-doc:
 	npx ts-node src/rules-doc.ts
+
+upgrade-deps:
+	npx npm-check-updates -u
 

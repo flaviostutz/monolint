@@ -166,7 +166,8 @@ describe('when using selector for checking parts of files', () => {
 
   it('should identify some-equals-file Makefile as OK', async () => {
     const results = rule.checkModules(modules, baseDir);
-    expectAllResourcesRegexValid(results, 'mod2-some-equal-files/Makefile', true);
+    expectAllResourcesRegexValid(results, 'mod2-some-equal-files/Makefile\\[target1', true);
+    expectAllResourcesRegexValid(results, 'mod2-some-equal-files/Makefile\\[target3', true);
   });
 
   it('should identify some-different-file Makefile as NOT OK', async () => {

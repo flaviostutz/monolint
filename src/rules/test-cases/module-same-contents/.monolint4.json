@@ -21,7 +21,7 @@
           ]
         },
         "Makefile": {
-          "selectors": [ "" ]
+          "selectors": [ "target1", "target2", "target3", "target_inexistent" ]
         }
       }
     }
