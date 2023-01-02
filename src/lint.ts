@@ -55,7 +55,7 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
       results.push(ruleResult);
     }
     // } catch (err) {
-      // throw new Error(`Error checking rule ${rule.name}: ${err}`);
+    // throw new Error(`Error checking rule ${rule.name}: ${err}`);
     // }
   }
 
