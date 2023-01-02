@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/flaviostutz/monolint#readme",
   "devDependencies": {
-    "@shopify/eslint-plugin": "^42.0.1",
+    "@shopify/eslint-plugin": "^42.0.2",
     "@types/diff": "^5.0.2",
     "@types/fast-levenshtein": "^0.0.2",
     "@types/fs-extra": "^9.0.13",
@@ -42,7 +42,7 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "@stutzlab/eslint-config": "^0.0.7",
+    "@stutzlab/eslint-config": "^0.0.8",
     "chalk": "^5.1.2",
     "diff": "^5.1.0",
     "fast-glob": "^3.2.12",
