@@ -85,7 +85,20 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
     return 0;
   });
 
-  return results;
+  // remove duplicates
+  const uresults = results.filter((rr1, index, self) => {
+    return index === self.findIndex((rr2) => {
+      return (
+        rr2.resource === rr1.resource &&
+        rr2.rule === rr1.rule &&
+        rr2.message === rr1.message &&
+        rr2.valid === rr1.valid &&
+        rr2.fixResult === rr1.fixResult
+      );
+    });
+  });
+
+  return uresults;
 };
 
 export { lint };

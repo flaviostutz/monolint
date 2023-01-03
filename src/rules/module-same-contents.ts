@@ -380,6 +380,8 @@ const checkPartialSimilarity = (pp: {
   refModule: Module;
 }): RuleResult[] => {
   const results: RuleResult[] = [];
+
+  // check if contents exists on reference file
   const contentsRef = loadContents(pp.refFilePath);
   if (pp.selector !== '') {
     const partial1 = jmespath.search(contentsRef, quoteQuery(pp.selector));
@@ -387,7 +389,7 @@ const checkPartialSimilarity = (pp: {
       results.push({
         valid: false,
         resource: `${pp.refFilePath}[${pp.selector}]`,
-        message: 'Config error: selector points to an unexisting content on reference file',
+        message: 'Required content on reference file not found',
         rule: rule.name,
         module: pp.targetModule,
       });
@@ -403,8 +405,18 @@ const checkPartialSimilarity = (pp: {
   );
 
   // minSim is NaN when content is not found in source file
-  // when not strict, skip this validation
-  if (!pp.strictSelector && Number.isNaN(pp.minSimilarity)) {
+  if (Number.isNaN(pp.minSimilarity) || Number.isNaN(sp._all)) {
+    // when not strict, skip this validation
+    if (!pp.strictSelector) {
+      return results;
+    }
+    results.push({
+      valid: false,
+      resource: `${pp.targetFilePath}[${pp.selector}]`,
+      message: `Required content not found at '${pp.refFilePath}[${pp.selector}]'`,
+      rule: rule.name,
+      module: pp.targetModule,
+    });
     return results;
   }
 
@@ -432,7 +444,7 @@ const checkPartialSimilarity = (pp: {
     return results;
   }
 
-  // generate results for failed checks
+  // generate detailed results for failed checks
   for (const key in sp) {
     if (key === '_all') {
       continue;
@@ -441,6 +453,11 @@ const checkPartialSimilarity = (pp: {
     if (!sp.hasOwnProperty(key)) {
       continue;
     }
+
+    if (sp[key] >= pp.minSimilarity) {
+      continue;
+    }
+
     if (pp.selector) {
       selectorMsg = `[${pp.selector}.${key}]`;
     } else {

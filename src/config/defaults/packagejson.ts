@@ -9,7 +9,6 @@ export const PackageJson: Config = {
         'package.json': {
           selectors: {
             license: true,
-            author: true,
             'repository.type': false,
             'scripts.build': false,
             'scripts.lint': false,

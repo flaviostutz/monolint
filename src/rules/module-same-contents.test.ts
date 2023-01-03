@@ -133,16 +133,16 @@ describe('when using selector for checking parts of files', () => {
     const results = rule.checkModules(modules, baseDir);
     expectAllResourcesRegexValid(
       results,
-      'mod1-reference/package.json\\[scripts.dist\\]',
+      'mod5-no-files/package.json\\[scripts.dist\\]',
       false,
-      'Config error: selector points to an unexisting',
+      'Required content not found.*',
     );
 
     expectAllResourcesRegexValid(
       results,
       'mod1-reference/package.json\\[unexistingthing\\]',
       false,
-      'Config error: selector points to an unexisting',
+      'Required content on reference file not found.*',
     );
   });
 
