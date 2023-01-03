@@ -13,12 +13,12 @@
           ]
         },
         "package.json": {
-          "selectors": [
-            "scripts.dist", 
-            "repository.type",
-            "unexistingthing",
-            "dependencies"
-          ]
+          "selectors": {
+            "scripts.dist": true, 
+            "repository.type": true,
+            "unexistingthing": true,
+            "dependencies": true
+          }
         },
         "Makefile": {
           "selectors": [ "target1", "target2", "target3", "target_inexistent" ]

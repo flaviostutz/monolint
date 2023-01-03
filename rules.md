@@ -302,7 +302,7 @@ Those configurations should be added to a file in the root of the monorepo calle
 }
 ```
 
-  - Attributes 'provider.runtime' and 'provider.stackName' of serverless.yml and script 'test' of package.json must be equal among modules (it won't check the whole file). Jmespath (jmespath.org) notation was used to select the attributes
+  - Attributes 'provider.runtime' and 'provider.stackName' of serverless.yml and script 'test' of package.json must be equal among modules if exists (it won't check the whole file). Jmespath (jmespath.org) notation was used to select the attributes
 
 ```json
 {
@@ -321,6 +321,25 @@ Those configurations should be added to a file in the root of the monorepo calle
             "scripts.dist",
             "repository.type"
           ]
+        }
+      }
+    }
+  }
+}
+```
+
+  - Attribute 'provider.runtime' is required and has to be equal reference module. Attribute 'provider.stackName' must be equal, but only if exists. Jmespath (jmespath.org) notation was used to select the attributes
+
+```json
+{
+  "rules": {
+    "module-same-contents": {
+      "files": {
+        "serverless.yml": {
+          "selectors": {
+            "provider.runtime": true,
+            "provider.stackName": false
+          }
         }
       }
     }

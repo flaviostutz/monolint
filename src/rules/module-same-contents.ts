@@ -28,20 +28,25 @@ const rule: Rule = {
   checkModules: (modules: Module[]): RuleResult[] | null => {
     const ruleResults: RuleResult[] = [];
 
+    // define the default reference module
+    const defaultReferenceModule = getDefaultReferenceModule(modules);
+
+    // check content similarity against reference modules
     for (let j = 0; j < modules.length; j += 1) {
       const targetModule = modules[j];
 
+      // expand simple configuration format to complete format
       const { rules } = targetModule.config;
       if (!rules || !rules['module-same-contents']) {
         throw new Error('module-same-contents is not enabled for this rule');
       }
-
-      // expand simple configuration format to complete format
       const targetModuleRuleConfig = expandConfig(
         <boolean | ConfigModuleSameContents>rules['module-same-contents'],
       );
 
-      // reference module was set
+      let referenceModule = defaultReferenceModule;
+
+      // specific reference module was set
       const refModuleName = targetModuleRuleConfig['reference-module'];
       if (refModuleName) {
         const rms = modules.filter((mm) => mm.name === refModuleName);
@@ -54,45 +59,13 @@ const rule: Rule = {
           });
           continue;
         }
-        const refModule = rms[0];
-        const mr = checkModule(refModule, targetModule, targetModuleRuleConfig);
-        ruleResults.push(...mr);
-        continue;
+        referenceModule = rms[0];
       }
 
-      // reference module not set
-
-      // find the module that have most of the reference files in it
-      let bestFileCount = 0;
-      let sameCountBestRefs: Module[] = [];
-      for (let i = 0; i < modules.length; i += 1) {
-        const rm = modules[i];
-        // only check if module has ref files and return one result per file found
-        const rr = checkModule(rm, rm, targetModuleRuleConfig);
-        if (rr.length === bestFileCount) {
-          sameCountBestRefs.push(rm);
-        }
-        if (rr.length > bestFileCount) {
-          bestFileCount = rr.length;
-          sameCountBestRefs = [rm];
-        }
-      }
-
-      // untie among best ref modules
-      let bestRefResults: RuleResult[] | null = null;
-      for (let i = 0; i < sameCountBestRefs.length; i += 1) {
-        const refModule = sameCountBestRefs[i];
-        const rr = checkModule(refModule, targetModule, targetModuleRuleConfig);
-        const irr = rr.filter((rrr) => !rrr.valid);
-        const ibr = bestRefResults?.filter((rrr) => !rrr.valid);
-        if (!bestRefResults || (ibr && irr.length < ibr.length)) {
-          bestRefResults = rr;
-        }
-      }
-      if (bestRefResults) {
-        ruleResults.push(...bestRefResults);
-      }
+      const mr = checkModule(referenceModule, targetModule, targetModuleRuleConfig);
+      ruleResults.push(...mr);
     }
+
     return ruleResults;
   },
   check(): RuleResult[] | null {
@@ -155,7 +128,7 @@ const rule: Rule = {
       },
       {
         description:
-          "Attributes 'provider.runtime' and 'provider.stackName' of serverless.yml and script 'test' of package.json must be equal among modules (it won't check the whole file). Jmespath (jmespath.org) notation was used to select the attributes",
+          "Attributes 'provider.runtime' and 'provider.stackName' of serverless.yml and script 'test' of package.json must be equal among modules if exists (it won't check the whole file). Jmespath (jmespath.org) notation was used to select the attributes",
         config: {
           files: {
             'serverless.yml': {
@@ -163,6 +136,17 @@ const rule: Rule = {
             },
             'package.json': {
               selectors: ['scripts.dist', 'repository.type'],
+            },
+          },
+        },
+      },
+      {
+        description:
+          "Attribute 'provider.runtime' is required and has to be equal reference module. Attribute 'provider.stackName' must be equal, but only if exists. Jmespath (jmespath.org) notation was used to select the attributes",
+        config: {
+          files: {
+            'serverless.yml': {
+              selectors: { 'provider.runtime': true, 'provider.stackName': false },
             },
           },
         },
@@ -202,6 +186,54 @@ const rule: Rule = {
       },
     ];
   },
+};
+
+const getDefaultReferenceModule = (modules: Module[]): Module => {
+  let defaultReferenceModule: Module = modules[0];
+
+  for (let j = 0; j < modules.length; j += 1) {
+    const targetModule = modules[j];
+
+    // expand simple configuration format to complete format
+    const { rules } = targetModule.config;
+    if (!rules || !rules['module-same-contents']) {
+      throw new Error('module-same-contents is not enabled for this rule');
+    }
+    const targetModuleRuleConfig = expandConfig(
+      <boolean | ConfigModuleSameContents>rules['module-same-contents'],
+    );
+
+    // find the module that have most of the reference files in it
+    let bestFileCount = 0;
+    let sameCountBestRefs: Module[] = [];
+    for (let i = 0; i < modules.length; i += 1) {
+      const rm = modules[i];
+      // only check if module has ref files and return one result per file found
+      const rr = checkModule(rm, rm, targetModuleRuleConfig);
+      if (rr.length === bestFileCount) {
+        sameCountBestRefs.push(rm);
+      }
+      if (rr.length > bestFileCount) {
+        bestFileCount = rr.length;
+        sameCountBestRefs = [rm];
+      }
+    }
+
+    // untie among best ref modules
+    let bestRefResults: RuleResult[] | null = null;
+    for (let i = 0; i < sameCountBestRefs.length; i += 1) {
+      const refModule = sameCountBestRefs[i];
+      const rr = checkModule(refModule, targetModule, targetModuleRuleConfig);
+      const irr = rr.filter((rrr) => !rrr.valid);
+      const ibr = bestRefResults?.filter((rrr) => !rrr.valid);
+      if (!bestRefResults || (ibr && irr.length < ibr.length)) {
+        bestRefResults = rr;
+        defaultReferenceModule = refModule;
+      }
+    }
+  }
+
+  return defaultReferenceModule;
 };
 
 const checkModule = (
@@ -252,27 +284,20 @@ const checkModule = (
 
     // partial content comparison by jmespath selector
     if (fileConfig.selectors) {
-      // if (
-      //   !Array.isArray(fileConfig.selectors) ||
-      //   fileConfig.selectors.length === 0 ||
-      //   typeof fileConfig.selectors[0] !== 'string'
-      // ) {
-      //   throw new Error(
-      //     `'selectors' config for file '${filename}' must be an array of jmespath queries`,
-      //   );
-      // }
-
       for (const selconf in fileConfig.selectors) {
         // eslint-disable-next-line no-prototype-builtins
         if (!fileConfig.selectors.hasOwnProperty(selconf)) {
           continue;
         }
         let strictSelector = false;
-        if (!Array.isArray(fileConfig.selectors)) {
+        let selector = selconf;
+        if (Array.isArray(fileConfig.selectors)) {
+          selector = fileConfig.selectors[parseInt(selconf, 10)];
+        } else {
           strictSelector = fileConfig.selectors[selconf];
         }
         const presults = checkPartialSimilarity({
-          selector: selconf,
+          selector,
           strictSelector,
           refFilePath,
           targetModule,
@@ -287,8 +312,8 @@ const checkModule = (
 
     // full content comparison
     const sp = fullContentSimilarityPerc(targetFilePath, refFilePath);
-    // eslint-disable-next-line @shopify/binary-assignment-parens
-    const valid = sp >= minSimilarity;
+    // prettier-ignore
+    const valid = (sp >= minSimilarity);
     let message = `Similar to module ${refModule.name} (${sp}%)`;
     if (!valid) {
       message = `Different from '${refFilePath}' (${sp}%)`;
@@ -378,7 +403,8 @@ const checkPartialSimilarity = (pp: {
   );
 
   // minSim is NaN when content is not found in source file
-  if (!pp.strictSelector && !Number.isNaN(pp.minSimilarity)) {
+  // when not strict, skip this validation
+  if (!pp.strictSelector && Number.isNaN(pp.minSimilarity)) {
     return results;
   }
 
