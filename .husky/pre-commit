@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+echo "Running make lint-fix..."
+make lint-fix
+echo "lint-fix finished."
