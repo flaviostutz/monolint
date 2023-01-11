@@ -2,7 +2,6 @@ import fs from 'fs';
 
 const loadIgnorePatterns = (baseDir: string, useGitIgnore: boolean): string[] => {
   const ignorePaths: string[] = [];
-
   if (useGitIgnore) {
     const gfile = `${baseDir}/.gitignore`;
     if (fs.existsSync(gfile)) {

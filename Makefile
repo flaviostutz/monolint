@@ -4,7 +4,7 @@ build:
 
 run:
 	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/general --verbose
-	npx ts-node src/main.ts --base-dir=../nx --verbose
+	npx ts-node src/main.ts --base-dir=../../nn/mortgage-loan/ --verbose
 	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/module-required-files --verbose
 	# npx ts-node src/main.ts --base-dir=../large-monorepo --verbose
 
