@@ -1,6 +1,6 @@
 build: 
-	npm ci
-	npm run build
+	yarn install --frozen-lockfile
+	npx esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js
 
 run:
 	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/general --verbose
@@ -22,7 +22,7 @@ lint-fix: rules-doc
 test: unit-tests
 
 unit-tests:
-	npm run test
+	npx jest
 
 publish:
 	git config --global user.email "flaviostutz@gmail.com"
