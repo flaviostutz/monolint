@@ -5,9 +5,9 @@ STAGED_FILES=$(git diff --name-only --cached | grep -E "\.(ts|js|jsx|tsx|json|md
 if [ "$?" == "0" ]; then
     echo "pre-commit: Running 'make lint-fix'..."
     make lint-fix
-    echo "lint-fix: finished"
+    echo "pre-commit: lint-fix finished"
     git add ${STAGED_FILES}
-    echo "git: fixed files staged again"
+    echo "pre-commit: fixed files staged again"
 else
     echo "pre-commit: skipping (no files for lint-fix)"
 fi
