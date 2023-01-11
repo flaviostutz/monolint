@@ -1,6 +1,7 @@
 # Monolint
 
 [![npm](https://img.shields.io/npm/v/monolint)](https://www.npmjs.com/package/monolint)
+
 <!-- [![npm](https://img.shields.io/npm/dw/monolint)](https://www.npmjs.com/package/monolint) -->
 
 [![This is a Poppins project](https://raw.githubusercontent.com/bancodobrasil/poppins/master/badge-poppins.svg)](https://github.com/bancodobrasil/poppins)
