@@ -12,7 +12,7 @@ lint:
 	npx prettier --loglevel warn --check .
 	npx eslint . --ext .ts
 	npx tsc -noEmit --skipLibCheck
-	npm audit --audit-level critical
+	yarn audit; [[ $? -ge 16 ]] && exit 1 || exit 0
 	npx ts-node src/rules-doc.ts --check
 
 lint-fix: rules-doc
