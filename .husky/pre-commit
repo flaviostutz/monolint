@@ -1,11 +1,16 @@
 #!/usr/bin/env sh
 
 # checking if any "fixable" file was staged
-git diff --name-only --cached | grep -E "\.(ts|js|jsx|tsx|json|md)$" 2>&1
+STAGED_FILES=$(git diff --name-only --cached | grep -E "\.(ts|js|jsx|tsx|json|md)$")
 if [ "$?" == "0" ]; then
     echo "pre-commit: Running 'make lint-fix'..."
     make lint-fix
-    echo "lint-fix finished"
+    echo "lint-fix: finished"
+    git add ${STAGED_FILES}
+    echo "git: fixed files staged again"
 else
     echo "pre-commit: skipping (no files for lint-fix)"
 fi
+
+
+
