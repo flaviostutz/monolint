@@ -49,6 +49,11 @@ if (!fs.existsSync(argv.baseDir)) {
   process.exit(1);
 }
 
+let { baseDir } = argv;
+if (baseDir.endsWith('/')) {
+  baseDir = baseDir.substring(0, baseDir.length - 1);
+}
+
 try {
   const fixed = new Map<string, FixResult>();
   // run linter and possibly fix issues
@@ -57,7 +62,7 @@ try {
   // one fix can cause other issues, so run this a bunch of times to check it
   for (let i = 0; i < 10; i += 1) {
     // check rules and possibly fix issues
-    results = lint(argv.baseDir, argv.config, argv.fix);
+    results = lint(baseDir, argv.config, argv.fix);
 
     // keep track of previously fixed issues to show afterwards
     const withFixResult = results.filter((rr) => rr.fixResult);
@@ -92,8 +97,8 @@ try {
 
   // show results
   if (argv.verbose) {
-    const baseConfig = loadBaseConfig(argv.baseDir, argv.config);
-    const modules = discoverModules(argv.baseDir, baseConfig, argv.config);
+    const baseConfig = loadBaseConfig(baseDir, argv.config);
+    const modules = discoverModules(baseDir, baseConfig, argv.config);
     console.log(`Found ${modules.length} modules: ${modules.map((mm) => mm.path).toString()}`);
   }
 

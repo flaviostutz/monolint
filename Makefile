@@ -1,9 +1,9 @@
 build: install
-	esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js
+	npx esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js
 
 run:
 	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/general --verbose
-	npx ts-node src/main.ts --base-dir=../nx --verbose
+	npx ts-node src/main.ts --base-dir=../../nn/mortgage-loan/ --verbose
 	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/module-required-files --verbose
 	# npx ts-node src/main.ts --base-dir=../large-monorepo --verbose
 
@@ -11,7 +11,7 @@ lint:
 	npx prettier --loglevel warn --check .
 	npx eslint . --ext .ts
 	npx tsc -noEmit --skipLibCheck
-	npm audit --audit-level critical
+	yarn audit; [[ $? -ge 16 ]] && exit 1 || exit 0
 	npx ts-node src/rules-doc.ts --check
 
 lint-fix: rules-doc

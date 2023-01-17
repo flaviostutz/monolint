@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+echo "pre-commit: Running 'make lint'..."
+make lint
+echo "pre-commit: lint OK"
+
+
+
