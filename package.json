@@ -7,9 +7,14 @@
   "files": [
     "dist/main.js"
   ],
+  "engines": {
+    "node": ">=14",
+    "yarn": "^1.22.19"
+  },
+  "packageManager": "yarn@1.22.19",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js",
-    "test": "jest"
+    "build": "make build",
+    "test": "make test"
   },
   "repository": {
     "type": "git",

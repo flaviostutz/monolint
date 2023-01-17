@@ -1,6 +1,5 @@
-build: 
-	npm ci
-	npm run build
+build: install
+	esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js
 
 run:
 	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/general --verbose
@@ -22,13 +21,14 @@ lint-fix: rules-doc
 test: unit-tests
 
 unit-tests:
-	npm run test
+	npx jest --verbose
 
 publish:
 	git config --global user.email "flaviostutz@gmail.com"
 	git config --global user.name "Flávio Stutz"
-	npm version from-git
-	npm publish
+	npm version from-git --no-git-tag-version
+	echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+	yarn publish
 
 all: build lint unit-tests
 
@@ -38,3 +38,5 @@ rules-doc:
 upgrade-deps:
 	npx npm-check-updates -u
 
+install:
+	yarn install --frozen-lockfile
