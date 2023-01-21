@@ -8,14 +8,12 @@ run:
 	# npx ts-node src/main.ts --base-dir=../large-monorepo --verbose
 
 lint:
-	npx prettier --loglevel warn --check .
 	npx eslint . --ext .ts
 	npx tsc -noEmit --skipLibCheck
 	yarn audit; [[ $? -ge 16 ]] && exit 1 || exit 0
 	npx ts-node src/rules-doc.ts --check
 
 lint-fix: rules-doc
-	npx prettier --loglevel warn --write .
 	npx eslint . --ext .ts --fix
 
 test: unit-tests
