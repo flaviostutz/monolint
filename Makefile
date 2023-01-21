@@ -18,6 +18,11 @@ lint-fix: rules-doc
 
 test: unit-tests
 
+clean:
+	rm -rf node_modules
+	rm -rf coverage
+	rm -rf dist
+
 unit-tests:
 	npx jest --verbose
 

@@ -28,6 +28,7 @@
   "homepage": "https://github.com/flaviostutz/monolint#readme",
   "devDependencies": {
     "@stutzlab/eslint-config": "^1.1.1",
+    "@tsconfig/node14": "^1.0.3",
     "@types/diff": "^5.0.2",
     "@types/fast-levenshtein": "^0.0.2",
     "@types/fs-extra": "^9.0.13",
