@@ -13,6 +13,6 @@
     "resolveJsonModule": true,
     "preserveConstEnums": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", ".eslintrc.js", "jest.config.js"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
