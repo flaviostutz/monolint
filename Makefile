@@ -1,12 +1,6 @@
 build: install
 	npx esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js
 
-run:
-	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/general --verbose
-	npx ts-node src/main.ts --base-dir=../../nn/mortgage-loan/ --verbose
-	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/module-required-files --verbose
-	# npx ts-node src/main.ts --base-dir=../large-monorepo --verbose
-
 lint:
 	npx eslint . --ext .ts
 	npx tsc -noEmit --skipLibCheck
@@ -17,6 +11,14 @@ lint-fix: rules-doc
 	npx eslint . --ext .ts --fix
 
 test: unit-tests
+
+
+## DEV targets
+
+run-dev:
+	npx ts-node src/main.ts --base-dir=./src/rules/test-cases/general --verbose --filter="group1"
+	# npx ts-node src/main.ts --base-dir=./src/rules/test-cases/module-required-files --verbose
+	# npx ts-node src/main.ts --base-dir=../large-monorepo --verbose
 
 clean:
 	rm -rf node_modules
