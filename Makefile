@@ -1,5 +1,5 @@
 build: install
-	npx esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js
+	npx esbuild src/main.ts --bundle --platform=node --minify --outfile=dist/main.js
 
 lint:
 	npx eslint . --ext .ts
