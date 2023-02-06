@@ -48,6 +48,8 @@ If you work or know a good public monorepo, please let us now so we can use it a
 }
 ```
 
+Show command line help: `npx monolint --help`
+
 - Execute `npx monolint .`
   - In this example, it will search for any folder that has a file "package.json" and consider it a module
   - Then it will run all default enabled rules, but will turn off rule "packagejson-same-name", which enforces the "name" property of the package.json contents to have the same name as the module folder
