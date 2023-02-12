@@ -25,7 +25,7 @@ const run = async (processArgs: string[]): Promise<number> => {
       alias: 'r',
       type: 'string',
       description: 'Monorepo base dir',
-      default: '.',
+      default: process.cwd(),
     })
     .option('config', {
       alias: 'c',
