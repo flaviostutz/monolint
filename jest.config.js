@@ -9,13 +9,13 @@ module.exports = {
       },
     ],
   },
-  collectCoverage: false,
-  collectCoverageFrom: ['./src/**'],
+  collectCoverage: true,
+  collectCoverageFrom: ['./src/**', '!**/test-cases/**', '!**/.tmp/**'],
   coverageThreshold: {
     global: {
-      lines: 50,
-      branches: 50,
-      functions: 50,
+      lines: 80,
+      branches: 65,
+      functions: 90,
     },
   },
 };

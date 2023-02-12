@@ -14,7 +14,7 @@ import { RuleResult } from './types/RuleResult';
 import { FixResult, FixType } from './types/FixResult';
 
 const run = async (processArgs: string[]): Promise<number> => {
-  const argv = yargs(hideBin(processArgs))
+  const args = yargs(hideBin(processArgs))
     .option('verbose', {
       alias: 'v',
       type: 'boolean',
@@ -44,12 +44,18 @@ const run = async (processArgs: string[]): Promise<number> => {
       type: 'string',
       description: 'Regex expression for filtering results by resource name',
       default: '',
-    })
-    .parseSync();
+    });
+
+  const argv = args.parseSync();
 
   if (!fs.existsSync(argv.baseDir)) {
     console.log(`Monorepo basedir ${argv.baseDir} not found`);
-    process.exit(1);
+    return 1;
+  }
+
+  if (argv._[0]) {
+    console.log(await args.getHelp());
+    return 1;
   }
 
   let { baseDir } = argv;

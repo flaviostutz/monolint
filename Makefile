@@ -26,7 +26,7 @@ clean:
 	rm -rf dist
 
 unit-tests:
-	npx jest --verbose
+	npx jest --verbose $(ARGS)
 
 publish:
 	git config --global user.email "flaviostutz@gmail.com"
