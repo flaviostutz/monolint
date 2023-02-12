@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { exit } from 'process';
 
 import { diffChars } from 'diff';
 
