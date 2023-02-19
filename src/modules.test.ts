@@ -1,7 +1,9 @@
+import { resolve } from 'path';
+
 import { loadBaseConfig } from './config/config-resolver';
 import { discoverModules } from './modules';
 
-const baseDir = 'src/rules/test-cases/general';
+const baseDir = resolve('src/rules/test-cases/general');
 const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
 const baseConfig2 = loadBaseConfig(baseDir, '.monolint2.json');
 

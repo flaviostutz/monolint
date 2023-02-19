@@ -4,14 +4,18 @@ import { RuleResult } from './types/RuleResult';
 import { Module } from './types/Module';
 // when registry is imported, all rules are registered at bootstrap
 import { allRules, enabledRules } from './rules/registry';
-import { resolveModuleConfig } from './config/config-resolver';
+import { loadBaseConfig } from './config/config-resolver';
 import { discoverModules } from './modules';
 
 const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult[] => {
+  if (!baseDir.startsWith('/')) {
+    throw new Error('"baseDir" must be an absolute path');
+  }
   if (!fs.existsSync(baseDir)) {
     throw new Error(`base-dir '${baseDir}' doesn't exist`);
   }
-  const baseConfig = resolveModuleConfig(baseDir, baseDir, configFileName);
+  const baseConfig = loadBaseConfig(baseDir, configFileName);
+  // const baseConfig = resolveModuleConfig(baseDir, baseDir, configFileName);
   const results: RuleResult[] = [];
 
   // check generic rules
@@ -44,7 +48,6 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
       continue;
     }
 
-    // try {
     const ruleResults = rule.checkModules(ruleModules, baseDir, fix, baseConfig);
     if (ruleResults === null) {
       continue;
@@ -54,9 +57,6 @@ const lint = (baseDir: string, configFileName: string, fix: boolean): RuleResult
       ruleResult.rule = rule.name;
       results.push(ruleResult);
     }
-    // } catch (err) {
-    // throw new Error(`Error checking rule ${rule.name}: ${err}`);
-    // }
   }
 
   results.sort((aa, bb) => {

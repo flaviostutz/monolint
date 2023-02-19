@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import fg from 'fast-glob';
 
 import { Module } from './types/Module';
@@ -9,6 +11,10 @@ import { enabledRules } from './rules/registry';
 import { resolveModuleConfig } from './config/config-resolver';
 
 const discoverModules = (baseDir: string, baseConfig: Config, configFileName: string): Module[] => {
+  if (!baseDir.startsWith('/')) {
+    throw new Error('"baseDir" must be an absolute path');
+  }
+
   const patterns: string[] = [];
 
   const markers = baseConfig['module-markers'];
@@ -40,7 +46,7 @@ const discoverModules = (baseDir: string, baseConfig: Config, configFileName: st
   for (let i = 0; i < entries.length; i += 1) {
     const elem = entries[i];
 
-    const modulePath = elem.substring(0, elem.lastIndexOf('/'));
+    const modulePath = resolve(elem.substring(0, elem.lastIndexOf('/')));
     const moduleName = modulePath.substring(modulePath.lastIndexOf('/') + 1, elem.lastIndexOf('/'));
 
     // check if this module was already added before

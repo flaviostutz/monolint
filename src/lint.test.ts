@@ -1,8 +1,10 @@
+import { resolve } from 'path';
+
 import { lint } from './lint';
 import { expectAllModuleResultsValid, expectAllResourcesRegexValid } from './utils/tests';
 
 describe('when running lint in a repo without .monolint.json config', () => {
-  const baseDir = 'src/rules/test-cases/general/modules/group1';
+  const baseDir = resolve('src/rules/test-cases/general/modules/group1');
   it('default module discovery marks and rules should be used', async () => {
     const results = lint(baseDir, '.monolint.json', false);
 
@@ -28,7 +30,7 @@ describe('when running lint in a repo without .monolint.json config', () => {
 });
 
 describe('when running lint', () => {
-  const baseDir = 'src/rules/test-cases/general';
+  const baseDir = resolve('src/rules/test-cases/general');
   it('lint test repo', async () => {
     const results = lint(baseDir, '.monolint.json', false);
 

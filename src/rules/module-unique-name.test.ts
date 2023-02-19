@@ -1,8 +1,10 @@
+import { resolve } from 'path';
+
 import { loadModulesForRule } from '../utils/tests';
 
 import rule from './module-unique-name';
 
-const baseDir = 'src/rules/test-cases/general';
+const baseDir = resolve('src/rules/test-cases/general');
 
 describe('using default configurations on general monorepo', () => {
   const modules = loadModulesForRule(baseDir, '.monolint.json', 'module-unique-name');

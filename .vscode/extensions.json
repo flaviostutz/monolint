@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "dbaeumer.vscode-eslint",
-    "Orta.vscode-jest"
+    "Orta.vscode-jest",
+    "lfm.vscode-makefile-term"
   ]
 }

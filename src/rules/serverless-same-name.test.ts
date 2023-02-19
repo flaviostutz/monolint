@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import fs from 'fs-extra';
 
 import { loadBaseConfig } from '../config/config-resolver';
@@ -7,7 +9,7 @@ import { FixType } from '../types/FixResult';
 import rule from './serverless-same-name';
 
 describe('when only checking serverless-same-name', () => {
-  const baseDir = 'src/rules/test-cases/general';
+  const baseDir = resolve('src/rules/test-cases/general');
   const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
   const modules = discoverModules(baseDir, baseConfig, '.monolint.json');
 
@@ -33,7 +35,7 @@ describe('when only checking serverless-same-name', () => {
 describe('when fixing with serverless-same-name', () => {
   it('should fix serverless "service" attribute in file automatically and return success', async () => {
     // make a copy of test-case dir for fix tests
-    const baseDir = 'src/rules/.tmp/ssn/test-cases/general';
+    const baseDir = resolve('src/rules/.tmp/ssn/test-cases/general');
     fs.rmSync(baseDir, { recursive: true, force: true });
     fs.copySync('src/rules/test-cases/general', baseDir);
 

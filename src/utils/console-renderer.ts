@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import chalk from 'chalk';
 
 import { FixType } from '../types/FixResult';
@@ -42,7 +43,7 @@ const renderResultsConsole = (
   ruleResults: RuleResult[],
   verbose: boolean,
   fixCount: number,
-): void => {
+): number => {
   console.log('');
 
   const byRes = groupByResource(ruleResults);
@@ -142,8 +143,10 @@ const renderResultsConsole = (
   );
 
   if (failRes.length > 0) {
-    process.exit(1);
+    return 2;
   }
+
+  return 0;
 };
 
 export { groupByResource, renderResultsConsole };

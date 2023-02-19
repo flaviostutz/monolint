@@ -1,9 +1,11 @@
+import { resolve } from 'path';
+
 import { loadBaseConfig } from '../config/config-resolver';
 import { discoverModules } from '../modules';
 
 import rule from './module-parent-folder';
 
-const baseTestcaseDir = 'src/rules/test-cases/module-parent-folder';
+const baseTestcaseDir = resolve('src/rules/test-cases/module-parent-folder');
 
 describe('given a rule config without this rule specified', () => {
   test('when the module is in any folder, it should succeed', async () => {

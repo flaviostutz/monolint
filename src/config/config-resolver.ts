@@ -11,9 +11,12 @@ const resolveModuleConfig = (
   baseDir: string,
   configFileName: string,
 ): Config => {
-  // iterate over module path hierarchy
-  const modulePaths = modulePath.split('/');
-  let path = '';
+  if (!modulePath.startsWith('/')) {
+    throw new Error('"modulePath" must be an absolute path');
+  }
+  if (!baseDir.startsWith('/')) {
+    throw new Error('"baseDir" must be an absolute path');
+  }
 
   // starting point
   let moduleConfig: Config = {
@@ -22,14 +25,12 @@ const resolveModuleConfig = (
   };
 
   // iterate over path parts of the module for creating a merged config
-  for (let j = 0; j < modulePaths.length; j += 1) {
+  const modulePaths = modulePath.split('/');
+  let path = '';
+  for (let j = 1; j < modulePaths.length; j += 1) {
     const pathPart = modulePaths[j];
 
-    if (path.length === 0) {
-      path = `${pathPart}`;
-    } else {
-      path = `${path}/${pathPart}`;
-    }
+    path = `${path}/${pathPart}`;
 
     // only evaluate dirs from 'baseDir' on
     if (path.length < baseDir.length) {

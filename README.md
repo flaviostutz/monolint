@@ -48,6 +48,8 @@ If you work or know a good public monorepo, please let us now so we can use it a
 }
 ```
 
+Show command line help: `npx monolint --help`
+
 - Execute `npx monolint .`
   - In this example, it will search for any folder that has a file "package.json" and consider it a module
   - Then it will run all default enabled rules, but will turn off rule "packagejson-same-name", which enforces the "name" property of the package.json contents to have the same name as the module folder
@@ -154,3 +156,4 @@ Each check that you want to do in the monorepo is done by a "rule". You can enab
 - [Contribute to this Project](https://github.com/Syknapse/Contribute-To-This-Project): This is for absolute beginners. If you know how to write and edit an anchor tag <a href="" target=""></a> then you should be able to do it.
 - [Contribute to open source](https://github.com/danthareja/contribute-to-open-source):
   Learn the GitHub workflow by contributing code in a fun simulation project
+

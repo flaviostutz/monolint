@@ -1,8 +1,8 @@
+import { resolve } from 'path';
+
 import { Config, ConfigModuleSameContents } from '../types/Config';
 
 import { loadBaseConfig, mergeConfigs, resolveModuleConfig } from './config-resolver';
-
-const baseDir = 'src/rules/test-cases/config-resolver';
 
 describe('when merging two configurations', () => {
   it('module-markers should be concated', async () => {
@@ -68,6 +68,8 @@ describe('when merging two configurations', () => {
     expect(config3.extends).toBeUndefined();
   });
 });
+
+const baseDir = resolve('src/rules/test-cases/config-resolver');
 
 describe('when loading base config with default contents', () => {
   it('loadBaseConfig .monolint.json', async () => {

@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import {
   expectAllModuleResultsValid,
   expectAllResourcesRegexValid,
@@ -6,7 +8,7 @@ import {
 
 import rule from './module-same-contents';
 
-const baseDir = 'src/rules/test-cases/module-same-contents';
+const baseDir = resolve('src/rules/test-cases/module-same-contents');
 
 describe('when using default configuration', () => {
   const modules = loadModulesForRule(baseDir, '.monolint.json', 'module-same-contents');

@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import fs from 'fs-extra';
 
 import { loadBaseConfig } from '../config/config-resolver';
@@ -7,7 +9,7 @@ import { FixType } from '../types/FixResult';
 import rule from './packagejson-same-name';
 
 describe('packagejson-same-name', () => {
-  const baseDir = 'src/rules/test-cases/general';
+  const baseDir = resolve('src/rules/test-cases/general');
   const baseConfig = loadBaseConfig(baseDir, '.monolint.json');
   const modules = discoverModules(baseDir, baseConfig, '.monolint.json');
 
@@ -37,7 +39,7 @@ describe('packagejson-same-name', () => {
 describe('when fixing with packagejson-same-name', () => {
   it('should fix package name in file automatically and return success', async () => {
     // make a copy of test-case dir for fix tests
-    const baseDir = 'src/rules/.tmp/psn/test-cases/general';
+    const baseDir = resolve('src/rules/.tmp/psn/test-cases/general');
     fs.rmSync(baseDir, { recursive: true, force: true });
     fs.copySync('src/rules/test-cases/general', baseDir);
 
