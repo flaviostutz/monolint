@@ -57,14 +57,14 @@ const renderResultsConsole = (
   if (verbose) {
     const successRes = byRes.filter((rr) => rr.valid);
     successRes.forEach((rr) => {
-      console.log(`${chalk.underline(rr.resource)}`);
+      console.log(`${chalk.underline(relativePath(rr.resource))}`);
       rr.ruleResults.forEach((ruleResult) => {
         let fixMessage = '';
         if (ruleResult.fixResult && ruleResult.fixResult.type === FixType.Fixed) {
           fixMessage = chalk.dim.yellow('fixed');
         }
         console.log(
-          `  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(
+          `  ${chalk.green('success')} ${relativePath(ruleResult.message)} ${chalk.grey(
             ruleResult.rule,
           )} ${fixMessage}`,
         );
@@ -77,7 +77,7 @@ const renderResultsConsole = (
 
   let fixableProblems = 0;
   failRes.forEach((rr) => {
-    console.log(`${chalk.underline(rr.resource)}`);
+    console.log(`${chalk.underline(relativePath(rr.resource))}`);
     const sortRuleResults = rr.ruleResults.sort((aa, bb) => {
       if (aa.valid && !bb.valid) {
         return -1;
@@ -92,7 +92,7 @@ const renderResultsConsole = (
             fixMessage = chalk.dim.yellow('fixed');
           }
           console.log(
-            `  ${chalk.green('success')} ${ruleResult.message} ${chalk.grey(
+            `  ${chalk.green('success')} ${relativePath(ruleResult.message)} ${chalk.grey(
               ruleResult.rule,
             )} ${fixMessage}`,
           );
@@ -104,15 +104,17 @@ const renderResultsConsole = (
           fixmsg = chalk.dim.yellow('fixable');
         }
         console.log(
-          `  ${chalk.red('error')} ${ruleResult.message} ${chalk.grey(ruleResult.rule)} ${fixmsg}`,
+          `  ${chalk.red('error')} ${relativePath(ruleResult.message)} ${chalk.grey(
+            ruleResult.rule,
+          )} ${fixmsg}`,
         );
         if (
           verbose &&
           ruleResult.fixResult &&
           ruleResult.fixResult.type === FixType.Possible &&
-          ruleResult.fixResult.message
+          relativePath(ruleResult.fixResult.message)
         ) {
-          console.log(`  ${chalk.grey(ruleResult.fixResult.message)}`);
+          console.log(`  ${chalk.grey(relativePath(ruleResult.fixResult.message))}`);
         }
       }
     });
@@ -147,6 +149,13 @@ const renderResultsConsole = (
   }
 
   return 0;
+};
+
+const relativePath = (message?: string): string | undefined => {
+  if (!message) {
+    return message;
+  }
+  return message.replace(`${process.cwd()}/`, '');
 };
 
 export { groupByResource, renderResultsConsole };

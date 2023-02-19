@@ -20,8 +20,8 @@ run-dev:
 	# yarn ts-node src/main.ts --base-dir=./src/rules/test-cases/module-required-files --verbose
 	# yarn ts-node src/main.ts --base-dir=../large-monorepo --verbose
 	# ./dist/main.js
-	# cd ../aws-serverless-spikes-monorepo && ../monolint/dist/main.js --verbose
-	dist/main.js --verbose --base-dir=../aws-serverless-spikes-monorepo
+	cd ../aws-serverless-spikes-monorepo && ../monolint/dist/main.js --verbose
+	# dist/main.js --verbose --base-dir=../aws-serverless-spikes-monorepo
 
 clean:
 	rm -rf node_modules
