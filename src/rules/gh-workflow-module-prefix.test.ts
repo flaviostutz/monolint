@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import fs from 'fs-extra';
 
 import { resolveModuleConfig } from '../config/config-resolver';
@@ -7,7 +9,7 @@ import { FixType } from '../types/FixResult';
 import rule from './gh-workflow-module-prefix';
 
 describe('when using default configurations', () => {
-  const baseDir = 'src/rules/test-cases/gh-workflow-module-prefix';
+  const baseDir = resolve('src/rules/test-cases/gh-workflow-module-prefix');
   const ruleModules = loadModulesForRule(baseDir, '.monolint.json', 'gh-workflow-module-prefix');
   const baseConfig = resolveModuleConfig(baseDir, baseDir, '.monolint.json');
 
@@ -24,7 +26,7 @@ describe('when using default configurations', () => {
 });
 
 describe('when using "required" with "-dev" and "-prd" sufixes', () => {
-  const baseDir = 'src/rules/test-cases/gh-workflow-module-prefix';
+  const baseDir = resolve('src/rules/test-cases/gh-workflow-module-prefix');
   const ruleModules = loadModulesForRule(baseDir, '.monolint2.json', 'gh-workflow-module-prefix');
   const baseConfig = resolveModuleConfig(baseDir, baseDir, '.monolint2.json');
 
@@ -62,8 +64,8 @@ describe('when using "required" with "-dev" and "-prd" sufixes', () => {
   });
 
   it('missing -prd and -dev files should be fixed automatically', async () => {
-    const baseDir1 = 'src/rules/test-cases/gh-workflow-module-prefix';
-    const baseDir2 = 'src/rules/.tmp/wmp/test-cases/gh-workflow-module-prefix';
+    const baseDir1 = resolve('src/rules/test-cases/gh-workflow-module-prefix');
+    const baseDir2 = resolve('src/rules/.tmp/wmp/test-cases/gh-workflow-module-prefix');
     // make a copy of test-case dir for fix tests
     fs.rmSync(baseDir2, { recursive: true, force: true });
     fs.copySync(baseDir1, baseDir2);
@@ -97,7 +99,7 @@ describe('when using "required" with "-dev" and "-prd" sufixes', () => {
 });
 
 describe('when using "not required" with "-dev" and "-prd" sufixes', () => {
-  const baseDir = 'src/rules/test-cases/gh-workflow-module-prefix';
+  const baseDir = resolve('src/rules/test-cases/gh-workflow-module-prefix');
   const ruleModules = loadModulesForRule(baseDir, '.monolint3.json', 'gh-workflow-module-prefix');
   const baseConfig = resolveModuleConfig(baseDir, baseDir, '.monolint3.json');
 

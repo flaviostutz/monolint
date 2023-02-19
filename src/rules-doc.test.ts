@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { run } from './rules-doc';
 
 describe('when using rules-doc cli', () => {

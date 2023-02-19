@@ -1,9 +1,11 @@
+import { resolve } from 'path';
+
 import { resolveModuleConfig } from '../config/config-resolver';
 
 import { enabledRules, getRule, allRules } from './registry';
 
 describe('when using registry', () => {
-  const baseDir = 'src/rules/test-cases/config-resolver';
+  const baseDir = resolve('src/rules/test-cases/config-resolver');
   const config = resolveModuleConfig(baseDir, baseDir, '.monolint.json');
 
   it('should get all enabled rules', async () => {

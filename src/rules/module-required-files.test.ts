@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { resolve } from 'path';
 
 import { discoverModules } from '../modules';
 import { loadBaseConfig } from '../config/config-resolver';
@@ -6,7 +7,7 @@ import { loadBaseConfig } from '../config/config-resolver';
 import rule from './module-required-files';
 
 describe('given a folder with non-strict config', () => {
-  const baseDir = 'src/rules/test-cases/module-required-files/non-strict';
+  const baseDir = resolve('src/rules/test-cases/module-required-files/non-strict');
 
   describe('when required files not found in folder', () => {
     const testCaseDir = `${baseDir}/mod-non-strict-error-1`;
@@ -95,7 +96,7 @@ describe('given a folder with non-strict config', () => {
 });
 
 describe('given a folder with strict config', () => {
-  const baseDir = 'src/rules/test-cases/module-required-files/strict';
+  const baseDir = resolve('src/rules/test-cases/module-required-files/strict');
 
   describe('when files beyond required found in folder', () => {
     const testCaseDir = `${baseDir}/mod-strict-error-1`;

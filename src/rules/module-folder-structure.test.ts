@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import { getResultsByModule, loadModulesForRule } from '../utils/tests';
 
 import rule from './module-folder-structure';
@@ -5,7 +7,7 @@ import rule from './module-folder-structure';
 const defaultConfigName = '.monolint.json';
 
 describe('given a folder with default configuration', () => {
-  const baseDir = 'src/rules/test-cases/module-folder-structure/defaults';
+  const baseDir = resolve('src/rules/test-cases/module-folder-structure/defaults');
 
   describe('when rule is enabled', () => {
     const modules = loadModulesForRule(baseDir, defaultConfigName, rule.name);
@@ -33,7 +35,7 @@ describe('given a folder with default configuration', () => {
 });
 
 describe('given a folder with non-strict configuration', () => {
-  const baseDir = 'src/rules/test-cases/module-folder-structure/non-strict';
+  const baseDir = resolve('src/rules/test-cases/module-folder-structure/non-strict');
 
   describe('when required folders are non-glob patterns', () => {
     const modules = loadModulesForRule(`${baseDir}/without-glob`, defaultConfigName, rule.name);
@@ -103,7 +105,7 @@ describe('given a folder with non-strict configuration', () => {
 });
 
 describe('given a folder with strict configuration', () => {
-  const baseDir = 'src/rules/test-cases/module-folder-structure/strict';
+  const baseDir = resolve('src/rules/test-cases/module-folder-structure/strict');
 
   describe('when required folders are non-glob patterns', () => {
     const modules = loadModulesForRule(`${baseDir}/without-glob`, defaultConfigName, rule.name);

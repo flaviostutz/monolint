@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-console */
 // eslint-disable-next-line node/shebang
 import * as fs from 'fs';
+import { resolve } from 'path';
 
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
@@ -25,7 +27,7 @@ const run = async (processArgs: string[]): Promise<number> => {
       alias: 'r',
       type: 'string',
       description: 'Monorepo base dir',
-      default: process.cwd(),
+      default: '.',
     })
     .option('config', {
       alias: 'c',
@@ -62,6 +64,11 @@ const run = async (processArgs: string[]): Promise<number> => {
   if (baseDir.endsWith('/')) {
     baseDir = baseDir.substring(0, baseDir.length - 1);
   }
+  baseDir = resolve(baseDir);
+
+  if (argv.verbose) {
+    console.log(`Running with ${JSON.stringify(argv)}`);
+  }
 
   const fixed = new Map<string, FixResult>();
   // run linter and possibly fix issues
@@ -69,6 +76,10 @@ const run = async (processArgs: string[]): Promise<number> => {
 
   // one fix can cause other issues, so run this a bunch of times to check it
   for (let i = 0; i < 10; i += 1) {
+    if (argv.verbose) {
+      console.log('Checking rules...');
+    }
+
     // check rules and possibly fix issues
     results = lint(baseDir, argv.config, argv.fix);
 

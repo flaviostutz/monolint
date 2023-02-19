@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { run } from './cli';
 
 describe('when using cli', () => {
