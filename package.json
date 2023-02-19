@@ -14,7 +14,8 @@
   "packageManager": "yarn@1.22.19",
   "scripts": {
     "build": "make build",
-    "test": "make test"
+    "test": "make test",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
