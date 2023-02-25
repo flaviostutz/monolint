@@ -12,7 +12,8 @@ const rule: Rule = {
   checkModules: (modules: Module[]): RuleResult[] | null => {
     const results: RuleResult[] = [];
 
-    for (const module of modules) {
+    for (let i = 0; i < modules.length; i += 1) {
+      const module = modules[i];
       // first, get the rule reference from the module
       const { rules } = module.config;
       if (!rules || !rules['module-required-files']) {
@@ -32,7 +33,8 @@ const rule: Rule = {
       const { path } = module;
       const requiredFilesPaths = files.map((file) => `${path}/${file}`);
 
-      for (const requiredFilePath of requiredFilesPaths) {
+      for (let j = 0; j < requiredFilesPaths.length; j += 1) {
+        const requiredFilePath = requiredFilesPaths[j];
         // check if the file exists
         const fileExists = fs.existsSync(requiredFilePath);
         if (fileExists) {

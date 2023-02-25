@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-conditional-expect */
 import { resolve } from 'path';
 
 import { loadBaseConfig } from './config/config-resolver';

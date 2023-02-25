@@ -11,7 +11,8 @@ const rule: Rule = {
 
   checkModules: (modules: Module[]): RuleResult[] | null => {
     const results: RuleResult[] = [];
-    for (const module of modules) {
+    for (let i = 0; i < modules.length; i += 1) {
+      const module = modules[i];
       // first, get the rule reference from the module
       const { rules } = module.config;
       if (!rules || !rules['module-parent-folder']) {

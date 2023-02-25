@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 import * as fs from 'fs';
 
 import jmespath from 'jmespath';

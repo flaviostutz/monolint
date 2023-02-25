@@ -15,7 +15,8 @@ const rule: Rule = {
   checkModules(modules) {
     const results: RuleResult[] = [];
 
-    for (const module of modules) {
+    for (let i = 0; i < modules.length; i += 1) {
+      const module = modules[i];
       // first, get the rule reference from the module
       const { rules } = module.config;
 
@@ -52,7 +53,8 @@ const rule: Rule = {
       const allModuleFolders = fg.sync('**/*', fgConfig);
 
       // Evaluate the pattern one by one and check if there is any missing a match
-      for (const requiredFolderPattern of requiredFolderPatterns) {
+      for (let j = 0; j < requiredFolderPatterns.length; j += 1) {
+        const requiredFolderPattern = requiredFolderPatterns[j];
         const foldersMatching = fg.sync(requiredFolderPattern, fgConfig);
 
         if (foldersMatching.length) {

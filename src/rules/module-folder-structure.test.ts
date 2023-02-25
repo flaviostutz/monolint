@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-conditional-expect */
 import { resolve } from 'path';
 
 import { getResultsByModule, loadModulesForRule } from '../utils/tests';
@@ -15,21 +16,20 @@ describe('given a folder with default configuration', () => {
     it('then should return error accordingly to existent folder structure', async () => {
       const results = rule.checkModules(modules, baseDir);
       expect(results).toHaveLength(2);
-      if (results) {
-        // Performs checks for result basic once! so we don't need to re-check in other tests
-        // Basics: module.name, rule, resource, valid, message
+      if (!results) throw new Error('shouldnt be null');
+      // Performs checks for result basic once! so we don't need to re-check in other tests
+      // Basics: module.name, rule, resource, valid, message
 
-        expect(results[0].module?.name).toEqual('mod-enabled-error-1');
-        expect(results[1].module?.name).toEqual('mod-enabled-success-1');
-        expect(results[0].valid).toBeFalsy();
-        expect(results[1].valid).toBeTruthy();
-        expect(results[0].message).toEqual('Required folder not found');
-        expect(results[1].message).toEqual('Required folder found');
-        results.forEach((result) => {
-          expect(result.resource).toEqual('src');
-          expect(result.rule).toEqual(rule.name);
-        });
-      }
+      expect(results[0].module?.name).toEqual('mod-enabled-error-1');
+      expect(results[1].module?.name).toEqual('mod-enabled-success-1');
+      expect(results[0].valid).toBeFalsy();
+      expect(results[1].valid).toBeTruthy();
+      expect(results[0].message).toEqual('Required folder not found');
+      expect(results[1].message).toEqual('Required folder found');
+      results.forEach((result) => {
+        expect(result.resource).toEqual('src');
+        expect(result.rule).toEqual(rule.name);
+      });
     });
   });
 });

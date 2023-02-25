@@ -96,6 +96,7 @@ const validateConfig = (config: Config): void => {
   if (!config.rules) {
     throw new Error('Config has no rule configurations');
   }
+  // eslint-disable-next-line no-restricted-syntax
   for (const ruleName in config.rules) {
     if (Object.prototype.hasOwnProperty.call(config.rules, ruleName)) {
       const rule = getRule(ruleName);

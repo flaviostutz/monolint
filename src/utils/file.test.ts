@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { fullContentSimilarityPerc, loadContents, partialContentSimilarity } from './file';
 
 describe('when comparing the contents of two files', () => {
@@ -124,7 +125,7 @@ describe('when having two yml or json files', () => {
     expect(dperc.lib4).toEqual(100);
   });
 
-  it('when selector resolves to an object, only matching attributes will be checked for similarity', async () => {
+  it('when selector resolves to an object, only matching attributes will be checked for similarity 2', async () => {
     const dperc = partialContentSimilarity(
       'src/rules/test-cases/general/modules/group1/mod2-svc/file-compare1.json',
       'dependencies',

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-underscore-dangle */
 import * as fs from 'fs';
 
 import jmespath from 'jmespath';
@@ -54,19 +56,22 @@ const partialContentSimilarity = (
   if (onlyMatchingAttributes && typeof partial1 === 'object' && typeof partial2 === 'object') {
     let sum = 0;
     let count = 0;
-    for (const key in partial1) {
-      // eslint-disable-next-line no-prototype-builtins
-      if (partial1 && partial1.hasOwnProperty(key)) {
+    if (partial1 && partial2) {
+      const keys1 = Object.keys(partial1);
+      keys1.forEach((key) => {
         // eslint-disable-next-line no-prototype-builtins
-        if (partial2 && partial2.hasOwnProperty(key)) {
-          const p1 = partial1[key];
-          const p2 = partial2[key];
-          const vv = similarity(JSON.stringify(p1), JSON.stringify(p2));
-          similarities[key] = vv;
-          sum += vv;
-          count += 1;
+        if (partial1 && partial1.hasOwnProperty(key)) {
+          // eslint-disable-next-line no-prototype-builtins
+          if (partial2 && partial2.hasOwnProperty(key)) {
+            const p1 = partial1[key];
+            const p2 = partial2[key];
+            const vv = similarity(JSON.stringify(p1), JSON.stringify(p2));
+            similarities[key] = vv;
+            sum += vv;
+            count += 1;
+          }
         }
-      }
+      });
     }
     similarities._all = Math.round((sum / count) * 100) / 100;
     return similarities;
@@ -146,6 +151,7 @@ const makefileToJSON = (contents: string): any => {
   const re = /(^([a-zA-Z0-9]*)\s*:\s*([a-zA-Z0-9]*)\n)([\s|\t]+.*?\n(?=[^\s|^\t]))/gms;
   const matches = contents.matchAll(re);
   const rr = <Record<string, any>>{};
+  // eslint-disable-next-line no-restricted-syntax
   for (const match of matches) {
     const targetName = match[2].trim();
     const targetDep = match[3].trim();

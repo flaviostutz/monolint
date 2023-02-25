@@ -17,17 +17,16 @@ describe('given a folder with non-strict config', () => {
     it('then should return error', async () => {
       const results = rule.checkModules(modules, baseDir);
       expect(results).toHaveLength(3);
-      if (results) {
-        expect(results[0].resource.includes('README.md')).toBeTruthy();
-        expect(results[1].resource.includes('serverless.yml')).toBeTruthy();
-        expect(results[2].resource.includes('package.json')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-non-strict-error-1');
-        expect(results[1].module?.name).toEqual('mod-non-strict-error-1');
-        expect(results[2].module?.name).toEqual('mod-non-strict-error-1');
-        expect(results[0].valid).toBeFalsy();
-        expect(results[1].valid).toBeTruthy();
-        expect(results[2].valid).toBeTruthy();
-      }
+      if (!results) throw new Error('shouldnt be null');
+      expect(results[0].resource.includes('README.md')).toBeTruthy();
+      expect(results[1].resource.includes('serverless.yml')).toBeTruthy();
+      expect(results[2].resource.includes('package.json')).toBeTruthy();
+      expect(results[0].module?.name).toEqual('mod-non-strict-error-1');
+      expect(results[1].module?.name).toEqual('mod-non-strict-error-1');
+      expect(results[2].module?.name).toEqual('mod-non-strict-error-1');
+      expect(results[0].valid).toBeFalsy();
+      expect(results[1].valid).toBeTruthy();
+      expect(results[2].valid).toBeTruthy();
     });
   });
 
@@ -39,20 +38,19 @@ describe('given a folder with non-strict config', () => {
     it('then should return error', async () => {
       const results = rule.checkModules(modules, baseDir);
       expect(results).toHaveLength(4);
-      if (results) {
-        expect(results[0].resource.includes('README.md')).toBeTruthy();
-        expect(results[1].resource.includes('package.json')).toBeTruthy();
-        expect(results[2].resource.includes('README.md')).toBeTruthy();
-        expect(results[3].resource.includes('package.json')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-e-ns-1');
-        expect(results[1].module?.name).toEqual('mod-e-ns-1');
-        expect(results[2].module?.name).toEqual('mod-e-ns-2');
-        expect(results[3].module?.name).toEqual('mod-e-ns-2');
-        expect(results[0].valid).toBeTruthy();
-        expect(results[1].valid).toBeTruthy();
-        expect(results[2].valid).toBeFalsy();
-        expect(results[3].valid).toBeTruthy();
-      }
+      if (!results) throw new Error('shouldnt be null');
+      expect(results[0].resource.includes('README.md')).toBeTruthy();
+      expect(results[1].resource.includes('package.json')).toBeTruthy();
+      expect(results[2].resource.includes('README.md')).toBeTruthy();
+      expect(results[3].resource.includes('package.json')).toBeTruthy();
+      expect(results[0].module?.name).toEqual('mod-e-ns-1');
+      expect(results[1].module?.name).toEqual('mod-e-ns-1');
+      expect(results[2].module?.name).toEqual('mod-e-ns-2');
+      expect(results[3].module?.name).toEqual('mod-e-ns-2');
+      expect(results[0].valid).toBeTruthy();
+      expect(results[1].valid).toBeTruthy();
+      expect(results[2].valid).toBeFalsy();
+      expect(results[3].valid).toBeTruthy();
     });
   });
 
@@ -64,14 +62,13 @@ describe('given a folder with non-strict config', () => {
     it('then should return success', async () => {
       const results = rule.checkModules(modules, baseDir);
       expect(results).toHaveLength(2);
-      if (results) {
-        expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
-        expect(results[1].resource.includes('package.json')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-non-strict-success-1');
-        expect(results[1].module?.name).toEqual('mod-non-strict-success-1');
-        expect(results[0].valid).toBeTruthy();
-        expect(results[1].valid).toBeTruthy();
-      }
+      if (!results) throw new Error('shouldnt be null');
+      expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
+      expect(results[1].resource.includes('package.json')).toBeTruthy();
+      expect(results[0].module?.name).toEqual('mod-non-strict-success-1');
+      expect(results[1].module?.name).toEqual('mod-non-strict-success-1');
+      expect(results[0].valid).toBeTruthy();
+      expect(results[1].valid).toBeTruthy();
     });
   });
 
@@ -83,14 +80,13 @@ describe('given a folder with non-strict config', () => {
     it('then should return success', async () => {
       const results = rule.checkModules(modules, baseDir);
       expect(results).toHaveLength(2);
-      if (results) {
-        expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
-        expect(results[1].resource.includes('package.json')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-non-strict-success-2');
-        expect(results[1].module?.name).toEqual('mod-non-strict-success-2');
-        expect(results[0].valid).toBeTruthy();
-        expect(results[1].valid).toBeTruthy();
-      }
+      if (!results) throw new Error('shouldnt be null');
+      expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
+      expect(results[1].resource.includes('package.json')).toBeTruthy();
+      expect(results[0].module?.name).toEqual('mod-non-strict-success-2');
+      expect(results[1].module?.name).toEqual('mod-non-strict-success-2');
+      expect(results[0].valid).toBeTruthy();
+      expect(results[1].valid).toBeTruthy();
     });
   });
 });
@@ -106,14 +102,13 @@ describe('given a folder with strict config', () => {
     it('then should return error', async () => {
       const results = rule.checkModules(modules, baseDir);
       expect(results).toHaveLength(2);
-      if (results) {
-        expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
-        expect(results[1].resource.includes('package.json')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-strict-error-1');
-        expect(results[1].module?.name).toEqual('mod-strict-error-1');
-        expect(results[0].valid).toBeTruthy();
-        expect(results[1].valid).toBeFalsy();
-      }
+      if (!results) throw new Error('shouldnt be null');
+      expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
+      expect(results[1].resource.includes('package.json')).toBeTruthy();
+      expect(results[0].module?.name).toEqual('mod-strict-error-1');
+      expect(results[1].module?.name).toEqual('mod-strict-error-1');
+      expect(results[0].valid).toBeTruthy();
+      expect(results[1].valid).toBeFalsy();
     });
   });
 
@@ -125,21 +120,20 @@ describe('given a folder with strict config', () => {
     it('then should return error', async () => {
       const results = rule.checkModules(modules, baseDir);
       expect(results).toHaveLength(4);
-      if (results) {
-        expect(results[0].resource.includes('README.md')).toBeTruthy();
-        expect(results[1].resource.includes('CONTRIBUTING.md')).toBeTruthy();
-        expect(results[2].resource.includes('LICENSE')).toBeTruthy();
-        expect(results[3].resource.includes('serverless.yml')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-strict-error-2');
-        expect(results[1].module?.name).toEqual('mod-strict-error-2');
-        expect(results[2].module?.name).toEqual('mod-strict-error-2');
-        expect(results[3].module?.name).toEqual('mod-strict-error-2');
+      if (!results) throw new Error('shouldnt be null');
+      expect(results[0].resource.includes('README.md')).toBeTruthy();
+      expect(results[1].resource.includes('CONTRIBUTING.md')).toBeTruthy();
+      expect(results[2].resource.includes('LICENSE')).toBeTruthy();
+      expect(results[3].resource.includes('serverless.yml')).toBeTruthy();
+      expect(results[0].module?.name).toEqual('mod-strict-error-2');
+      expect(results[1].module?.name).toEqual('mod-strict-error-2');
+      expect(results[2].module?.name).toEqual('mod-strict-error-2');
+      expect(results[3].module?.name).toEqual('mod-strict-error-2');
 
-        expect(results[0].valid).toBeFalsy();
-        expect(results[1].valid).toBeFalsy();
-        expect(results[2].valid).toBeFalsy();
-        expect(results[3].valid).toBeFalsy();
-      }
+      expect(results[0].valid).toBeFalsy();
+      expect(results[1].valid).toBeFalsy();
+      expect(results[2].valid).toBeFalsy();
+      expect(results[3].valid).toBeFalsy();
     });
   });
 
@@ -155,11 +149,10 @@ describe('given a folder with strict config', () => {
     it('then should return success', async () => {
       const results = rule.checkModules(modules, baseDir);
       expect(results).toHaveLength(1);
-      if (results) {
-        expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
-        expect(results[0].module?.name).toEqual('mod-strict-success-1');
-        expect(results[0].valid).toBeTruthy();
-      }
+      if (!results) throw new Error('shouldnt be null');
+      expect(results[0].resource.includes('serverless.yml')).toBeTruthy();
+      expect(results[0].module?.name).toEqual('mod-strict-success-1');
+      expect(results[0].valid).toBeTruthy();
     });
   });
 });

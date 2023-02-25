@@ -13,9 +13,9 @@ describe('when merging two configurations', () => {
       'module-markers': ['file3', 'file2'],
     };
     const config3 = mergeConfigs(config1, config2);
-    expect(config3['module-markers']?.includes('file1'));
-    expect(config3['module-markers']?.includes('file2'));
-    expect(config3['module-markers']?.includes('file3'));
+    expect(config3['module-markers']?.includes('file1')).toBeTruthy();
+    expect(config3['module-markers']?.includes('file2')).toBeTruthy();
+    expect(config3['module-markers']?.includes('file3')).toBeTruthy();
   });
 
   it('parent should be overriten by child', async () => {
@@ -77,9 +77,8 @@ describe('when loading base config with default contents', () => {
     expect(config['module-markers']).toEqual(['package.json', 'serverless.yml']);
     expect(config['use-gitignore']).toBeTruthy();
     expect(config.rules).toBeDefined();
-    if (config.rules) {
-      expect(config.rules['serverless-same-name']).toBeTruthy();
-    }
+    if (!config.rules) throw new Error('shouldnt be null');
+    expect(config.rules['serverless-same-name']).toBeTruthy();
 
     const config2 = loadBaseConfig(baseDir, '.monolint.json');
     expect(config).toEqual(config2);
@@ -90,11 +89,10 @@ describe('when loading base config with default contents', () => {
     expect(config['module-markers']).toEqual(['go.mod']);
     expect(config['use-gitignore']).toBeFalsy();
     expect(config.rules).toBeDefined();
-    if (config.rules) {
-      expect(config.rules).toEqual({
-        'packagejson-same-name': true,
-      });
-    }
+    if (!config.rules) throw new Error('shouldnt be null');
+    expect(config.rules).toEqual({
+      'packagejson-same-name': true,
+    });
   });
 });
 

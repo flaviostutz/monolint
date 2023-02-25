@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 /* eslint-disable no-console */
-// eslint-disable-next-line node/shebang
 import * as fs from 'fs';
 import { resolve } from 'path';
 
@@ -104,11 +103,12 @@ const run = async (processArgs: string[]): Promise<number> => {
   // restore first fix results found for each resource
   let fixCount = 0;
   results.forEach((rr) => {
+    const rrr = rr;
     const frkey = `${rr.rule}:${rr.resource}`;
     const fr = fixed.get(frkey);
     if (fr) {
-      rr.fixResult = fr;
-      if (rr.fixResult.type === FixType.Fixed) {
+      rrr.fixResult = fr;
+      if (rrr.fixResult.type === FixType.Fixed) {
         fixCount += 1;
       }
     }

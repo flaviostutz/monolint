@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 import { Rule } from '../types/Rule';
 import { Module } from '../types/Module';
 import { RuleResult } from '../types/RuleResult';

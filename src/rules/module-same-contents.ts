@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import * as fs from 'fs';
 
 import jmespath from 'jmespath';
@@ -244,8 +245,9 @@ const checkModule = (
   let results: RuleResult[] = [];
 
   // check each file in module against ref module file
+  // eslint-disable-next-line no-restricted-syntax
   for (const filename in targetModuleRuleConfig.files) {
-    // eslint-disable-next-line no-prototype-builtins, @typescript-eslint/no-unnecessary-condition
+    // eslint-disable-next-line no-prototype-builtins
     if (!targetModuleRuleConfig.files || !targetModuleRuleConfig.files.hasOwnProperty(filename)) {
       continue;
     }
@@ -284,6 +286,7 @@ const checkModule = (
 
     // partial content comparison by jmespath selector
     if (fileConfig.selectors) {
+      // eslint-disable-next-line no-restricted-syntax
       for (const selconf in fileConfig.selectors) {
         // eslint-disable-next-line no-prototype-builtins
         if (!fileConfig.selectors.hasOwnProperty(selconf)) {
@@ -348,16 +351,15 @@ const expandConfig = (
   // only an array of files was used, not the expanded full format, so expand it
   if (Array.isArray(fileConfigs)) {
     fileConfigs = fileConfigs.reduce<Record<string, ConfigModuleSameContentsFile>>((fc, rf) => {
-      fc[rf] = { enabled: true, 'min-similarity': 100 };
-      return fc;
+      const fcr = fc;
+      fcr[rf] = { enabled: true, 'min-similarity': 100 };
+      return fcr;
     }, {});
   }
 
-  for (const fc in fileConfigs) {
-    // eslint-disable-next-line no-prototype-builtins
-    if (!fileConfigs.hasOwnProperty(fc)) {
-      continue;
-    }
+  const fckeys = Object.keys(fileConfigs);
+  for (let i = 0; i < fckeys.length; i += 1) {
+    const fc = fckeys[i];
     const fileConfig = fileConfigs[fc];
     if (typeof fileConfig['min-similarity'] !== 'number') {
       fileConfig['min-similarity'] = 100;
@@ -444,7 +446,9 @@ const checkPartialSimilarity = (pp: {
   }
 
   // generate detailed results for failed checks
-  for (const key in sp) {
+  const keys = Object.keys(sp);
+  for (let i = 0; i < keys.length; i += 1) {
+    const key = keys[i];
     if (key === '_all') {
       continue;
     }
