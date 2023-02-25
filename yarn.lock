@@ -807,10 +807,10 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@stutzlab/eslint-config@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@stutzlab/eslint-config/-/eslint-config-2.2.0.tgz#208194b6d8d0f9ab6ef85cd0bacc3b346fd9fd6e"
-  integrity sha512-mEWGbZ3iSn7cKd34kXsr0UEkNvwulhWeP6aC/2+pudWtEv+57D1h1NVCGXCb93rT0lKiUNXOh5sohJbjqr9Seg==
+"@stutzlab/eslint-config@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@stutzlab/eslint-config/-/eslint-config-2.4.0.tgz#8d73719d9e8e004257e8d30341561926463f9451"
+  integrity sha512-EukKgB3pJYsWCSeEGcrRXCBSlVLhGWAwSM8qYOK19Kw+funCqXiIL5XK787no0Rf6XCLyzF2eScgL5BOJbad1A==
   dependencies:
     eslint-config-airbnb-base "^15.0.0"
     eslint-config-airbnb-typescript "^17.0.0"
