@@ -420,7 +420,6 @@ const checkPartialSimilarity = (pp: {
     return results;
   }
 
-  // eslint-disable-next-line @shopify/binary-assignment-parens
   const valid = sp._all >= pp.minSimilarity;
   let message = `Similar to module ${pp.refModule.name} (${sp._all}%)`;
   let selectorMsg = `[${pp.selector}]`;

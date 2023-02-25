@@ -32,7 +32,7 @@ const partialContentSimilarity = (
   jmespathFile1: string,
   filePath2: string,
   jmespathFile2: string,
-  onlyMatchingAttributes: boolean = false,
+  onlyMatchingAttributes = false,
 ): Record<string, number> => {
   const contents1 = loadContents(filePath1);
 
@@ -106,9 +106,11 @@ const loadContents = (filePath: string): any => {
   const contents = fs.readFileSync(filePath).toString();
   if (filePath.toLowerCase().endsWith('.yml')) {
     return yamlParse(contents);
-  } else if (filePath.toLowerCase().endsWith('.json')) {
+  }
+  if (filePath.toLowerCase().endsWith('.json')) {
     return JSON.parse(contents);
-  } else if (filePath.endsWith('/Makefile')) {
+  }
+  if (filePath.endsWith('/Makefile')) {
     return makefileToJSON(contents);
   }
   throw new Error('Only files with extension .yml or .json are supported');
