@@ -30,7 +30,7 @@
   "devDependencies": {
     "@stutzlab/eslint-config": "^2.4.0",
     "@tsconfig/node14": "^1.0.3",
-    "@types/diff": "^5.0.2",
+    "@types/diff": "^5.0.3",
     "@types/fast-levenshtein": "^0.0.2",
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.4.0",
